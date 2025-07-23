@@ -1,6 +1,7 @@
-defmodule AinComBookingWeb.BookingController do
-  use AinComBookingWeb, :controller
+defmodule AinComBookingWeb.Controllers.BookingController do
+  use Phoenix.Controller
 
+  import AinComBookingWeb.Errors
   import Ecto.Query
 
   alias AinComBookingApi.Bookings.Booking

@@ -2,7 +2,7 @@ defmodule AinComBooking.Release do
   @moduledoc false
   alias Ecto.Migrator
 
-  @app :ain_com
+  @app :ain_com_booking
 
   def migrate do
     load_app()

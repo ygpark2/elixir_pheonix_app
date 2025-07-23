@@ -1,4 +1,4 @@
-defmodule AinComWeb.ConnCase do
+defmodule AinComBookingWeb.ConnCase do
   @moduledoc """
   This module defines the test case to be used by
   tests that require setting up a connection.
@@ -15,15 +15,15 @@ defmodule AinComWeb.ConnCase do
 
   use ExUnit.CaseTemplate
 
-  alias Ecto.Adapters.SQL.Sandbox
   alias AinCom.Repo
-  alias AinComWeb.Endpoint
+  alias AinComBookingWeb.Endpoint
+  alias Ecto.Adapters.SQL.Sandbox
   alias Phoenix.ConnTest
 
   using do
     quote do
       # Import conveniences for testing with connections
-      import AinComWeb.Router.Helpers
+      import AinComBookingWeb.Router.Helpers
       import Phoenix.ConnTest
       import Plug.Conn
 
@@ -35,12 +35,12 @@ defmodule AinComWeb.ConnCase do
   setup tags do
     :ok = Sandbox.checkout(Repo)
 
-    unless tags[:async] do
+    if !tags[:async] do
       Sandbox.mode(Repo, {:shared, self()})
     end
 
     {:ok, conn: %{ConnTest.build_conn() | host: host()}}
   end
 
-  defp host, do: Application.get_env(:ain_com, :canonical_host)
+  defp host, do: Application.get_env(:ain_com_booking, :canonical_host)
 end

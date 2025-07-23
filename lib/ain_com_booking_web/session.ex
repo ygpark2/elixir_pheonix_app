@@ -9,6 +9,6 @@ defmodule AinComBookingWeb.Session do
   end
 
   defp app_config(key) do
-    Keyword.fetch!(Application.get_env(:ain_com, AinComBookingWeb.Endpoint), key)
+    Keyword.fetch!(Application.get_env(:ain_com_booking, AinComBookingWeb.Endpoint), key)
   end
 end

@@ -14,8 +14,8 @@ defmodule AinComBookingHealth.Router do
       init_opts:
         PlugCheckup.Options.new(
           json_encoder: Jason,
-          checks: AinComHealth.checks(),
-          error_code: AinComHealth.error_code(),
+          checks: AinComBookingHealth.checks(),
+          error_code: AinComBookingHealth.error_code(),
           timeout: to_timeout(second: 5),
           pretty: false
         )

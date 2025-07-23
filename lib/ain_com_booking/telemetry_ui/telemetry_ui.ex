@@ -257,5 +257,5 @@ defmodule AinComBooking.TelemetryUI do
     }
   end
 
-  defp share_key, do: Application.get_env(:ain_com, __MODULE__)[:share_key]
+  defp share_key, do: Application.get_env(:ain_com_booking, __MODULE__)[:share_key]
 end

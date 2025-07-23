@@ -1,4 +1,4 @@
-defmodule AinComWeb.PowControllerCallbacks do
+defmodule AinComBookingWeb.PowControllerCallbacks do
   @moduledoc """
   Assigns an existing guest Player to the newly created User record
   """

@@ -14,5 +14,5 @@ defmodule AinComBookingGraphQL.Application.Types do
     end
   end
 
-  defp version, do: Application.get_env(:ain_com, :version)
+  defp version, do: Application.get_env(:ain_com_booking, :version)
 end

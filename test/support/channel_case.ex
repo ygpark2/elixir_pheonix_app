@@ -1,4 +1,4 @@
-defmodule AinComWeb.ChannelCase do
+defmodule AinComBookingWeb.ChannelCase do
   @moduledoc """
   This module defines the test case to be used by
   channel tests.
@@ -15,9 +15,9 @@ defmodule AinComWeb.ChannelCase do
 
   use ExUnit.CaseTemplate
 
-  alias Ecto.Adapters.SQL.Sandbox
   alias AinCom.Repo
-  alias AinComWeb.Endpoint
+  alias AinComBookingWeb.Endpoint
+  alias Ecto.Adapters.SQL.Sandbox
 
   using do
     quote do
@@ -32,7 +32,7 @@ defmodule AinComWeb.ChannelCase do
   setup tags do
     :ok = Sandbox.checkout(Repo)
 
-    unless tags[:async] do
+    if !tags[:async] do
       Sandbox.mode(Repo, {:shared, self()})
     end
 

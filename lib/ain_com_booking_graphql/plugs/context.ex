@@ -1,4 +1,4 @@
-defmodule AinComGraphQL.Plugs.Context do
+defmodule AinComBookingGraphQL.Plugs.Context do
   @moduledoc false
   @behaviour Plug
 

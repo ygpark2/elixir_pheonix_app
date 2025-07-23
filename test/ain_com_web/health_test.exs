@@ -1,5 +1,5 @@
-defmodule AinComWeb.HealthTest do
-  use AinComWeb.ConnCase
+defmodule AinComBookingWeb.HealthTest do
+  use AinComBookingWeb.ConnCase
 
   test "GET /health", %{conn: conn} do
     conn = get(conn, "/health")

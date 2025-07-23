@@ -1,5 +1,5 @@
-defmodule AinComWeb.Home.ControllerTest do
-  use AinComWeb.ConnCase
+defmodule AinComBookingWeb.Home.ControllerTest do
+  use AinComBookingWeb.ConnCase
 
   test "GET /", %{conn: conn} do
     conn = get(conn, "/")

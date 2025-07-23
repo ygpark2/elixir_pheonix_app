@@ -1,5 +1,7 @@
-defmodule AinComBookingWeb.AuthController do
-  use AinComBookingWeb, :controller
+defmodule AinComBookingWeb.Controllers.AuthController do
+  use Phoenix.Controller
+
+  import AinComBookingApi.Errors
 
   alias AinComBookingApi.Accounts.Auth
   alias AinComBookingApi.Guardian

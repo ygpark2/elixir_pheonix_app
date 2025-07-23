@@ -1,7 +1,7 @@
-defmodule AinComWeb.ErrorsTest do
+defmodule AinComBookingWeb.ErrorsTest do
   use AinCom.DataCase, async: true
 
-  alias AinComWeb.Errors
+  alias AinComBookingWeb.Errors
 
   defmodule UserRole do
     @moduledoc false

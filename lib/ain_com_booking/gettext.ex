@@ -4,6 +4,6 @@ defmodule AinComBooking.Gettext do
   application.
   """
 
-  use Gettext.Backend, otp_app: :ain_com
+  use Gettext.Backend, otp_app: :ain_com_booking
   use Gettext, backend: AinCom.Gettext
 end

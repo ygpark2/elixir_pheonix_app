@@ -38,7 +38,7 @@ defmodule AinComBookingWeb.Plugs.Security do
   defp image_src_directive, do: "'self' data:"
 
   defp script_src_directive do
-    if Application.get_env(:ain_com, __MODULE__)[:allow_unsafe_scripts] do
+    if Application.get_env(:ain_com_booking, __MODULE__)[:allow_unsafe_scripts] do
       "'self' 'unsafe-eval' 'unsafe-inline'"
     else
       "'self'"

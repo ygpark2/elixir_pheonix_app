@@ -15,13 +15,13 @@ defmodule TestEnvironment do
   end
 end
 
-config :ain_com, AinCom.Repo,
+# This config is to output keys instead of translated message in test
+config :ain_com_booking, AinComBooking.Gettext, priv: "priv/null", interpolation: AinComBooking.GettextInterpolation
+
+config :ain_com_booking, AinComBooking.Repo,
   pool: Ecto.Adapters.SQL.Sandbox,
   url: TestEnvironment.get_database_url()
 
-config :ain_com, AinComWeb.Endpoint, server: false
-
-# This config is to output keys instead of translated message in test
-config :ain_com, AinCom.Gettext, priv: "priv/null", interpolation: AinCom.GettextInterpolation
+config :ain_com_booking, AinComBookingWeb.Endpoint, server: false
 
 config :logger, level: :warning

@@ -31,7 +31,7 @@ defmodule AinComBookingGraphQL do
   defp build_options(options) do
     Keyword.merge(
       [
-        token_limit: Application.get_env(:ain_com, AinComGraphQL)[:token_limit]
+        token_limit: Application.get_env(:ain_com_booking, AinComGraphQL)[:token_limit]
       ],
       Pipeline.options(options)
     )

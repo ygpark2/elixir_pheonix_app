@@ -1,4 +1,4 @@
-defmodule AinCom.Errors.Sentry do
+defmodule AinComBookingApi.Errors.Sentry do
   @moduledoc false
   @scrubbed_keys ["first_name", "last_name", "email"]
   @scrubbed_value "*********"

@@ -6,30 +6,30 @@ config :absinthe_security, AbsintheSecurity.Phase.MaxAliasesCheck, max_alias_cou
 config :absinthe_security, AbsintheSecurity.Phase.MaxDepthCheck, max_depth_count: 100
 config :absinthe_security, AbsintheSecurity.Phase.MaxDirectivesCheck, max_directive_count: 100
 
-config :ain_com, AinComBooking.Gettext, default_locale: "en"
+config :ain_com_booking, AinComBooking.Gettext, default_locale: "en"
 
-config :ain_com, AinComBooking.Repo,
+config :ain_com_booking, AinComBooking.Repo,
   migration_primary_key: [type: :binary_id, default: {:fragment, "gen_random_uuid()"}],
   migration_timestamps: [type: :utc_datetime_usec],
   start_apps_before_migration: [:ssl]
 
-config :ain_com, AinComBookingGraphQL, token_limit: 2000
+config :ain_com_booking, AinComBookingGraphQL, token_limit: 2000
 
-config :ain_com, AinComBookingWeb.Endpoint,
+config :ain_com_booking, AinComBookingWeb.Endpoint,
   pubsub_server: AinComBooking.PubSub,
   render_errors: [view: AinComBookingWeb.Errors, accepts: ~w(html json)]
 
-config :ain_com, AinComBookingWeb.Plugs.Security, allow_unsafe_scripts: false
-config :ain_com, Corsica, allow_headers: :all
+config :ain_com_booking, AinComBookingWeb.Plugs.Security, allow_unsafe_scripts: false
+config :ain_com_booking, Corsica, allow_headers: :all
 
-config :ain_com, :pow,
-  user: AinComBookingApi.Users.User,
-  repo: AinComBookingApi.Repo,
+config :ain_com_booking, :pow,
+  user: AinComBooking.Accounts.User,
+  repo: AinComBooking.Repo,
   extensions: [PowEmailConfirmation, PowPersistentSession, PowResetPassword],
   # controller_callbacks: Pow.Extension.Phoenix.ControllerCallbacks
   controller_callbacks: AinComBookingWeb.PowControllerCallbacks
 
-config :ain_com,
+config :ain_com_booking,
   ecto_repos: [AinComBookingApi.Repo],
   version: version
 

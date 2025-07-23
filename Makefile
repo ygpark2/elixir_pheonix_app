@@ -68,6 +68,17 @@ targets:
 	@echo "\033[34m---------------------------------------------------------------\033[0m"
 	@perl -nle'print $& if m{^[a-zA-Z_-\d]+:.*?## .*$$}' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-22s\033[0m %s\n", $$1, $$2}'
 
+# Setup targets
+# -------------
+
+.PHONY: setup
+setup: dependencies user_creation
+
+.PHONY: user_creation
+user_creation:
+	mix phx.gen.auth Accounts User users
+
+
 # Build targets
 # -------------
 
@@ -95,6 +106,7 @@ run: loadEnv ## Run the server in an IEx shell
 .PHONY: run_db_setup
 run_db_setup: loadEnv ## Run ecto db setup
 	mix ecto.setup
+	mix ecto.migrate
 
 .PHONY: run_db
 run_db: loadEnv ## Run Postgresql server
@@ -112,14 +124,6 @@ wait-for-db:
 		sleep 2; \
 	done
 	@echo "✅ PostgreSQL is ready!"
-
-.PHONY: pow_install
-pow_install: loadEnv ## Run stop Postgresql server
-	mix pow.install
-
-.PHONY: pow_extension_install
-pow_extension_install: loadEnv ## Run stop Postgresql server
-	mix pow.extension.ecto.gen.migrations --extension PowResetPassword --extension PowEmailConfirmation --extension PowPersistentSession
 
 .PHONY: dependencies
 dependencies: ## Install hex and npm dependencies

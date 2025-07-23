@@ -1,5 +1,5 @@
-defmodule AinComWeb.PingTest do
-  use AinComWeb.ConnCase
+defmodule AinComBookingWeb.PingTest do
+  use AinComBookingWeb.ConnCase
 
   test "GET /ping", %{conn: conn} do
     conn = get(conn, "/ping")

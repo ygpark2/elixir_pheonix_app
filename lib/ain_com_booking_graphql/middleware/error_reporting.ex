@@ -1,4 +1,4 @@
-defmodule AinComGraphQL.Middleware.ErrorReporting do
+defmodule AinComBookingGraphQL.Middleware.ErrorReporting do
   @moduledoc false
   defmodule Error do
     @moduledoc false

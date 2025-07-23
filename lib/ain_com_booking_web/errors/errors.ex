@@ -1,4 +1,4 @@
-defmodule AinComWeb.Errors do
+defmodule AinComBookingWeb.Errors do
   @moduledoc false
   import Phoenix.Template, only: [embed_templates: 1]
 

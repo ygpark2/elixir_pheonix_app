@@ -1,6 +1,6 @@
 defmodule AinComBookingWeb.Endpoint do
   use Sentry.PlugCapture
-  use Phoenix.Endpoint, otp_app: :ain_com
+  use Phoenix.Endpoint, otp_app: :ain_com_booking
 
   alias Plug.Conn
 
@@ -22,7 +22,7 @@ defmodule AinComBookingWeb.Endpoint do
   # when deploying your static files in production.
   plug(Plug.Static,
     at: "/",
-    from: :ain_com,
+    from: :ain_com_booking,
     gzip: true,
     only: ~w(assets fonts images favicon.ico robots.txt)
   )
@@ -34,7 +34,7 @@ defmodule AinComBookingWeb.Endpoint do
 
     plug(Phoenix.LiveReloader)
     plug(Phoenix.CodeReloader)
-    plug(Phoenix.Ecto.CheckRepoStatus, otp_app: :ain_com)
+    plug(Phoenix.Ecto.CheckRepoStatus, otp_app: :ain_com_booking)
   end
 
   plug(Plug.RequestId)
@@ -48,8 +48,8 @@ defmodule AinComBookingWeb.Endpoint do
   )
 
   plug(Sentry.PlugContext,
-    body_scrubber: {AinComBooking.Errors.Sentry, :scrub_params},
-    remote_address_reader: {AinComBooking.Errors.Sentry, :scrubbed_remote_address}
+    body_scrubber: {AinComBookingApi.Errors.Sentry, :scrub_params},
+    remote_address_reader: {AinComBookingApi.Errors.Sentry, :scrubbed_remote_address}
   )
 
   @session_options [
@@ -58,7 +58,7 @@ defmodule AinComBookingWeb.Endpoint do
     signing_salt: "/uVdH/rU"
   ]
   plug(Plug.Session, @session_options)
-  plug(Pow.Plug.Session, otp_app: :ain_com)
+  plug(Pow.Plug.Session, otp_app: :ain_com_booking)
 
   plug(Plug.MethodOverride)
   plug(Plug.Head)
@@ -76,7 +76,7 @@ defmodule AinComBookingWeb.Endpoint do
   """
   # def init(_key, config) do
   #   if config[:load_from_system_env] do
-  #     port = Application.get_env(:ain_com, __MODULE__)[:http][:port] || raise "expected the PORT environment variable to be set"
+  #     port = Application.get_env(:ain_com_booking, __MODULE__)[:http][:port] || raise "expected the PORT environment variable to be set"
   #     {:ok, Keyword.put(config, :http, [:inet6, port: port])}
   #   else
   #     {:ok, config}
@@ -85,7 +85,7 @@ defmodule AinComBookingWeb.Endpoint do
 
   # sobelow_skip ["XSS.SendResp"]
   defp ping(%{request_path: "/ping"} = conn, _opts) do
-    version = Application.get_env(:ain_com, :version)
+    version = Application.get_env(:ain_com_booking, :version)
     response = Jason.encode!(%{status: "ok", version: version})
 
     conn
@@ -99,7 +99,7 @@ defmodule AinComBookingWeb.Endpoint do
   defp canonical_host(%{request_path: "/health"} = conn, _opts), do: conn
 
   defp canonical_host(conn, _opts) do
-    opts = PlugCanonicalHost.init(canonical_host: Application.get_env(:ain_com, :canonical_host))
+    opts = PlugCanonicalHost.init(canonical_host: Application.get_env(:ain_com_booking, :canonical_host))
 
     PlugCanonicalHost.call(conn, opts)
   end
@@ -107,7 +107,7 @@ defmodule AinComBookingWeb.Endpoint do
   defp force_ssl(%{request_path: "/health"} = conn, _opts), do: conn
 
   defp force_ssl(conn, _opts) do
-    if Application.get_env(:ain_com, :force_ssl) do
+    if Application.get_env(:ain_com_booking, :force_ssl) do
       Plug.SSL.call(conn, @plug_ssl)
     else
       conn
@@ -115,13 +115,13 @@ defmodule AinComBookingWeb.Endpoint do
   end
 
   defp cors(conn, _opts) do
-    opts = Corsica.init(Application.get_env(:ain_com, Corsica))
+    opts = Corsica.init(Application.get_env(:ain_com_booking, Corsica))
 
     Corsica.call(conn, opts)
   end
 
   defp basic_auth(conn, _opts) do
-    basic_auth_config = Application.get_env(:ain_com, :basic_auth)
+    basic_auth_config = Application.get_env(:ain_com_booking, :basic_auth)
 
     if basic_auth_config[:username] do
       Plug.BasicAuth.basic_auth(conn, basic_auth_config)

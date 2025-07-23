@@ -10,7 +10,7 @@ defmodule AinComBooking.Application do
       AinComBookingApi.Repo,
       {Phoenix.PubSub, [name: AinCom.PubSub, adapter: Phoenix.PubSub.PG2]},
       AinComBookingWeb.Endpoint,
-      {TelemetryUI, AinCom.TelemetryUI.config()}
+      {TelemetryUI, AinComBooking.TelemetryUI.config()}
     ]
 
     :logger.add_handler(:sentry_handler, Sentry.LoggerHandler, %{})
@@ -20,7 +20,7 @@ defmodule AinComBooking.Application do
   end
 
   def config_change(changed, _new, removed) do
-    AinComWeb.Endpoint.config_change(changed, removed)
+    AinComBookingWeb.Endpoint.config_change(changed, removed)
     :ok
   end
 end

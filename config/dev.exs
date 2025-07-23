@@ -1,6 +1,6 @@
 import Config
 
-config :ain_com, AinComWeb.Endpoint,
+config :ain_com_booking, AinComBookingWeb.Endpoint,
   code_reloader: true,
   debug_errors: true,
   check_origin: false,
@@ -17,9 +17,9 @@ config :ain_com, AinComWeb.Endpoint,
     web_console_logger: true
   ]
 
-config :ain_com, AinComWeb.Plugs.Security, allow_unsafe_scripts: true
+config :ain_com_booking, AinComBookingWeb.Plugs.Security, allow_unsafe_scripts: true
 
 config :logger, :console, format: "[$level] $message\n"
 
-config :phoenix, :stacktrace_depth, 20
 config :phoenix, :plug_init_mode, :runtime
+config :phoenix, :stacktrace_depth, 20

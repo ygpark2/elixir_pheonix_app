@@ -1,6 +1,7 @@
 # App artifacts
 /_build
 /db
+/data
 /deps
 /*.ez
 /cover
@@ -11,6 +12,10 @@ erl_crash.dump
 
 # Generated on crash by NPM
 npm-debug.log
+
+# IDE
+.idea/
+ain_com.iml
 
 # Static artifacts
 /assets/node_modules

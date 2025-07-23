@@ -3,7 +3,7 @@ defmodule AinCom.Mixfile do
 
   def project do
     [
-      app: :ain_com,
+      app: :ain_com_booking,
       version: "0.0.1",
       erlang: "~> 27.3",
       elixir: "~> 1.18",
@@ -22,7 +22,7 @@ defmodule AinCom.Mixfile do
 
   def application do
     [
-      mod: {AinCom.Application, []},
+      mod: {AinComBooking.Application, []},
       extra_applications: [:logger, :runtime_tools]
     ]
   end
@@ -62,6 +62,7 @@ defmodule AinCom.Mixfile do
       {:phoenix_ecto, "~> 4.6.3"},
       {:phoenix_live_reload, "~> 1.5", only: :dev},
       {:jason, "~> 1.4"},
+      {:phoenix_swagger, "~> 0.8"},   # Swagger 문서
 
       # GraphQL
       {:absinthe, "~> 1.7"},
@@ -70,8 +71,11 @@ defmodule AinCom.Mixfile do
       {:dataloader, "~> 2.0.2"},
       {:absinthe_error_payload, "~> 1.2"},
 
+      # Scheduller
+      {:oban, "~> 2.19.4"},            # 백그라운드 작업
+
       # Auth
-      {:pow, "~> 1.0.39"},
+      {:guardian, "~> 2.3.2"},
 
       # Database
       {:ecto_sql, "~> 3.12"},
@@ -128,7 +132,7 @@ defmodule AinCom.Mixfile do
   defp releases do
     [
       ain_com: [
-        version: {:from_app, :ain_com},
+        version: {:from_app, :ain_com_booking},
         applications: [ain_com: :permanent],
         include_executables_for: [:unix],
         steps: [:assemble, :tar]
