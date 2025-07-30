@@ -1,11 +1,12 @@
-defmodule AinComBookingWeb.Controllers.SlotController do
+defmodule AinComBookingApi.Controllers.SlotController do
   use Phoenix.Controller
+  use PhoenixSwagger
 
   import AinComBookingWeb.Errors
   import Ecto.Query
 
-  alias AinComBookingApi.Bookings.Slot
-  alias AinComBookingApi.Repo
+  alias AinComBooking.Bookings.Slot
+  alias AinComBooking.Repo
 
   def index(conn, %{"service_id" => _service_id, "from" => from_str, "to" => to_str}) do
     {:ok, from_date} = Date.from_iso8601(from_str)

@@ -103,8 +103,18 @@ push: ## Push the Docker image to the registry
 run: loadEnv ## Run the server in an IEx shell
 	iex -S mix phx.server
 
-.PHONY: run_db_setup
-run_db_setup: loadEnv ## Run ecto db setup
+.PHONY: run_migration
+run_migration: loadEnv ## Run ecto db setup
+	mix ecto.gen.migration $(NAME)
+
+.PHONY: run_db_reset
+run_db_reset: loadEnv ## Run ecto db setup
+	mix ecto.drop
+	mix ecto.create
+	mix ecto.migrate
+
+.PHONY: run_init_db
+run_init_db: loadEnv ## Run ecto db setup
 	mix ecto.setup
 	mix ecto.migrate
 

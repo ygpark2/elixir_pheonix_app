@@ -1,7 +1,7 @@
-defmodule AinComBookingApi.Bookings.SlotGenerator do
+defmodule AinComBooking.Bookings.SlotGenerator do
   @moduledoc false
-  alias AinComBookingApi.Bookings.Slot
-  alias AinComBookingApi.Repo
+  alias AinComBooking.Bookings.Slot
+  alias AinComBooking.Repo
 
   # minutes
   @slot_duration 30

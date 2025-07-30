@@ -8,6 +8,7 @@ defmodule AinCom.Mixfile do
       erlang: "~> 27.3",
       elixir: "~> 1.18",
       elixirc_paths: elixirc_paths(Mix.env()),
+      compilers: Mix.compilers() ++ [:phoenix_swagger],
       test_paths: ["test"],
       test_pattern: "**/*_test.exs",
       test_coverage: [tool: ExCoveralls],
@@ -44,8 +45,10 @@ defmodule AinCom.Mixfile do
 
   defp deps do
     [
+      {:bcrypt_elixir, "~> 3.0"},
       # Assets bundling
       {:esbuild, "~> 0.9", runtime: Mix.env() == :dev},
+      {:dotenv, "~> 3.1", only: [:dev, :test]},
 
       # HTTP Client
       {:hackney, "~> 1.23"},
@@ -58,28 +61,42 @@ defmodule AinCom.Mixfile do
       # Phoenix
       {:phoenix, "~> 1.7"},
       {:phoenix_html, "~> 4.2"},
-      {:phoenix_live_view, "~> 1.0"},
+      {:phoenix_live_view, "~> 1.0.17"},
       {:phoenix_ecto, "~> 4.6.3"},
       {:phoenix_live_reload, "~> 1.5", only: :dev},
       {:jason, "~> 1.4"},
-      {:phoenix_swagger, "~> 0.8"},   # Swagger 문서
+
+      # Swagger 문서
+      {:phoenix_swagger, "~> 0.8"},
+      {:ex_json_schema, "~> 0.7"},
+
+      # Dashboard
+      # {:fluxon, "~> 1.1.0", repo: :fluxon},
+      {:phoenix_live_dashboard, "~> 0.7"},
 
       # GraphQL
       {:absinthe, "~> 1.7"},
       {:absinthe_security, "~> 0.1"},
       {:absinthe_plug, "~> 1.5"},
-      {:dataloader, "~> 2.0.2"},
+      {:dataloader, "~> 2.0"},
       {:absinthe_error_payload, "~> 1.2"},
 
       # Scheduller
-      {:oban, "~> 2.19.4"},            # 백그라운드 작업
+      # 백그라운드 작업
+      {:oban, "~> 2.19"},
+
+      # Email
+      {:swoosh, "~> 1.19"},
+      # SMTP가 아닌 경우 필요
+      {:finch, "~> 0.20"},
 
       # Auth
-      {:guardian, "~> 2.3.2"},
+      {:guardian, "~> 2.3"},
 
       # Database
       {:ecto_sql, "~> 3.12"},
       {:postgrex, "~> 0.20"},
+      {:ecto_psql_extras, "~> 0.6"},
 
       # Database check
       {:excellent_migrations, "~> 0.1", only: [:dev, :test], runtime: false},
@@ -124,16 +141,16 @@ defmodule AinCom.Mixfile do
 
   defp dialyzer do
     [
-      plt_file: {:no_warn, "priv/plts/ain_com.plt"},
+      plt_file: {:no_warn, "priv/plts/ain_com_booking.plt"},
       plt_add_apps: [:mix, :ex_unit]
     ]
   end
 
   defp releases do
     [
-      ain_com: [
+      ain_com_booking: [
         version: {:from_app, :ain_com_booking},
-        applications: [ain_com: :permanent],
+        # applications: [ain_com_booking: :permanent],
         include_executables_for: [:unix],
         steps: [:assemble, :tar]
       ]

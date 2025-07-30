@@ -1,0 +1,421 @@
+{
+  "info": {
+    "version": "1.0",
+    "title": "AinComBooking API"
+  },
+  "definitions": {
+    "Booking": {
+      "description": "Represents a booking record",
+      "example": {
+        "customer_name": "John Doe",
+        "email": "john@example.com",
+        "id": "12c9be95-2c09-4cc2-9a24-6c42f8fae54d",
+        "phone": "010-0000-0000",
+        "slot_id": "27d9be95-2c09-4cc2-9a24-6c42f8fae54d",
+        "status": "confirmed"
+      },
+      "properties": {
+        "customer_name": {
+          "type": "string"
+        },
+        "email": {
+          "type": "string"
+        },
+        "id": {
+          "description": "Booking ID",
+          "type": "string"
+        },
+        "phone": {
+          "type": "string"
+        },
+        "slot_id": {
+          "description": "Slot ID",
+          "type": "string"
+        },
+        "status": {
+          "type": "string"
+        }
+      },
+      "title": "Booking",
+      "type": "object"
+    },
+    "SignupRequest": {
+      "description": "Parameters to register a new user",
+      "example": {
+        "email": "user@example.com",
+        "password": "password123"
+      },
+      "properties": {
+        "email": {
+          "description": "User email",
+          "type": "string"
+        },
+        "password": {
+          "description": "User password",
+          "type": "string"
+        }
+      },
+      "required": [
+        "email",
+        "password"
+      ],
+      "title": "SignupRequest",
+      "type": "object"
+    },
+    "UserResponse": {
+      "description": "Response returned after successful registration",
+      "example": {
+        "email": "user@example.com",
+        "id": "550e8400-e29b-41d4-a716-446655440000"
+      },
+      "properties": {
+        "email": {
+          "description": "User email",
+          "type": "string"
+        },
+        "id": {
+          "description": "User ID",
+          "type": "string"
+        }
+      },
+      "title": "UserResponse",
+      "type": "object"
+    },
+    "ErrorsResponse": {
+      "description": "Validation error response",
+      "example": {
+        "errors": {
+          "email": [
+            "has invalid format"
+          ],
+          "password": [
+            "too short"
+          ]
+        }
+      },
+      "properties": {
+        "errors": {
+          "description": "A map of field names to error messages",
+          "type": "object"
+        }
+      },
+      "title": "ErrorsResponse",
+      "type": "object"
+    },
+    "LoginRequest": {
+      "description": "Parameters to authenticate a user",
+      "example": {
+        "email": "user@example.com",
+        "password": "password123"
+      },
+      "properties": {
+        "email": {
+          "description": "User email",
+          "type": "string"
+        },
+        "password": {
+          "description": "User password",
+          "type": "string"
+        }
+      },
+      "required": [
+        "email",
+        "password"
+      ],
+      "title": "LoginRequest",
+      "type": "object"
+    },
+    "TokenResponse": {
+      "description": "Response containing a JWT access token",
+      "example": {
+        "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+      },
+      "properties": {
+        "access_token": {
+          "description": "Access token",
+          "type": "string"
+        }
+      },
+      "title": "TokenResponse",
+      "type": "object"
+    },
+    "BookingRequest": {
+      "description": "Payload for creating a booking",
+      "example": {
+        "customer_name": "John Doe",
+        "email": "john@example.com",
+        "phone": "010-0000-0000",
+        "slot_id": "27d9be95-2c09-4cc2-9a24-6c42f8fae54d"
+      },
+      "properties": {
+        "customer_name": {
+          "description": "Customer name",
+          "type": "string"
+        },
+        "email": {
+          "description": "Email",
+          "type": "string"
+        },
+        "phone": {
+          "description": "Phone",
+          "type": "string"
+        },
+        "slot_id": {
+          "description": "Slot ID",
+          "type": "string"
+        }
+      },
+      "required": [
+        "phone",
+        "email",
+        "customer_name",
+        "slot_id"
+      ],
+      "title": "BookingRequest",
+      "type": "object"
+    }
+  },
+  "tags": [
+    {
+      "name": "Users",
+      "description": "Operations about users"
+    },
+    {
+      "name": "Bookings",
+      "description": "Booking management"
+    }
+  ],
+  "basePath": "/api",
+  "paths": {
+    "/auth/login": {
+      "post": {
+        "consumes": [
+          "application/json"
+        ],
+        "description": "Generates a JWT access token for valid credentials",
+        "operationId": "AinComBookingApi.Controllers.AuthController.login",
+        "parameters": [
+          {
+            "description": "Login credentials",
+            "in": "body",
+            "name": "credentials",
+            "required": false,
+            "schema": {
+              "$ref": "#/definitions/LoginRequest"
+            }
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Authenticated",
+            "schema": {
+              "$ref": "#/definitions/TokenResponse"
+            }
+          },
+          "401": {
+            "description": "Invalid credentials"
+          }
+        },
+        "summary": "Authenticate user",
+        "tags": [
+          "Auth"
+        ]
+      }
+    },
+    "/auth/signup": {
+      "post": {
+        "consumes": [
+          "application/json"
+        ],
+        "description": "Registers a user with email and password",
+        "operationId": "AinComBookingApi.Controllers.AuthController.signup",
+        "parameters": [
+          {
+            "description": "User signup details",
+            "in": "body",
+            "name": "user",
+            "required": false,
+            "schema": {
+              "$ref": "#/definitions/SignupRequest"
+            }
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "201": {
+            "description": "User created",
+            "schema": {
+              "$ref": "#/definitions/UserResponse"
+            }
+          },
+          "422": {
+            "description": "Validation errors",
+            "schema": {
+              "$ref": "#/definitions/ErrorsResponse"
+            }
+          }
+        },
+        "summary": "Register a new user",
+        "tags": [
+          "Auth"
+        ]
+      }
+    },
+    "/bookings": {
+      "get": {
+        "description": "",
+        "operationId": "AinComBookingApi.Controllers.BookingController.index",
+        "parameters": [
+          {
+            "description": "JWT access token",
+            "in": "header",
+            "name": "Authorization",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "description": "Device Unique Token",
+            "in": "header",
+            "name": "device_token",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "description": "The property to sort by",
+            "in": "query",
+            "name": "sort_by",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "default": "asc",
+            "description": "The sort direction",
+            "enum": [
+              "asc",
+              "desc"
+            ],
+            "in": "query",
+            "name": "sort_direction",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "description": "The company id",
+            "in": "string",
+            "name": "company_id",
+            "required": false,
+            "type": "query"
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {},
+        "summary": "",
+        "tags": [
+          "Booking"
+        ]
+      },
+      "post": {
+        "consumes": [
+          "application/json"
+        ],
+        "description": "Create a booking for a given slot",
+        "operationId": "AinComBookingApi.Controllers.BookingController.create",
+        "parameters": [
+          {
+            "description": "JWT access token",
+            "in": "header",
+            "name": "Authorization",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "description": "Device Unique Token",
+            "in": "header",
+            "name": "device_token",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "description": "Booking attributes",
+            "in": "body",
+            "name": "booking",
+            "required": false,
+            "schema": {
+              "$ref": "#/definitions/BookingRequest"
+            }
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "201": {
+            "description": "Booking created",
+            "schema": {
+              "$ref": "#/definitions/Booking"
+            }
+          },
+          "409": {
+            "description": "Slot already taken or unavailable"
+          }
+        },
+        "summary": "Create booking",
+        "tags": [
+          "Booking"
+        ]
+      }
+    },
+    "/bookings/{id}": {
+      "delete": {
+        "description": "",
+        "operationId": "AinComBookingApi.Controllers.BookingController.delete",
+        "parameters": [
+          {
+            "description": "JWT access token",
+            "in": "header",
+            "name": "Authorization",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "description": "Device Unique Token",
+            "in": "header",
+            "name": "device_token",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "description": "Booking ID",
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "204": {
+            "description": "Booking deleted"
+          },
+          "404": {
+            "description": "Booking not found"
+          }
+        },
+        "summary": "Delete booking",
+        "tags": [
+          "Booking"
+        ]
+      }
+    }
+  },
+  "swagger": "2.0"
+}

@@ -58,7 +58,6 @@ defmodule AinComBookingWeb.Endpoint do
     signing_salt: "/uVdH/rU"
   ]
   plug(Plug.Session, @session_options)
-  plug(Pow.Plug.Session, otp_app: :ain_com_booking)
 
   plug(Plug.MethodOverride)
   plug(Plug.Head)
@@ -67,6 +66,12 @@ defmodule AinComBookingWeb.Endpoint do
   plug(AinComBookingGraphQL.Router)
   plug(:halt_if_sent)
   plug(AinComBookingWeb.Router)
+
+  """
+  if Mix.env() == :dev do
+    plug Swoosh.MailboxPreview
+  end
+  """
 
   @doc """
   Callback invoked for dynamically configuring the endpoint.

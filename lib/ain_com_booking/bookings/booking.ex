@@ -1,10 +1,10 @@
-defmodule AinComBookingApi.Bookings.Booking do
+defmodule AinComBooking.Bookings.Booking do
   @moduledoc false
   use Ecto.Schema
 
   import Ecto.Changeset
 
-  alias AinComBookingApi.Bookings.Slot
+  alias AinComBooking.Bookings.Slot
 
   @primary_key {:id, :binary_id, autogenerate: true}
   schema "bookings" do

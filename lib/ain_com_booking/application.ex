@@ -7,8 +7,8 @@ defmodule AinComBooking.Application do
 
   def start(_type, _args) do
     children = [
-      AinComBookingApi.Repo,
-      {Phoenix.PubSub, [name: AinCom.PubSub, adapter: Phoenix.PubSub.PG2]},
+      AinComBooking.Repo,
+      {Phoenix.PubSub, [name: AinComBooking.PubSub, adapter: Phoenix.PubSub.PG2]},
       AinComBookingWeb.Endpoint,
       {TelemetryUI, AinComBooking.TelemetryUI.config()}
     ]

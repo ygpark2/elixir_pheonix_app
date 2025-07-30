@@ -1,6 +1,6 @@
 defmodule AinCom.Factory do
   @moduledoc false
-  use ExMachina.Ecto, repo: AinCom.Repo
+  use ExMachina.Ecto, repo: AinComBooking.Repo
 
   # This is a sample factory to make sure our setup is working correctly.
   def name_factory(_) do

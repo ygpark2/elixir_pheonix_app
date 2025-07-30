@@ -8,16 +8,21 @@ defmodule AinComBooking.Config do
 
   @spec get_env(String.t(), nil | value_type()) :: config_type()
   def get_env(key, type \\ :string) do
-    value = System.get_env(key)
-
-    parse_env(value, type)
+    case System.get_env(key) do
+      nil -> nil
+      "" when type in [:uri, :string, :cors] -> nil
+      value -> parse_env(value, type)
+    end
   end
 
   @spec get_env!(String.t(), nil | value_type()) :: config_type()
   def get_env!(key, type \\ :string) do
     value = System.fetch_env!(key)
 
-    parse_env(value, type)
+    case value do
+      "" when type in [:uri, :string, :cors] -> raise ArgumentError, "#{key} must not be empty"
+      _ -> parse_env(value, type)
+    end
   end
 
   defp parse_env(value, :string), do: value

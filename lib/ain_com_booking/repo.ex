@@ -1,4 +1,4 @@
-defmodule AinComBookingApi.Repo do
+defmodule AinComBooking.Repo do
   use Ecto.Repo,
     adapter: Ecto.Adapters.Postgres,
     otp_app: :ain_com_booking

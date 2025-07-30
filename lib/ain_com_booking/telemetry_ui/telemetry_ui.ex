@@ -248,7 +248,7 @@ defmodule AinComBooking.TelemetryUI do
 
   defp backend do
     %TelemetryUI.Backend.EctoPostgres{
-      repo: AinCom.Repo,
+      repo: AinComBooking.Repo,
       pruner_threshold: [months: -1],
       pruner_interval_ms: 84_000,
       max_buffer_size: 10_000,

@@ -1,5 +1,12 @@
 import Config
 
+if Code.ensure_loaded?(Dotenv) do
+  Dotenv.load(".env.test")
+end
+
+# Only in tests, remove the complexity from the password hashing algorithm
+config :bcrypt_elixir, :log_rounds, 1
+
 defmodule TestEnvironment do
   @moduledoc false
   @database_name_suffix "_test"

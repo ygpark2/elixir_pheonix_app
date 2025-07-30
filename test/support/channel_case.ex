@@ -15,7 +15,7 @@ defmodule AinComBookingWeb.ChannelCase do
 
   use ExUnit.CaseTemplate
 
-  alias AinCom.Repo
+  alias AinComBooking.Repo
   alias AinComBookingWeb.Endpoint
   alias Ecto.Adapters.SQL.Sandbox
 

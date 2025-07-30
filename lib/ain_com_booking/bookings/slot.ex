@@ -1,4 +1,4 @@
-defmodule AinComBookingApi.Bookings.Slot do
+defmodule AinComBooking.Bookings.Slot do
   @moduledoc false
   use Ecto.Schema
 

@@ -1,10 +1,22 @@
 import AinComBooking.Config
 import Config
 
+"""
+require Logger
+
+if File.exists?(".env.#{Mix.env()}") do
+  env = Dotenv.load(".env.#{Mix.env()}")
+
+  Enum.each(env.values, fn {key, value} ->
+    System.put_env(key, value)
+  end)
+end
+"""
+
 canonical_uri = get_env("CANONICAL_URL", :uri)
 static_uri = get_env("STATIC_URL", :uri)
 
-config :ain_com_booking, AinComBookingApi.Repo,
+config :ain_com_booking, AinComBooking.Repo,
   url: get_env!("DATABASE_URL"),
   ssl: get_env("DATABASE_SSL", :boolean),
   pool_size: get_env!("DATABASE_POOL_SIZE", :integer),
@@ -43,5 +55,5 @@ config :ain_com_booking,
   ]
 
 config :sentry,
-  dsn: get_env("SENTRY_DSN"),
+  dsn: get_env("SENTRY_DSN", :string),
   environment_name: get_env("SENTRY_ENVIRONMENT_NAME")

@@ -15,7 +15,7 @@ defmodule AinComBookingWeb.ConnCase do
 
   use ExUnit.CaseTemplate
 
-  alias AinCom.Repo
+  alias AinComBooking.Repo
   alias AinComBookingWeb.Endpoint
   alias Ecto.Adapters.SQL.Sandbox
   alias Phoenix.ConnTest
@@ -43,4 +43,30 @@ defmodule AinComBookingWeb.ConnCase do
   end
 
   defp host, do: Application.get_env(:ain_com_booking, :canonical_host)
+
+  @doc """
+  Setup helper that registers and logs in users.
+
+      setup :register_and_log_in_user
+
+  It stores an updated connection and a registered user in the
+  test context.
+  """
+  def register_and_log_in_user(%{conn: conn}) do
+    user = AinComBooking.AccountsFixtures.user_fixture()
+    %{conn: log_in_user(conn, user), user: user}
+  end
+
+  @doc """
+  Logs the given `user` into the `conn`.
+
+  It returns an updated `conn`.
+  """
+  def log_in_user(conn, user) do
+    token = AinComBooking.Accounts.generate_user_session_token(user)
+
+    conn
+    |> Phoenix.ConnTest.init_test_session(%{})
+    |> Plug.Conn.put_session(:user_token, token)
+  end
 end

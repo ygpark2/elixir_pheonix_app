@@ -14,25 +14,25 @@ defmodule AinCom.DataCase do
 
   use ExUnit.CaseTemplate
 
+  alias AinComBooking.Repo
   alias Ecto.Adapters.SQL.Sandbox
   alias Ecto.Changeset
-  alias AinCom.Repo
 
   using do
     quote do
+      import AinCom.DataCase
       import Ecto
       import Ecto.Changeset
       import Ecto.Query
-      import AinCom.DataCase
 
-      alias AinCom.Repo
+      alias AinComBooking.Repo
     end
   end
 
   setup tags do
     :ok = Sandbox.checkout(Repo)
 
-    unless tags[:async] do
+    if !tags[:async] do
       Sandbox.mode(Repo, {:shared, self()})
     end
 
