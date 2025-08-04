@@ -61,7 +61,7 @@ defmodule AinCom.Mixfile do
       # Phoenix
       {:phoenix, "~> 1.7"},
       {:phoenix_html, "~> 4.2"},
-      {:phoenix_live_view, "~> 1.0.17"},
+      {:phoenix_live_view, "~> 1.1.2"},
       {:phoenix_ecto, "~> 4.6.3"},
       {:phoenix_live_reload, "~> 1.5", only: :dev},
       {:jason, "~> 1.4"},
