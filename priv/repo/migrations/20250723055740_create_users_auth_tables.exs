@@ -11,6 +11,10 @@ defmodule AinComBooking.Repo.Migrations.CreateUsersAuthTables do
       add(:hashed_password, :string, null: false)
       add(:confirmed_at, :naive_datetime)
 
+      add(:company_id, references(:users, type: :binary_id, on_delete: :delete_all), null: false)
+      add(:service_id, references(:users, type: :binary_id, on_delete: :delete_all), null: false)
+      add(:resource_id, references(:users, type: :binary_id, on_delete: :delete_all), null: false)
+
       timestamps()
     end
 

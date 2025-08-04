@@ -12,6 +12,10 @@ defmodule AinComBooking.Accounts.User do
     field(:current_password, :string, virtual: true, redact: true)
     field(:confirmed_at, :naive_datetime)
 
+    has_many(:companies, AinComBooking.Catalog.Company)
+    has_many(:services, AinComBooking.Catalog.UserService)
+    has_many(:resources, AinComBooking.Catalog.UserResource)
+
     timestamps()
   end
 

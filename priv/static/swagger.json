@@ -4,83 +4,6 @@
     "title": "AinComBooking API"
   },
   "definitions": {
-    "Booking": {
-      "description": "Represents a booking record",
-      "example": {
-        "customer_name": "John Doe",
-        "email": "john@example.com",
-        "id": "12c9be95-2c09-4cc2-9a24-6c42f8fae54d",
-        "phone": "010-0000-0000",
-        "slot_id": "27d9be95-2c09-4cc2-9a24-6c42f8fae54d",
-        "status": "confirmed"
-      },
-      "properties": {
-        "customer_name": {
-          "type": "string"
-        },
-        "email": {
-          "type": "string"
-        },
-        "id": {
-          "description": "Booking ID",
-          "type": "string"
-        },
-        "phone": {
-          "type": "string"
-        },
-        "slot_id": {
-          "description": "Slot ID",
-          "type": "string"
-        },
-        "status": {
-          "type": "string"
-        }
-      },
-      "title": "Booking",
-      "type": "object"
-    },
-    "SignupRequest": {
-      "description": "Parameters to register a new user",
-      "example": {
-        "email": "user@example.com",
-        "password": "password123"
-      },
-      "properties": {
-        "email": {
-          "description": "User email",
-          "type": "string"
-        },
-        "password": {
-          "description": "User password",
-          "type": "string"
-        }
-      },
-      "required": [
-        "email",
-        "password"
-      ],
-      "title": "SignupRequest",
-      "type": "object"
-    },
-    "UserResponse": {
-      "description": "Response returned after successful registration",
-      "example": {
-        "email": "user@example.com",
-        "id": "550e8400-e29b-41d4-a716-446655440000"
-      },
-      "properties": {
-        "email": {
-          "description": "User email",
-          "type": "string"
-        },
-        "id": {
-          "description": "User ID",
-          "type": "string"
-        }
-      },
-      "title": "UserResponse",
-      "type": "object"
-    },
     "ErrorsResponse": {
       "description": "Validation error response",
       "example": {
@@ -125,6 +48,29 @@
       "title": "LoginRequest",
       "type": "object"
     },
+    "SignupRequest": {
+      "description": "Parameters to register a new user",
+      "example": {
+        "email": "user@example.com",
+        "password": "password123"
+      },
+      "properties": {
+        "email": {
+          "description": "User email",
+          "type": "string"
+        },
+        "password": {
+          "description": "User password",
+          "type": "string"
+        }
+      },
+      "required": [
+        "email",
+        "password"
+      ],
+      "title": "SignupRequest",
+      "type": "object"
+    },
     "TokenResponse": {
       "description": "Response containing a JWT access token",
       "example": {
@@ -137,6 +83,60 @@
         }
       },
       "title": "TokenResponse",
+      "type": "object"
+    },
+    "UserResponse": {
+      "description": "Response returned after successful registration",
+      "example": {
+        "email": "user@example.com",
+        "id": "550e8400-e29b-41d4-a716-446655440000"
+      },
+      "properties": {
+        "email": {
+          "description": "User email",
+          "type": "string"
+        },
+        "id": {
+          "description": "User ID",
+          "type": "string"
+        }
+      },
+      "title": "UserResponse",
+      "type": "object"
+    },
+    "Booking": {
+      "description": "Represents a booking record",
+      "example": {
+        "customer_name": "John Doe",
+        "email": "john@example.com",
+        "id": "12c9be95-2c09-4cc2-9a24-6c42f8fae54d",
+        "phone": "010-0000-0000",
+        "slot_id": "27d9be95-2c09-4cc2-9a24-6c42f8fae54d",
+        "status": "confirmed"
+      },
+      "properties": {
+        "customer_name": {
+          "type": "string"
+        },
+        "email": {
+          "type": "string"
+        },
+        "id": {
+          "description": "Booking ID",
+          "type": "string"
+        },
+        "phone": {
+          "type": "string"
+        },
+        "slot_id": {
+          "description": "Slot ID",
+          "type": "string"
+        },
+        "status": {
+          "type": "string"
+        }
+      },
+      "title": "Booking",
       "type": "object"
     },
     "BookingRequest": {
@@ -175,17 +175,6 @@
       "type": "object"
     }
   },
-  "tags": [
-    {
-      "name": "Users",
-      "description": "Operations about users"
-    },
-    {
-      "name": "Bookings",
-      "description": "Booking management"
-    }
-  ],
-  "basePath": "/api",
   "paths": {
     "/auth/login": {
       "post": {
@@ -417,5 +406,16 @@
       }
     }
   },
-  "swagger": "2.0"
+  "swagger": "2.0",
+  "basePath": "/api",
+  "tags": [
+    {
+      "name": "Users",
+      "description": "Operations about users"
+    },
+    {
+      "name": "Bookings",
+      "description": "Booking management"
+    }
+  ]
 }
