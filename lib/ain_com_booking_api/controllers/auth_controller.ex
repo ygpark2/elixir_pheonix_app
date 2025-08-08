@@ -6,6 +6,7 @@ defmodule AinComBookingApi.Controllers.AuthController do
 
   alias AinComBooking.Accounts
   alias AinComBookingApi.Guardian
+  alias AinComBookingApi.Devices
 
   # POST /api/auth/signup
   swagger_path :signup do
@@ -39,27 +40,65 @@ defmodule AinComBookingApi.Controllers.AuthController do
   swagger_path :login do
     post("/auth/login")
     summary("Authenticate user")
-    description("Generates a JWT access token for valid credentials")
+    description("Generates a JWT access token and device token for valid credentials")
     consumes("application/json")
     produces("application/json")
 
     parameter(:credentials, :body, Schema.ref(:LoginRequest), "Login credentials")
 
     response(200, "Authenticated", Schema.ref(:TokenResponse))
+    response(201, "Authenticated (new device)", Schema.ref(:TokenResponse))
     response(401, "Invalid credentials")
   end
 
-  def login(conn, %{"email" => email, "password" => password}) do
-    case Accounts.authenticate_user(email, password) do
-      {:ok, user} ->
-        {:ok, token, _claims} = Guardian.encode_and_sign(user)
-        json(conn, %{access_token: token})
+  def login(conn, %{"email" => email, "password" => password} = params) do
+    with {:ok, user} <- Accounts.authenticate_user(email, password),
+         {:ok, access_token, _claims} <- Guardian.encode_and_sign(user) do
+      fingerprint = Map.get(params, "fingerprint") || default_fingerprint(conn)
 
-      {:error, :unauthorized} ->
+      device_info = %{
+        name: Map.get(params, "device_name", "web"),
+        os: Map.get(params, "os", "browser"),
+        version: Map.get(params, "version"),
+        user_agent: get_req_header(conn, "user-agent") |> List.first(),
+        ip: get_req_header(conn, "x-forwarded-for") |> List.first()
+      }
+
+      case Devices.create_or_get_device(user, fingerprint, device_info) do
+        {:created, raw, device} ->
+          conn
+          |> put_status(:created)
+          |> json(%{
+            access_token: access_token,
+            device_token: raw,
+            expires_in: 3600,
+            device_expires_at: device.expires_at
+          })
+
+        {:reused, _nil, device} ->
+          resp =
+            case Devices.rotate_if_expiring(device, 7) do
+              {:ok, new_raw, new_dev} ->
+                %{device_token: new_raw, device_expires_at: new_dev.expires_at}
+
+              {:skip, dev} ->
+                %{device_token: nil, device_expires_at: dev.expires_at}
+            end
+
+          json(conn, Map.merge(%{access_token: access_token, expires_in: 3600}, resp))
+      end
+    else
+      _ ->
         conn
         |> put_status(:unauthorized)
         |> json(%{error: "Invalid credentials"})
     end
+  end
+
+  defp default_fingerprint(conn) do
+    ua = get_req_header(conn, "user-agent") |> List.first() || "unknown"
+    ip = get_req_header(conn, "x-forwarded-for") |> List.first() || "ip"
+    :crypto.hash(:sha256, ua <> "|" <> ip) |> Base.encode16(case: :lower)
   end
 
   # === Schema definitions for Swagger ===
@@ -87,9 +126,17 @@ defmodule AinComBookingApi.Controllers.AuthController do
           properties do
             email(:string, "User email")
             password(:string, "User password")
+            fingerprint(:string, "Device fingerprint", required: false)
+            device_name(:string, "Device name", required: false)
+            os(:string, "Operating system", required: false)
+            version(:string, "Device version", required: false)
           end
 
-          example(%{email: "user@example.com", password: "password123"})
+          example(%{
+            email: "user@example.com",
+            password: "password123",
+            fingerprint: "abcdef123456"
+          })
         end,
       UserResponse:
         swagger_schema do
@@ -106,13 +153,21 @@ defmodule AinComBookingApi.Controllers.AuthController do
       TokenResponse:
         swagger_schema do
           title("TokenResponse")
-          description("Response containing a JWT access token")
+          description("Response containing tokens")
 
           properties do
             access_token(:string, "Access token")
+            device_token(:string, "Device token", required: false)
+            expires_in(:integer, "Access token TTL in seconds")
+            device_expires_at(:string, "ISO8601 expiry of device token")
           end
 
-          example(%{access_token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."})
+          example(%{
+            access_token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+            device_token: "86b5b3e2-34c9-43ab-9940-19c0ad19f4b2",
+            expires_in: 3600,
+            device_expires_at: "2025-08-08T00:00:00Z"
+          })
         end,
       ErrorsResponse:
         swagger_schema do

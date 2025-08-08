@@ -30,7 +30,7 @@ defmodule AinComBookingWeb.Router do
   pipeline :protected_api do
     # JWT 검증
     plug(AinComBookingApi.AuthPipeline)
-    # device_token 검증
+    # X-Device-Token 검증
     plug(AinComBookingApi.Plugs.DeviceTokenAuth)
   end
 

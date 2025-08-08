@@ -1031,7 +1031,7 @@
           {
             "description": "Device Unique Token",
             "in": "header",
-            "name": "device_token",
+            "name": "X-Device-Token",
             "required": true,
             "type": "string"
           },
@@ -1088,7 +1088,7 @@
           {
             "description": "Device Unique Token",
             "in": "header",
-            "name": "device_token",
+            "name": "X-Device-Token",
             "required": true,
             "type": "string"
           },
@@ -1137,7 +1137,7 @@
           {
             "description": "Device Unique Token",
             "in": "header",
-            "name": "device_token",
+            "name": "X-Device-Token",
             "required": true,
             "type": "string"
           },
@@ -1182,7 +1182,7 @@
           {
             "description": "Device Unique Token",
             "in": "header",
-            "name": "device_token",
+            "name": "X-Device-Token",
             "required": true,
             "type": "string"
           },
@@ -1241,7 +1241,7 @@
           {
             "description": "Device Unique Token",
             "in": "header",
-            "name": "device_token",
+            "name": "X-Device-Token",
             "required": true,
             "type": "string"
           },
@@ -1291,7 +1291,7 @@
           {
             "description": "Device Unique Token",
             "in": "header",
-            "name": "device_token",
+            "name": "X-Device-Token",
             "required": true,
             "type": "string"
           },
@@ -1340,7 +1340,7 @@
           {
             "description": "Device Unique Token",
             "in": "header",
-            "name": "device_token",
+            "name": "X-Device-Token",
             "required": true,
             "type": "string"
           },
@@ -1385,7 +1385,7 @@
           {
             "description": "Device Unique Token",
             "in": "header",
-            "name": "device_token",
+            "name": "X-Device-Token",
             "required": true,
             "type": "string"
           },
@@ -1444,7 +1444,7 @@
           {
             "description": "Device Unique Token",
             "in": "header",
-            "name": "device_token",
+            "name": "X-Device-Token",
             "required": true,
             "type": "string"
           },
@@ -1494,7 +1494,7 @@
           {
             "description": "Device Unique Token",
             "in": "header",
-            "name": "device_token",
+            "name": "X-Device-Token",
             "required": true,
             "type": "string"
           },
@@ -1543,7 +1543,7 @@
           {
             "description": "Device Unique Token",
             "in": "header",
-            "name": "device_token",
+            "name": "X-Device-Token",
             "required": true,
             "type": "string"
           },
@@ -1588,7 +1588,7 @@
           {
             "description": "Device Unique Token",
             "in": "header",
-            "name": "device_token",
+            "name": "X-Device-Token",
             "required": true,
             "type": "string"
           },
@@ -1647,7 +1647,7 @@
           {
             "description": "Device Unique Token",
             "in": "header",
-            "name": "device_token",
+            "name": "X-Device-Token",
             "required": true,
             "type": "string"
           }
@@ -1678,7 +1678,7 @@
           {
             "description": "Device Unique Token",
             "in": "header",
-            "name": "device_token",
+            "name": "X-Device-Token",
             "required": true,
             "type": "string"
           },
@@ -1727,7 +1727,7 @@
           {
             "description": "Device Unique Token",
             "in": "header",
-            "name": "device_token",
+            "name": "X-Device-Token",
             "required": true,
             "type": "string"
           },
@@ -1772,7 +1772,7 @@
           {
             "description": "Device Unique Token",
             "in": "header",
-            "name": "device_token",
+            "name": "X-Device-Token",
             "required": true,
             "type": "string"
           },
@@ -1831,7 +1831,7 @@
           {
             "description": "Device Unique Token",
             "in": "header",
-            "name": "device_token",
+            "name": "X-Device-Token",
             "required": true,
             "type": "string"
           },
@@ -1887,7 +1887,7 @@
           {
             "description": "Device Unique Token",
             "in": "header",
-            "name": "device_token",
+            "name": "X-Device-Token",
             "required": true,
             "type": "string"
           },
@@ -1936,7 +1936,7 @@
           {
             "description": "Device Unique Token",
             "in": "header",
-            "name": "device_token",
+            "name": "X-Device-Token",
             "required": true,
             "type": "string"
           },
@@ -1981,7 +1981,7 @@
           {
             "description": "Device Unique Token",
             "in": "header",
-            "name": "device_token",
+            "name": "X-Device-Token",
             "required": true,
             "type": "string"
           },
@@ -2040,7 +2040,7 @@
           {
             "description": "Device Unique Token",
             "in": "header",
-            "name": "device_token",
+            "name": "X-Device-Token",
             "required": true,
             "type": "string"
           },
@@ -2090,7 +2090,7 @@
           {
             "description": "Device Unique Token",
             "in": "header",
-            "name": "device_token",
+            "name": "X-Device-Token",
             "required": true,
             "type": "string"
           },
@@ -2139,7 +2139,7 @@
           {
             "description": "Device Unique Token",
             "in": "header",
-            "name": "device_token",
+            "name": "X-Device-Token",
             "required": true,
             "type": "string"
           },
@@ -2184,7 +2184,7 @@
           {
             "description": "Device Unique Token",
             "in": "header",
-            "name": "device_token",
+            "name": "X-Device-Token",
             "required": true,
             "type": "string"
           },
@@ -2243,7 +2243,7 @@
           {
             "description": "Device Unique Token",
             "in": "header",
-            "name": "device_token",
+            "name": "X-Device-Token",
             "required": true,
             "type": "string"
           },
@@ -2300,7 +2300,7 @@
           {
             "description": "Device Unique Token",
             "in": "header",
-            "name": "device_token",
+            "name": "X-Device-Token",
             "required": true,
             "type": "string"
           },
@@ -2349,7 +2349,7 @@
           {
             "description": "Device Unique Token",
             "in": "header",
-            "name": "device_token",
+            "name": "X-Device-Token",
             "required": true,
             "type": "string"
           },
@@ -2394,7 +2394,7 @@
           {
             "description": "Device Unique Token",
             "in": "header",
-            "name": "device_token",
+            "name": "X-Device-Token",
             "required": true,
             "type": "string"
           },
@@ -2453,7 +2453,7 @@
           {
             "description": "Device Unique Token",
             "in": "header",
-            "name": "device_token",
+            "name": "X-Device-Token",
             "required": true,
             "type": "string"
           },
@@ -2503,7 +2503,7 @@
           {
             "description": "Device Unique Token",
             "in": "header",
-            "name": "device_token",
+            "name": "X-Device-Token",
             "required": true,
             "type": "string"
           },
@@ -2552,7 +2552,7 @@
           {
             "description": "Device Unique Token",
             "in": "header",
-            "name": "device_token",
+            "name": "X-Device-Token",
             "required": true,
             "type": "string"
           },
@@ -2597,7 +2597,7 @@
           {
             "description": "Device Unique Token",
             "in": "header",
-            "name": "device_token",
+            "name": "X-Device-Token",
             "required": true,
             "type": "string"
           },
@@ -2656,7 +2656,7 @@
           {
             "description": "Device Unique Token",
             "in": "header",
-            "name": "device_token",
+            "name": "X-Device-Token",
             "required": true,
             "type": "string"
           }
@@ -2687,7 +2687,7 @@
           {
             "description": "Device Unique Token",
             "in": "header",
-            "name": "device_token",
+            "name": "X-Device-Token",
             "required": true,
             "type": "string"
           },
@@ -2736,7 +2736,7 @@
           {
             "description": "Device Unique Token",
             "in": "header",
-            "name": "device_token",
+            "name": "X-Device-Token",
             "required": true,
             "type": "string"
           },
@@ -2781,7 +2781,7 @@
           {
             "description": "Device Unique Token",
             "in": "header",
-            "name": "device_token",
+            "name": "X-Device-Token",
             "required": true,
             "type": "string"
           },
@@ -2840,7 +2840,7 @@
           {
             "description": "Device Unique Token",
             "in": "header",
-            "name": "device_token",
+            "name": "X-Device-Token",
             "required": true,
             "type": "string"
           },
@@ -2896,7 +2896,7 @@
           {
             "description": "Device Unique Token",
             "in": "header",
-            "name": "device_token",
+            "name": "X-Device-Token",
             "required": true,
             "type": "string"
           },
@@ -2945,7 +2945,7 @@
           {
             "description": "Device Unique Token",
             "in": "header",
-            "name": "device_token",
+            "name": "X-Device-Token",
             "required": true,
             "type": "string"
           },
@@ -2990,7 +2990,7 @@
           {
             "description": "Device Unique Token",
             "in": "header",
-            "name": "device_token",
+            "name": "X-Device-Token",
             "required": true,
             "type": "string"
           },

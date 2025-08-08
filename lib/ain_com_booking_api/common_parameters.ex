@@ -9,7 +9,7 @@ defmodule AinComBookingApi.CommonParameters do
   def authorization(%PathObject{} = path) do
     path
     |> parameter("Authorization", :header, :string, "JWT access token", required: true)
-    |> parameter("device_token", :header, :string, "Device Unique Token", required: true)
+    |> parameter("X-Device-Token", :header, :string, "Device Unique Token", required: true)
   end
 
   def sorting(%PathObject{} = path) do
@@ -30,7 +30,7 @@ defmodule AinComBookingApi.CommonParameters do
         deviceTokenAuth: %{
           type: "apiKey",
           in: "header",
-          name: "device_token",
+          name: "X-Device-Token",
           description: "Device Unique Token"
         }
       }
