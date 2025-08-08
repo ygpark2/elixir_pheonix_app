@@ -7,6 +7,7 @@ defmodule AinComBookingApi.Controllers.Company.CompanyController do
 
   alias AinComBooking.Catalog.Company
   alias AinComBooking.Repo
+  alias Guardian.Plug, as: GuardianPlug
 
   def swagger_paths do
     [
@@ -34,6 +35,13 @@ defmodule AinComBookingApi.Controllers.Company.CompanyController do
   end
 
   def create(conn, params) do
+    user = GuardianPlug.current_resource(conn, key: :auth)
+
+    params =
+      params
+      |> Map.put("user_id", user.id)
+      |> Map.put_new("login", generate_login(params["name"]))
+
     changeset = Company.changeset(%Company{}, params)
 
     case Repo.insert(changeset) do
@@ -47,6 +55,15 @@ defmodule AinComBookingApi.Controllers.Company.CompanyController do
         |> put_status(:unprocessable_entity)
         |> json(%{errors: Ecto.Changeset.traverse_errors(changeset, &translate_error/1)})
     end
+  end
+
+  defp generate_login(nil), do: nil
+
+  defp generate_login(name) do
+    name
+    |> String.downcase()
+    |> String.replace(~r/[^a-z0-9]+/u, "-")
+    |> String.trim("-")
   end
 
   swagger_path :update do
