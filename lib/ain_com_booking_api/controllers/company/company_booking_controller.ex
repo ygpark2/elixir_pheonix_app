@@ -104,7 +104,7 @@ defmodule AinComBookingApi.Controllers.Company.CompanyBookingController do
 
   def update(conn, %{"id" => id} = params) do
     # optional: ensure the booking exists
-    case Repo.get(Booking, id) do
+    case Repo.get(CompanyBooking, id) do
       nil ->
         conn
         |> put_status(:not_found)
@@ -139,7 +139,7 @@ defmodule AinComBookingApi.Controllers.Company.CompanyBookingController do
   end
 
   def index(conn, _params) do
-    bookings = Repo.all(Booking)
+    bookings = Repo.all(CompanyBooking)
     json(conn, bookings)
   end
 
