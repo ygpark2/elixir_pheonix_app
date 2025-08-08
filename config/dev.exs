@@ -19,7 +19,15 @@ config :ain_com_booking, AinComBookingWeb.Endpoint,
 
 config :ain_com_booking, AinComBookingWeb.Plugs.Security, allow_unsafe_scripts: true
 
-config :logger, :console, format: "[$level] $message\n"
+# 콘솔 백엔드 설정은 따로
+config :logger, :console,
+  format: "[$level] $message\n",
+  level: :info
+
+# 일반 logger 설정
+config :logger,
+  handle_otp_reports: false,
+  handle_sasl_reports: false
 
 config :phoenix, :plug_init_mode, :runtime
 config :phoenix, :stacktrace_depth, 20

@@ -22,10 +22,16 @@ defmodule AinComBookingApi.Plugs.DeviceTokenAuth do
     end
   end
 
-  defp unauthorized(conn) do
+  def unauthorized(conn) do
     conn
-    |> Phoenix.Controller.put_status(:unauthorized)
-    |> Phoenix.Controller.json(%{error: "invalid device token"})
-    |> halt()
+    |> Plug.Conn.put_status(:unauthorized)
+    |> Phoenix.Controller.json(%{error: "Unauthorized"})
   end
+
+  # defp unauthorized(conn) do
+  #   conn
+  #   |> Phoenix.Controller.put_status(:unauthorized)
+  #   |> Phoenix.Controller.json(%{error: "invalid device token"})
+  #   |> halt()
+  # end
 end

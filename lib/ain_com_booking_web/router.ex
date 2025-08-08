@@ -6,6 +6,17 @@ defmodule AinComBookingWeb.Router do
   import Phoenix.LiveDashboard.Router
   import Phoenix.LiveView.Router
 
+  alias Company.CompanyBookingController
+  alias Company.CompanyController
+  alias Company.CompanyResourceController
+  alias Company.CompanyServiceController
+  alias Company.CompanySlotController
+  alias Company.CompanyUnitController
+  alias User.UserBookingController
+  alias User.UserResourceController
+  alias User.UserServiceController
+  alias User.UserSlotController
+
   pipeline :api do
     plug(:accepts, ["json"])
 
@@ -80,10 +91,19 @@ defmodule AinComBookingWeb.Router do
     post("/auth/signup", AuthController, :signup)
     post("/auth/login", AuthController, :login)
 
-    get("/slots", SlotController, :index)
-
     pipe_through(:protected_api)
-    resources("/bookings", BookingController, only: [:create, :delete, :index])
+
+    resources("/company/companies", CompanyController, only: [:create, :update, :delete, :index])
+    resources("/company/units", CompanyUnitController, only: [:create, :update, :delete, :index])
+    resources("/company/slots", CompanySlotController, only: [:create, :update, :delete, :index])
+    resources("/company/bookings", CompanyBookingController, only: [:create, :update, :delete, :index])
+    resources("/company/services", CompanyServiceController, only: [:create, :update, :delete, :index])
+    resources("/company/resources", CompanyResourceController, only: [:create, :update, :delete, :index])
+
+    resources("/user/slots", UserSlotController, only: [:create, :update, :delete, :index])
+    resources("/user/bookings", UserBookingController, only: [:create, :update, :delete, :index])
+    resources("/user/services", UserServiceController, only: [:create, :update, :delete, :index])
+    resources("/user/resources", UserResourceController, only: [:create, :update, :delete, :index])
   end
 
   scope "/api/swagger" do
@@ -101,9 +121,17 @@ defmodule AinComBookingWeb.Router do
         title: "AinComBooking API"
       },
       basePath: "/api",
+      consumes: ["application/json"],
+      produces: ["application/json"],
       tags: [
-        %{name: "Users", description: "Operations about users"},
-        %{name: "Bookings", description: "Booking management"}
+        %{
+          name: "Company",
+          description: "Company-related endpoints"
+        },
+        %{
+          name: "User",
+          description: "User-related endpoints"
+        }
       ]
     }
   end

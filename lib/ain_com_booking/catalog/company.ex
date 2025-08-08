@@ -2,6 +2,8 @@ defmodule AinComBooking.Catalog.Company do
   @moduledoc false
   use Ecto.Schema
 
+  import Ecto.Changeset
+
   @primary_key {:id, :binary_id, autogenerate: true}
   schema "companies" do
     field(:login, :string)
@@ -32,5 +34,34 @@ defmodule AinComBooking.Catalog.Company do
     has_many(:resources, AinComBooking.Catalog.CompanyResource)
 
     timestamps()
+  end
+
+  @doc false
+  def changeset(company, attrs) do
+    company
+    |> cast(attrs, [
+      :login,
+      :name,
+      :description_html,
+      :description_text,
+      :address1,
+      :address2,
+      :city,
+      :country_id,
+      :latitude,
+      :longitude,
+      :email,
+      :phone,
+      :web,
+      :logo,
+      :timezone,
+      :show_in_client_timezone,
+      :timeframe,
+      :timeline_type,
+      :allow_event_day_break,
+      :allow_event_breaktime_break,
+      :user_id
+    ])
+    |> validate_required([:name, :login, :user_id])
   end
 end

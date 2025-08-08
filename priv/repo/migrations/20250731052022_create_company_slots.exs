@@ -10,9 +10,12 @@ defmodule AinComBooking.Repo.Migrations.CreateCompanySlots do
       add(:end_time, :utc_datetime, null: false)
       add(:status, :string, null: false, default: "available")
 
-      add(:resource_id, references(:resources, type: :binary_id, on_delete: :delete_all), null: false)
+      add(:resource_id, references(:company_resources, type: :binary_id, on_delete: :delete_all), null: false)
+      add(:service_id, references(:company_services, type: :binary_id, on_delete: :delete_all), null: false)
 
       timestamps()
     end
+
+    create(index(:company_slots, [:resource_id, :service_id]))
   end
 end

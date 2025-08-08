@@ -1,9 +1,9 @@
-defmodule AinComBooking.Repo.Migrations.CreateUserServices do
+defmodule AinComBooking.Repo.Migrations.CreateCompanyServices do
   @moduledoc false
   use Ecto.Migration
 
   def change do
-    create table(:services, primary_key: false) do
+    create table(:company_services, primary_key: false) do
       add(:id, :binary_id, primary_key: true)
       add(:name, :string)
       add(:description_html, :text)
@@ -19,9 +19,11 @@ defmodule AinComBooking.Repo.Migrations.CreateUserServices do
       add(:price, :decimal)
       add(:currency, :string)
 
-      add(:user_id, references(:companies, type: :binary_id, on_delete: :delete_all))
+      add(:company_id, references(:companies, type: :binary_id, on_delete: :delete_all), null: false)
 
       timestamps()
     end
+
+    create(index(:company_services, [:company_id]))
   end
 end

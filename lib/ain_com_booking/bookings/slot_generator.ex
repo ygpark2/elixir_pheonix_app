@@ -1,6 +1,7 @@
 defmodule AinComBooking.Bookings.SlotGenerator do
   @moduledoc false
-  alias AinComBooking.Bookings.Slot
+  alias AinComBooking.Bookings.CompanySlot
+  alias AinComBooking.Bookings.UserSlot
   alias AinComBooking.Repo
 
   # minutes
@@ -9,12 +10,22 @@ defmodule AinComBooking.Bookings.SlotGenerator do
   @slot_gap 10
   @tz "Asia/Seoul"
 
-  def generate_slots(%{from: from_date, to: to_date, work_days: work_days, work_hours: %{start: start_time, end: end_time}, holidays: holidays}) do
+  def generate_slots(%{
+        from: from_date,
+        to: to_date,
+        work_days: work_days,
+        work_hours: %{start: start_time, end: end_time},
+        holidays: holidays,
+        slot_type: slot_type,
+        extra_fields: extra_fields
+      }) do
+    module = slot_module(slot_type)
+
     from_date
     |> Date.range(to_date)
     |> Enum.flat_map(fn date ->
       if Date.day_of_week(date) in work_days and date not in holidays do
-        build_day_slots(date, start_time, end_time)
+        build_day_slots(date, start_time, end_time, module, extra_fields)
       else
         []
       end
@@ -22,7 +33,7 @@ defmodule AinComBooking.Bookings.SlotGenerator do
     |> Enum.each(&Repo.insert!/1)
   end
 
-  defp build_day_slots(date, start_t, end_t) do
+  defp build_day_slots(date, start_t, end_t, module, extra_fields) do
     start_dt = DateTime.new!(date, start_t, @tz)
     end_dt = DateTime.new!(date, end_t, @tz)
 
@@ -32,15 +43,23 @@ defmodule AinComBooking.Bookings.SlotGenerator do
       next_end = DateTime.add(dt, @slot_duration * 60, :second)
 
       if DateTime.before?(next_end, end_dt) do
-        slot = %Slot{
-          start_time: dt,
-          end_time: next_end,
-          status: "available"
-        }
+        slot =
+          struct(
+            module,
+            Map.merge(extra_fields, %{
+              start_time: DateTime.to_time(dt),
+              end_time: DateTime.to_time(next_end),
+              date: DateTime.to_date(dt),
+              status: :available
+            })
+          )
 
         {slot, next_start}
       end
     end)
     |> Enum.to_list()
   end
+
+  defp slot_module(:company), do: CompanySlot
+  defp slot_module(:user), do: UserSlot
 end

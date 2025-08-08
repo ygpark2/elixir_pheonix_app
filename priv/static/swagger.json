@@ -4,6 +4,48 @@
     "title": "AinComBooking API"
   },
   "definitions": {
+    "SignupRequest": {
+      "description": "Parameters to register a new user",
+      "example": {
+        "email": "user@example.com",
+        "password": "password123"
+      },
+      "properties": {
+        "email": {
+          "description": "User email",
+          "type": "string"
+        },
+        "password": {
+          "description": "User password",
+          "type": "string"
+        }
+      },
+      "required": [
+        "email",
+        "password"
+      ],
+      "title": "SignupRequest",
+      "type": "object"
+    },
+    "UserResponse": {
+      "description": "Response returned after successful registration",
+      "example": {
+        "email": "user@example.com",
+        "id": "550e8400-e29b-41d4-a716-446655440000"
+      },
+      "properties": {
+        "email": {
+          "description": "User email",
+          "type": "string"
+        },
+        "id": {
+          "description": "User ID",
+          "type": "string"
+        }
+      },
+      "title": "UserResponse",
+      "type": "object"
+    },
     "ErrorsResponse": {
       "description": "Validation error response",
       "example": {
@@ -48,29 +90,6 @@
       "title": "LoginRequest",
       "type": "object"
     },
-    "SignupRequest": {
-      "description": "Parameters to register a new user",
-      "example": {
-        "email": "user@example.com",
-        "password": "password123"
-      },
-      "properties": {
-        "email": {
-          "description": "User email",
-          "type": "string"
-        },
-        "password": {
-          "description": "User password",
-          "type": "string"
-        }
-      },
-      "required": [
-        "email",
-        "password"
-      ],
-      "title": "SignupRequest",
-      "type": "object"
-    },
     "TokenResponse": {
       "description": "Response containing a JWT access token",
       "example": {
@@ -85,26 +104,293 @@
       "title": "TokenResponse",
       "type": "object"
     },
-    "UserResponse": {
-      "description": "Response returned after successful registration",
+    "Company": {
+      "description": "Represents a company",
       "example": {
-        "email": "user@example.com",
-        "id": "550e8400-e29b-41d4-a716-446655440000"
+        "address1": "123 Main St",
+        "city": "Seoul",
+        "country_id": "KR",
+        "description_text": "A leading provider of tech services",
+        "email": "contact@acme.com",
+        "id": "abc123",
+        "logo": "acme-logo.png",
+        "name": "Acme Corp",
+        "phone": "123-456-7890",
+        "timezone": "Asia/Seoul"
       },
       "properties": {
+        "address1": {
+          "type": "string"
+        },
+        "city": {
+          "type": "string"
+        },
+        "country_id": {
+          "type": "string"
+        },
+        "description_text": {
+          "type": "string"
+        },
         "email": {
-          "description": "User email",
           "type": "string"
         },
         "id": {
-          "description": "User ID",
+          "description": "Company ID",
+          "type": "string"
+        },
+        "logo": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "phone": {
+          "type": "string"
+        },
+        "timezone": {
           "type": "string"
         }
       },
-      "title": "UserResponse",
+      "title": "Company",
       "type": "object"
     },
-    "Booking": {
+    "CompanyRequest": {
+      "description": "Payload for creating/updating a company",
+      "example": {
+        "address1": "123 Main St",
+        "city": "Seoul",
+        "country_id": "KR",
+        "description_text": "A leading provider of tech services",
+        "email": "contact@acme.com",
+        "logo": "acme-logo.png",
+        "name": "Acme Corp",
+        "phone": "123-456-7890",
+        "timezone": "Asia/Seoul"
+      },
+      "properties": {
+        "address1": {
+          "description": "Company address1",
+          "type": "string"
+        },
+        "city": {
+          "description": "Company address city",
+          "type": "string"
+        },
+        "country_id": {
+          "description": "Company country code",
+          "type": "string"
+        },
+        "description_text": {
+          "description": "Company description",
+          "type": "string"
+        },
+        "email": {
+          "description": "Company email",
+          "type": "string"
+        },
+        "logo": {
+          "description": "Company logo",
+          "type": "string"
+        },
+        "name": {
+          "description": "Company name",
+          "type": "string"
+        },
+        "phone": {
+          "description": "Company phone",
+          "type": "string"
+        },
+        "timezone": {
+          "description": "Company timezone",
+          "type": "string"
+        }
+      },
+      "title": "CompanyRequest",
+      "type": "object"
+    },
+    "Unit": {
+      "description": "Represents a unit",
+      "example": {
+        "company_id": "company-001",
+        "description": "Core service unit",
+        "email": "unit@example.com",
+        "id": "unit-001",
+        "is_active": true,
+        "is_visible": true,
+        "name": "Main Unit",
+        "phone": "010-1111-2222",
+        "picture": "unit.png",
+        "picture_path": "/images/unit.png",
+        "position": 1,
+        "qty": 5
+      },
+      "properties": {
+        "company_id": {
+          "description": "Company ID",
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "email": {
+          "type": "string"
+        },
+        "id": {
+          "description": "Unit ID",
+          "type": "string"
+        },
+        "is_active": {
+          "type": "boolean"
+        },
+        "is_visible": {
+          "type": "boolean"
+        },
+        "name": {
+          "type": "string"
+        },
+        "phone": {
+          "type": "string"
+        },
+        "picture": {
+          "type": "string"
+        },
+        "picture_path": {
+          "type": "string"
+        },
+        "position": {
+          "type": "integer"
+        },
+        "qty": {
+          "type": "integer"
+        }
+      },
+      "title": "Unit",
+      "type": "object"
+    },
+    "UnitRequest": {
+      "description": "Payload for creating/updating a unit",
+      "example": {
+        "company_id": "company-001",
+        "description": "Core service unit",
+        "email": "unit@example.com",
+        "is_active": true,
+        "is_visible": true,
+        "name": "Main Unit",
+        "phone": "010-1111-2222",
+        "picture": "unit.png",
+        "picture_path": "/images/unit.png",
+        "position": 1,
+        "qty": 5
+      },
+      "properties": {
+        "company_id": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "email": {
+          "type": "string"
+        },
+        "is_active": {
+          "type": "boolean"
+        },
+        "is_visible": {
+          "type": "boolean"
+        },
+        "name": {
+          "type": "string"
+        },
+        "phone": {
+          "type": "string"
+        },
+        "picture": {
+          "type": "string"
+        },
+        "picture_path": {
+          "type": "string"
+        },
+        "position": {
+          "type": "integer"
+        },
+        "qty": {
+          "type": "integer"
+        }
+      },
+      "title": "UnitRequest",
+      "type": "object"
+    },
+    "CompanySlot": {
+      "description": "A slot for booking",
+      "example": {
+        "booked_count": 1,
+        "capacity": 4,
+        "date": "2025-08-01",
+        "end_time": "10:30:00",
+        "id": "slot123",
+        "start_time": "10:00:00",
+        "status": "available"
+      },
+      "properties": {
+        "booked_count": {
+          "type": "integer"
+        },
+        "capacity": {
+          "type": "integer"
+        },
+        "date": {
+          "type": "string"
+        },
+        "end_time": {
+          "type": "string"
+        },
+        "id": {
+          "type": "string"
+        },
+        "start_time": {
+          "type": "string"
+        },
+        "status": {
+          "type": "string"
+        }
+      },
+      "title": "CompanySlot",
+      "type": "object"
+    },
+    "CompanySlotRequest": {
+      "description": "Attributes for creating or updating a slot",
+      "example": {
+        "booked_count": 0,
+        "capacity": 4,
+        "date": "2025-08-01",
+        "end_time": "10:30:00",
+        "start_time": "10:00:00",
+        "status": "available"
+      },
+      "properties": {
+        "booked_count": {
+          "type": "integer"
+        },
+        "capacity": {
+          "type": "integer"
+        },
+        "date": {
+          "type": "string"
+        },
+        "end_time": {
+          "type": "string"
+        },
+        "start_time": {
+          "type": "string"
+        },
+        "status": {
+          "type": "string"
+        }
+      },
+      "title": "CompanySlotRequest",
+      "type": "object"
+    },
+    "CompanyBooking": {
       "description": "Represents a booking record",
       "example": {
         "customer_name": "John Doe",
@@ -122,7 +408,7 @@
           "type": "string"
         },
         "id": {
-          "description": "Booking ID",
+          "description": "CompanyBooking ID",
           "type": "string"
         },
         "phone": {
@@ -136,10 +422,10 @@
           "type": "string"
         }
       },
-      "title": "Booking",
+      "title": "CompanyBooking",
       "type": "object"
     },
-    "BookingRequest": {
+    "CompanyBookingRequest": {
       "description": "Payload for creating a booking",
       "example": {
         "customer_name": "John Doe",
@@ -165,16 +451,491 @@
           "type": "string"
         }
       },
+      "title": "CompanyBookingRequest",
+      "type": "object"
+    },
+    "CompanyService": {
+      "description": "A company service",
+      "example": {
+        "currency": "USD",
+        "description_text": "30-min consultation",
+        "duration": 30,
+        "id": "xyz789",
+        "is_active": true,
+        "is_public": true,
+        "name": "Consulting",
+        "price": 49.99
+      },
+      "properties": {
+        "currency": {
+          "type": "string"
+        },
+        "description_text": {
+          "type": "string"
+        },
+        "duration": {
+          "type": "integer"
+        },
+        "id": {
+          "type": "string"
+        },
+        "is_active": {
+          "type": "boolean"
+        },
+        "is_public": {
+          "type": "boolean"
+        },
+        "name": {
+          "type": "string"
+        },
+        "price": {
+          "type": "number"
+        }
+      },
+      "title": "CompanyService",
+      "type": "object"
+    },
+    "CompanyServiceRequest": {
+      "description": "Attributes for creating/updating a service",
+      "example": {
+        "currency": "USD",
+        "description_text": "30-min consultation",
+        "duration": 30,
+        "is_active": true,
+        "is_public": true,
+        "name": "Consulting",
+        "price": 49.99
+      },
+      "properties": {
+        "currency": {
+          "description": "Currency",
+          "type": "string"
+        },
+        "description_text": {
+          "description": "Description",
+          "type": "string"
+        },
+        "duration": {
+          "description": "Duration in minutes",
+          "type": "integer"
+        },
+        "is_active": {
+          "type": "boolean"
+        },
+        "is_public": {
+          "type": "boolean"
+        },
+        "name": {
+          "description": "Service name",
+          "type": "string"
+        },
+        "price": {
+          "description": "Price",
+          "type": "number"
+        }
+      },
+      "title": "CompanyServiceRequest",
+      "type": "object"
+    },
+    "CompanyResource": {
+      "description": "Represents a company resource",
+      "example": {
+        "company_id": "comp123",
+        "description": "High quality projector",
+        "id": "res123",
+        "location": "Room 101",
+        "name": "Projector",
+        "type": "equipment",
+        "user_id": "user123"
+      },
+      "properties": {
+        "company_id": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "id": {
+          "description": "Resource ID",
+          "type": "string"
+        },
+        "location": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "type": {
+          "type": "string"
+        },
+        "user_id": {
+          "type": "string"
+        }
+      },
+      "title": "CompanyResource",
+      "type": "object"
+    },
+    "CompanyResourceRequest": {
+      "description": "Payload for creating/updating a resource",
+      "example": {
+        "company_id": "comp123",
+        "description": "High quality projector",
+        "location": "Room 101",
+        "name": "Projector",
+        "type": "equipment",
+        "user_id": "user123"
+      },
+      "properties": {
+        "company_id": {
+          "description": "Company ID",
+          "type": "string"
+        },
+        "description": {
+          "description": "Description",
+          "type": "string"
+        },
+        "location": {
+          "description": "Location",
+          "type": "string"
+        },
+        "name": {
+          "description": "Resource name",
+          "type": "string"
+        },
+        "type": {
+          "description": "Resource type",
+          "type": "string"
+        },
+        "user_id": {
+          "description": "User ID",
+          "type": "string"
+        }
+      },
       "required": [
-        "phone",
-        "email",
-        "customer_name",
-        "slot_id"
+        "name",
+        "type",
+        "company_id"
       ],
-      "title": "BookingRequest",
+      "title": "CompanyResourceRequest",
+      "type": "object"
+    },
+    "UserSlot": {
+      "description": "A slot for user booking",
+      "example": {
+        "booked_count": 1,
+        "capacity": 3,
+        "date": "2025-08-01",
+        "end_time": "09:30:00",
+        "id": "uslot123",
+        "start_time": "09:00:00",
+        "status": "available"
+      },
+      "properties": {
+        "booked_count": {
+          "type": "integer"
+        },
+        "capacity": {
+          "type": "integer"
+        },
+        "date": {
+          "type": "string"
+        },
+        "end_time": {
+          "type": "string"
+        },
+        "id": {
+          "type": "string"
+        },
+        "start_time": {
+          "type": "string"
+        },
+        "status": {
+          "type": "string"
+        }
+      },
+      "title": "UserSlot",
+      "type": "object"
+    },
+    "UserSlotRequest": {
+      "description": "Attributes for creating or updating a user slot",
+      "example": {
+        "booked_count": 0,
+        "capacity": 3,
+        "date": "2025-08-01",
+        "end_time": "09:30:00",
+        "start_time": "09:00:00",
+        "status": "available"
+      },
+      "properties": {
+        "booked_count": {
+          "type": "integer"
+        },
+        "capacity": {
+          "type": "integer"
+        },
+        "date": {
+          "type": "string"
+        },
+        "end_time": {
+          "type": "string"
+        },
+        "start_time": {
+          "type": "string"
+        },
+        "status": {
+          "type": "string"
+        }
+      },
+      "title": "UserSlotRequest",
+      "type": "object"
+    },
+    "UserBooking": {
+      "description": "Represents a user booking record",
+      "example": {
+        "customer_name": "John Doe",
+        "email": "john@example.com",
+        "id": "12c9be95-2c09-4cc2-9a24-6c42f8fae54d",
+        "phone": "010-0000-0000",
+        "slot_id": "27d9be95-2c09-4cc2-9a24-6c42f8fae54d",
+        "status": "confirmed"
+      },
+      "properties": {
+        "customer_name": {
+          "type": "string"
+        },
+        "email": {
+          "type": "string"
+        },
+        "id": {
+          "description": "UserBooking ID",
+          "type": "string"
+        },
+        "phone": {
+          "type": "string"
+        },
+        "slot_id": {
+          "description": "Slot ID",
+          "type": "string"
+        },
+        "status": {
+          "type": "string"
+        }
+      },
+      "title": "UserBooking",
+      "type": "object"
+    },
+    "UserBookingRequest": {
+      "description": "Payload for creating a booking",
+      "example": {
+        "customer_name": "John Doe",
+        "email": "john@example.com",
+        "phone": "010-0000-0000",
+        "slot_id": "27d9be95-2c09-4cc2-9a24-6c42f8fae54d"
+      },
+      "properties": {
+        "customer_name": {
+          "description": "Customer name",
+          "type": "string"
+        },
+        "email": {
+          "description": "Email",
+          "type": "string"
+        },
+        "phone": {
+          "description": "Phone",
+          "type": "string"
+        },
+        "slot_id": {
+          "description": "Slot ID",
+          "type": "string"
+        }
+      },
+      "title": "UserBookingRequest",
+      "type": "object"
+    },
+    "UserService": {
+      "description": "A user service",
+      "example": {
+        "currency": "USD",
+        "description_text": "30-min consultation",
+        "duration": 30,
+        "id": "xyz789",
+        "is_active": true,
+        "is_public": true,
+        "name": "Consulting",
+        "price": 49.99
+      },
+      "properties": {
+        "currency": {
+          "type": "string"
+        },
+        "description_text": {
+          "type": "string"
+        },
+        "duration": {
+          "type": "integer"
+        },
+        "id": {
+          "type": "string"
+        },
+        "is_active": {
+          "type": "boolean"
+        },
+        "is_public": {
+          "type": "boolean"
+        },
+        "name": {
+          "type": "string"
+        },
+        "price": {
+          "type": "number"
+        }
+      },
+      "title": "UserService",
+      "type": "object"
+    },
+    "UserServiceRequest": {
+      "description": "Attributes for creating/updating a service",
+      "example": {
+        "currency": "USD",
+        "description_text": "30-min consultation",
+        "duration": 30,
+        "is_active": true,
+        "is_public": true,
+        "name": "Consulting",
+        "price": 49.99
+      },
+      "properties": {
+        "currency": {
+          "description": "Currency",
+          "type": "string"
+        },
+        "description_text": {
+          "description": "Description",
+          "type": "string"
+        },
+        "duration": {
+          "description": "Duration in minutes",
+          "type": "integer"
+        },
+        "is_active": {
+          "type": "boolean"
+        },
+        "is_public": {
+          "type": "boolean"
+        },
+        "name": {
+          "description": "Service name",
+          "type": "string"
+        },
+        "price": {
+          "description": "Price",
+          "type": "number"
+        }
+      },
+      "title": "UserServiceRequest",
+      "type": "object"
+    },
+    "UserResource": {
+      "description": "Represents a company resource",
+      "example": {
+        "company_id": "comp123",
+        "description": "High quality projector",
+        "id": "res123",
+        "location": "Room 101",
+        "name": "Projector",
+        "type": "equipment",
+        "user_id": "user123"
+      },
+      "properties": {
+        "company_id": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "id": {
+          "description": "Resource ID",
+          "type": "string"
+        },
+        "location": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "type": {
+          "type": "string"
+        },
+        "user_id": {
+          "type": "string"
+        }
+      },
+      "title": "UserResource",
+      "type": "object"
+    },
+    "UserResourceRequest": {
+      "description": "Payload for creating/updating a resource",
+      "example": {
+        "company_id": "comp123",
+        "description": "High quality projector",
+        "location": "Room 101",
+        "name": "Projector",
+        "type": "equipment",
+        "user_id": "user123"
+      },
+      "properties": {
+        "company_id": {
+          "description": "Company ID",
+          "type": "string"
+        },
+        "description": {
+          "description": "Description",
+          "type": "string"
+        },
+        "location": {
+          "description": "Location",
+          "type": "string"
+        },
+        "name": {
+          "description": "Resource name",
+          "type": "string"
+        },
+        "type": {
+          "description": "Resource type",
+          "type": "string"
+        },
+        "user_id": {
+          "description": "User ID",
+          "type": "string"
+        }
+      },
+      "required": [
+        "name",
+        "type",
+        "company_id"
+      ],
+      "title": "UserResourceRequest",
       "type": "object"
     }
   },
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "tags": [
+    {
+      "name": "Company",
+      "description": "Company-related endpoints"
+    },
+    {
+      "name": "User",
+      "description": "User-related endpoints"
+    }
+  ],
+  "basePath": "/api",
   "paths": {
     "/auth/login": {
       "post": {
@@ -255,10 +1016,10 @@
         ]
       }
     },
-    "/bookings": {
+    "/company/bookings": {
       "get": {
         "description": "",
-        "operationId": "AinComBookingApi.Controllers.BookingController.index",
+        "operationId": "AinComBookingApi.Controllers.Company.CompanyBookingController.index",
         "parameters": [
           {
             "description": "JWT access token",
@@ -307,7 +1068,7 @@
         "responses": {},
         "summary": "",
         "tags": [
-          "Booking"
+          "Company / Booking"
         ]
       },
       "post": {
@@ -315,7 +1076,1219 @@
           "application/json"
         ],
         "description": "Create a booking for a given slot",
-        "operationId": "AinComBookingApi.Controllers.BookingController.create",
+        "operationId": "AinComBookingApi.Controllers.Company.CompanyBookingController.create",
+        "parameters": [
+          {
+            "description": "JWT access token",
+            "in": "header",
+            "name": "Authorization",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "description": "Device Unique Token",
+            "in": "header",
+            "name": "device_token",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "description": "CompanyBooking attributes",
+            "in": "body",
+            "name": "booking",
+            "required": false,
+            "schema": {
+              "$ref": "#/definitions/CompanyBookingRequest"
+            }
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "201": {
+            "description": "Booking created",
+            "schema": {
+              "$ref": "#/definitions/CompanyBooking"
+            }
+          },
+          "409": {
+            "description": "Slot already taken or unavailable"
+          }
+        },
+        "summary": "Create booking",
+        "tags": [
+          "Company / Booking"
+        ]
+      }
+    },
+    "/company/bookings/{id}": {
+      "delete": {
+        "description": "",
+        "operationId": "AinComBookingApi.Controllers.Company.CompanyBookingController.delete",
+        "parameters": [
+          {
+            "description": "JWT access token",
+            "in": "header",
+            "name": "Authorization",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "description": "Device Unique Token",
+            "in": "header",
+            "name": "device_token",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "description": "CompanyBooking ID",
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "204": {
+            "description": "CompanyBooking deleted"
+          },
+          "404": {
+            "description": "CompanyBooking not found"
+          }
+        },
+        "summary": "Delete booking",
+        "tags": [
+          "Company / Booking"
+        ]
+      },
+      "patch": {
+        "consumes": [
+          "application/json"
+        ],
+        "description": "Updates the customer details or status of an existing booking",
+        "operationId": "AinComBookingApi.Controllers.Company.CompanyBookingController.update",
+        "parameters": [
+          {
+            "description": "JWT access token",
+            "in": "header",
+            "name": "Authorization",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "description": "Device Unique Token",
+            "in": "header",
+            "name": "device_token",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "description": "CompanyBooking ID",
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "description": "CompanyBooking attributes to update",
+            "in": "body",
+            "name": "booking",
+            "required": false,
+            "schema": {
+              "$ref": "#/definitions/CompanyBookingRequest"
+            }
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Booking updated",
+            "schema": {
+              "$ref": "#/definitions/CompanyBooking"
+            }
+          },
+          "404": {
+            "description": "Booking not found"
+          },
+          "409": {
+            "description": "Slot already taken or unavailable"
+          }
+        },
+        "summary": "Update a booking",
+        "tags": [
+          "Company / Booking"
+        ]
+      }
+    },
+    "/company/companies": {
+      "get": {
+        "description": "",
+        "operationId": "AinComBookingApi.Controllers.Company.CompanyController.index",
+        "parameters": [
+          {
+            "description": "JWT access token",
+            "in": "header",
+            "name": "Authorization",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "description": "Device Unique Token",
+            "in": "header",
+            "name": "device_token",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "description": "The property to sort by",
+            "in": "query",
+            "name": "sort_by",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "default": "asc",
+            "description": "The sort direction",
+            "enum": [
+              "asc",
+              "desc"
+            ],
+            "in": "query",
+            "name": "sort_direction",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {},
+        "summary": "",
+        "tags": [
+          "Company / Company"
+        ]
+      },
+      "post": {
+        "consumes": [
+          "application/json"
+        ],
+        "description": "Create a new company",
+        "operationId": "AinComBookingApi.Controllers.Company.CompanyController.create",
+        "parameters": [
+          {
+            "description": "JWT access token",
+            "in": "header",
+            "name": "Authorization",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "description": "Device Unique Token",
+            "in": "header",
+            "name": "device_token",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "description": "Company attributes",
+            "in": "body",
+            "name": "company",
+            "required": false,
+            "schema": {
+              "$ref": "#/definitions/CompanyRequest"
+            }
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "201": {
+            "description": "Company created",
+            "schema": {
+              "$ref": "#/definitions/Company"
+            }
+          },
+          "422": {
+            "description": "Invalid input"
+          }
+        },
+        "summary": "Create company",
+        "tags": [
+          "Company / Company"
+        ]
+      }
+    },
+    "/company/companies/{id}": {
+      "delete": {
+        "description": "",
+        "operationId": "AinComBookingApi.Controllers.Company.CompanyController.delete",
+        "parameters": [
+          {
+            "description": "JWT access token",
+            "in": "header",
+            "name": "Authorization",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "description": "Device Unique Token",
+            "in": "header",
+            "name": "device_token",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "description": "Company ID",
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "204": {
+            "description": "Company deleted"
+          },
+          "404": {
+            "description": "Company not found"
+          }
+        },
+        "summary": "Delete company",
+        "tags": [
+          "Company / Company"
+        ]
+      },
+      "patch": {
+        "consumes": [
+          "application/json"
+        ],
+        "description": "Updates company details",
+        "operationId": "AinComBookingApi.Controllers.Company.CompanyController.update",
+        "parameters": [
+          {
+            "description": "JWT access token",
+            "in": "header",
+            "name": "Authorization",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "description": "Device Unique Token",
+            "in": "header",
+            "name": "device_token",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "description": "Company ID",
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "description": "Company attributes to update",
+            "in": "body",
+            "name": "company",
+            "required": false,
+            "schema": {
+              "$ref": "#/definitions/CompanyRequest"
+            }
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Company updated",
+            "schema": {
+              "$ref": "#/definitions/Company"
+            }
+          },
+          "404": {
+            "description": "Company not found"
+          },
+          "422": {
+            "description": "Invalid input"
+          }
+        },
+        "summary": "Update a company",
+        "tags": [
+          "Company / Company"
+        ]
+      }
+    },
+    "/company/resources": {
+      "get": {
+        "description": "",
+        "operationId": "AinComBookingApi.Controllers.Company.CompanyResourceController.index",
+        "parameters": [
+          {
+            "description": "JWT access token",
+            "in": "header",
+            "name": "Authorization",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "description": "Device Unique Token",
+            "in": "header",
+            "name": "device_token",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "description": "The property to sort by",
+            "in": "query",
+            "name": "sort_by",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "default": "asc",
+            "description": "The sort direction",
+            "enum": [
+              "asc",
+              "desc"
+            ],
+            "in": "query",
+            "name": "sort_direction",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {},
+        "summary": "",
+        "tags": [
+          "Company / Resource"
+        ]
+      },
+      "post": {
+        "consumes": [
+          "application/json"
+        ],
+        "description": "Create a new resource for a company",
+        "operationId": "AinComBookingApi.Controllers.Company.CompanyResourceController.create",
+        "parameters": [
+          {
+            "description": "JWT access token",
+            "in": "header",
+            "name": "Authorization",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "description": "Device Unique Token",
+            "in": "header",
+            "name": "device_token",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "description": "Resource attributes",
+            "in": "body",
+            "name": "resource",
+            "required": false,
+            "schema": {
+              "$ref": "#/definitions/CompanyResourceRequest"
+            }
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "201": {
+            "description": "Resource created",
+            "schema": {
+              "$ref": "#/definitions/CompanyResource"
+            }
+          },
+          "422": {
+            "description": "Invalid input"
+          }
+        },
+        "summary": "Create company resource",
+        "tags": [
+          "Company / Resource"
+        ]
+      }
+    },
+    "/company/resources/{id}": {
+      "delete": {
+        "description": "",
+        "operationId": "AinComBookingApi.Controllers.Company.CompanyResourceController.delete",
+        "parameters": [
+          {
+            "description": "JWT access token",
+            "in": "header",
+            "name": "Authorization",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "description": "Device Unique Token",
+            "in": "header",
+            "name": "device_token",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "description": "CompanyResource ID",
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "204": {
+            "description": "CompanyResource deleted"
+          },
+          "404": {
+            "description": "CompanyResource not found"
+          }
+        },
+        "summary": "Delete resource",
+        "tags": [
+          "Company / Resource"
+        ]
+      },
+      "patch": {
+        "consumes": [
+          "application/json"
+        ],
+        "description": "Updates resource details",
+        "operationId": "AinComBookingApi.Controllers.Company.CompanyResourceController.update",
+        "parameters": [
+          {
+            "description": "JWT access token",
+            "in": "header",
+            "name": "Authorization",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "description": "Device Unique Token",
+            "in": "header",
+            "name": "device_token",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "description": "Resource ID",
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "description": "Resource attributes to update",
+            "in": "body",
+            "name": "resource",
+            "required": false,
+            "schema": {
+              "$ref": "#/definitions/CompanyResourceRequest"
+            }
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Resource updated",
+            "schema": {
+              "$ref": "#/definitions/CompanyResource"
+            }
+          },
+          "404": {
+            "description": "Resource not found"
+          },
+          "422": {
+            "description": "Invalid input"
+          }
+        },
+        "summary": "Update a company resource",
+        "tags": [
+          "Company / Resource"
+        ]
+      }
+    },
+    "/company/services": {
+      "get": {
+        "description": "",
+        "operationId": "AinComBookingApi.Controllers.Company.CompanyServiceController.index",
+        "parameters": [
+          {
+            "description": "JWT access token",
+            "in": "header",
+            "name": "Authorization",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "description": "Device Unique Token",
+            "in": "header",
+            "name": "device_token",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {},
+        "summary": "List company services",
+        "tags": [
+          "Company / Service"
+        ]
+      },
+      "post": {
+        "consumes": [
+          "application/json"
+        ],
+        "description": "Create a new company service",
+        "operationId": "AinComBookingApi.Controllers.Company.CompanyServiceController.create",
+        "parameters": [
+          {
+            "description": "JWT access token",
+            "in": "header",
+            "name": "Authorization",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "description": "Device Unique Token",
+            "in": "header",
+            "name": "device_token",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "description": "Service attributes",
+            "in": "body",
+            "name": "service",
+            "required": false,
+            "schema": {
+              "$ref": "#/definitions/CompanyServiceRequest"
+            }
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "201": {
+            "description": "Service created",
+            "schema": {
+              "$ref": "#/definitions/CompanyService"
+            }
+          },
+          "422": {
+            "description": "Invalid input"
+          }
+        },
+        "summary": "Create service",
+        "tags": [
+          "Company / Service"
+        ]
+      }
+    },
+    "/company/services/{id}": {
+      "delete": {
+        "description": "",
+        "operationId": "AinComBookingApi.Controllers.Company.CompanyServiceController.delete",
+        "parameters": [
+          {
+            "description": "JWT access token",
+            "in": "header",
+            "name": "Authorization",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "description": "Device Unique Token",
+            "in": "header",
+            "name": "device_token",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "description": "Service ID",
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "204": {
+            "description": "Service deleted"
+          },
+          "404": {
+            "description": "Service not found"
+          }
+        },
+        "summary": "Delete service",
+        "tags": [
+          "Company / Service"
+        ]
+      },
+      "patch": {
+        "consumes": [
+          "application/json"
+        ],
+        "description": "Updates an existing service",
+        "operationId": "AinComBookingApi.Controllers.Company.CompanyServiceController.update",
+        "parameters": [
+          {
+            "description": "JWT access token",
+            "in": "header",
+            "name": "Authorization",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "description": "Device Unique Token",
+            "in": "header",
+            "name": "device_token",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "description": "Service ID",
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "description": "Service attributes",
+            "in": "body",
+            "name": "service",
+            "required": false,
+            "schema": {
+              "$ref": "#/definitions/CompanyServiceRequest"
+            }
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Service updated",
+            "schema": {
+              "$ref": "#/definitions/CompanyService"
+            }
+          },
+          "404": {
+            "description": "Service not found"
+          },
+          "422": {
+            "description": "Invalid input"
+          }
+        },
+        "summary": "Update service",
+        "tags": [
+          "Company / Service"
+        ]
+      }
+    },
+    "/company/slots": {
+      "get": {
+        "description": "Fetches available slots within a date range for a service",
+        "operationId": "AinComBookingApi.Controllers.Company.CompanySlotController.index",
+        "parameters": [
+          {
+            "description": "JWT access token",
+            "in": "header",
+            "name": "Authorization",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "description": "Device Unique Token",
+            "in": "header",
+            "name": "device_token",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "description": "Service ID",
+            "in": "string",
+            "name": "service_id",
+            "required": true,
+            "type": "query"
+          },
+          {
+            "description": "Start date (YYYY-MM-DD)",
+            "in": "string",
+            "name": "from",
+            "required": true,
+            "type": "query"
+          },
+          {
+            "description": "End date (YYYY-MM-DD)",
+            "in": "string",
+            "name": "to",
+            "required": true,
+            "type": "query"
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "List of available slots"
+          }
+        },
+        "summary": "List available slots",
+        "tags": [
+          "Company / Slot"
+        ]
+      },
+      "post": {
+        "consumes": [
+          "application/json"
+        ],
+        "description": "Add a new time slot",
+        "operationId": "AinComBookingApi.Controllers.Company.CompanySlotController.create",
+        "parameters": [
+          {
+            "description": "JWT access token",
+            "in": "header",
+            "name": "Authorization",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "description": "Device Unique Token",
+            "in": "header",
+            "name": "device_token",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "description": "Slot attributes",
+            "in": "body",
+            "name": "slot",
+            "required": false,
+            "schema": {
+              "$ref": "#/definitions/CompanySlotRequest"
+            }
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "201": {
+            "description": "Slot created",
+            "schema": {
+              "$ref": "#/definitions/CompanySlot"
+            }
+          },
+          "422": {
+            "description": "Validation failed"
+          }
+        },
+        "summary": "Create a new slot",
+        "tags": [
+          "Company / Slot"
+        ]
+      }
+    },
+    "/company/slots/{id}": {
+      "delete": {
+        "description": "",
+        "operationId": "AinComBookingApi.Controllers.Company.CompanySlotController.delete",
+        "parameters": [
+          {
+            "description": "JWT access token",
+            "in": "header",
+            "name": "Authorization",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "description": "Device Unique Token",
+            "in": "header",
+            "name": "device_token",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "description": "CompanySlot ID",
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "204": {
+            "description": "CompanySlot deleted"
+          },
+          "404": {
+            "description": "CompanySlot not found"
+          }
+        },
+        "summary": "Delete a slot",
+        "tags": [
+          "Company / Slot"
+        ]
+      },
+      "patch": {
+        "consumes": [
+          "application/json"
+        ],
+        "description": "Modify an existing slot",
+        "operationId": "AinComBookingApi.Controllers.Company.CompanySlotController.update",
+        "parameters": [
+          {
+            "description": "JWT access token",
+            "in": "header",
+            "name": "Authorization",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "description": "Device Unique Token",
+            "in": "header",
+            "name": "device_token",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "description": "CompanySlot ID",
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "description": "Slot attributes to update",
+            "in": "body",
+            "name": "slot",
+            "required": false,
+            "schema": {
+              "$ref": "#/definitions/CompanySlotRequest"
+            }
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "CompanySlot updated",
+            "schema": {
+              "$ref": "#/definitions/CompanySlot"
+            }
+          },
+          "404": {
+            "description": "CompanySlot not found"
+          },
+          "422": {
+            "description": "Invalid input"
+          }
+        },
+        "summary": "Update a slot",
+        "tags": [
+          "Company / Slot"
+        ]
+      }
+    },
+    "/units": {
+      "get": {
+        "description": "",
+        "operationId": "AinComBookingApi.Controllers.Company.CompanyUnitController.index",
+        "parameters": [
+          {
+            "description": "JWT access token",
+            "in": "header",
+            "name": "Authorization",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "description": "Device Unique Token",
+            "in": "header",
+            "name": "device_token",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "description": "The property to sort by",
+            "in": "query",
+            "name": "sort_by",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "default": "asc",
+            "description": "The sort direction",
+            "enum": [
+              "asc",
+              "desc"
+            ],
+            "in": "query",
+            "name": "sort_direction",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {},
+        "summary": "",
+        "tags": [
+          "Company / Unit"
+        ]
+      },
+      "post": {
+        "consumes": [
+          "application/json"
+        ],
+        "description": "Create a new unit for a company",
+        "operationId": "AinComBookingApi.Controllers.Company.CompanyUnitController.create",
+        "parameters": [
+          {
+            "description": "JWT access token",
+            "in": "header",
+            "name": "Authorization",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "description": "Device Unique Token",
+            "in": "header",
+            "name": "device_token",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "description": "Unit attributes",
+            "in": "body",
+            "name": "unit",
+            "required": false,
+            "schema": {
+              "$ref": "#/definitions/UnitRequest"
+            }
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "201": {
+            "description": "Unit created",
+            "schema": {
+              "$ref": "#/definitions/Unit"
+            }
+          },
+          "422": {
+            "description": "Invalid input"
+          }
+        },
+        "summary": "Create unit",
+        "tags": [
+          "Company / Unit"
+        ]
+      }
+    },
+    "/units/{id}": {
+      "delete": {
+        "description": "",
+        "operationId": "AinComBookingApi.Controllers.Company.CompanyUnitController.delete",
+        "parameters": [
+          {
+            "description": "JWT access token",
+            "in": "header",
+            "name": "Authorization",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "description": "Device Unique Token",
+            "in": "header",
+            "name": "device_token",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "description": "Unit ID",
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "204": {
+            "description": "Unit deleted"
+          },
+          "404": {
+            "description": "Unit not found"
+          }
+        },
+        "summary": "Delete unit",
+        "tags": [
+          "Company / Unit"
+        ]
+      },
+      "patch": {
+        "consumes": [
+          "application/json"
+        ],
+        "description": "Updates the attributes of an existing unit",
+        "operationId": "AinComBookingApi.Controllers.Company.CompanyUnitController.update",
+        "parameters": [
+          {
+            "description": "JWT access token",
+            "in": "header",
+            "name": "Authorization",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "description": "Device Unique Token",
+            "in": "header",
+            "name": "device_token",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "description": "Unit ID",
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "description": "Unit attributes to update",
+            "in": "body",
+            "name": "unit",
+            "required": false,
+            "schema": {
+              "$ref": "#/definitions/UnitRequest"
+            }
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Unit updated",
+            "schema": {
+              "$ref": "#/definitions/Unit"
+            }
+          },
+          "404": {
+            "description": "Unit not found"
+          },
+          "422": {
+            "description": "Invalid input"
+          }
+        },
+        "summary": "Update a unit",
+        "tags": [
+          "Company / Unit"
+        ]
+      }
+    },
+    "/user/bookings": {
+      "get": {
+        "description": "",
+        "operationId": "AinComBookingApi.Controllers.User.UserBookingController.index",
+        "parameters": [
+          {
+            "description": "JWT access token",
+            "in": "header",
+            "name": "Authorization",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "description": "Device Unique Token",
+            "in": "header",
+            "name": "device_token",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "description": "The property to sort by",
+            "in": "query",
+            "name": "sort_by",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "default": "asc",
+            "description": "The sort direction",
+            "enum": [
+              "asc",
+              "desc"
+            ],
+            "in": "query",
+            "name": "sort_direction",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "description": "The company id",
+            "in": "string",
+            "name": "company_id",
+            "required": false,
+            "type": "query"
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {},
+        "summary": "",
+        "tags": [
+          "User"
+        ]
+      },
+      "post": {
+        "consumes": [
+          "application/json"
+        ],
+        "description": "Create a booking for a given slot",
+        "operationId": "AinComBookingApi.Controllers.User.UserBookingController.create",
         "parameters": [
           {
             "description": "JWT access token",
@@ -337,7 +2310,7 @@
             "name": "booking",
             "required": false,
             "schema": {
-              "$ref": "#/definitions/BookingRequest"
+              "$ref": "#/definitions/UserBookingRequest"
             }
           }
         ],
@@ -348,7 +2321,7 @@
           "201": {
             "description": "Booking created",
             "schema": {
-              "$ref": "#/definitions/Booking"
+              "$ref": "#/definitions/UserBooking"
             }
           },
           "409": {
@@ -357,14 +2330,14 @@
         },
         "summary": "Create booking",
         "tags": [
-          "Booking"
+          "User"
         ]
       }
     },
-    "/bookings/{id}": {
+    "/user/bookings/{id}": {
       "delete": {
         "description": "",
-        "operationId": "AinComBookingApi.Controllers.BookingController.delete",
+        "operationId": "AinComBookingApi.Controllers.User.UserBookingController.delete",
         "parameters": [
           {
             "description": "JWT access token",
@@ -393,29 +2366,674 @@
         ],
         "responses": {
           "204": {
-            "description": "Booking deleted"
+            "description": "UserBooking deleted"
           },
           "404": {
-            "description": "Booking not found"
+            "description": "UserBooking not found"
           }
         },
         "summary": "Delete booking",
         "tags": [
-          "Booking"
+          "User"
+        ]
+      },
+      "patch": {
+        "consumes": [
+          "application/json"
+        ],
+        "description": "Updates the customer details or status of an existing booking",
+        "operationId": "AinComBookingApi.Controllers.User.UserBookingController.update",
+        "parameters": [
+          {
+            "description": "JWT access token",
+            "in": "header",
+            "name": "Authorization",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "description": "Device Unique Token",
+            "in": "header",
+            "name": "device_token",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "description": "UserBooking ID",
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "description": "UserBooking attributes to update",
+            "in": "body",
+            "name": "booking",
+            "required": false,
+            "schema": {
+              "$ref": "#/definitions/UserBookingRequest"
+            }
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Booking updated",
+            "schema": {
+              "$ref": "#/definitions/UserBooking"
+            }
+          },
+          "404": {
+            "description": "Booking not found"
+          },
+          "409": {
+            "description": "Slot already taken or unavailable"
+          }
+        },
+        "summary": "Update a booking",
+        "tags": [
+          "User"
+        ]
+      }
+    },
+    "/user/resources": {
+      "get": {
+        "description": "",
+        "operationId": "AinComBookingApi.Controllers.User.UserResourceController.index",
+        "parameters": [
+          {
+            "description": "JWT access token",
+            "in": "header",
+            "name": "Authorization",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "description": "Device Unique Token",
+            "in": "header",
+            "name": "device_token",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "description": "The property to sort by",
+            "in": "query",
+            "name": "sort_by",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "default": "asc",
+            "description": "The sort direction",
+            "enum": [
+              "asc",
+              "desc"
+            ],
+            "in": "query",
+            "name": "sort_direction",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {},
+        "summary": "",
+        "tags": [
+          "User"
+        ]
+      },
+      "post": {
+        "consumes": [
+          "application/json"
+        ],
+        "description": "Create a new resource for a company",
+        "operationId": "AinComBookingApi.Controllers.User.UserResourceController.create",
+        "parameters": [
+          {
+            "description": "JWT access token",
+            "in": "header",
+            "name": "Authorization",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "description": "Device Unique Token",
+            "in": "header",
+            "name": "device_token",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "description": "Resource attributes",
+            "in": "body",
+            "name": "resource",
+            "required": false,
+            "schema": {
+              "$ref": "#/definitions/UserResourceRequest"
+            }
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "201": {
+            "description": "UserResource created",
+            "schema": {
+              "$ref": "#/definitions/UserResource"
+            }
+          },
+          "422": {
+            "description": "Invalid input"
+          }
+        },
+        "summary": "Create user resource",
+        "tags": [
+          "User"
+        ]
+      }
+    },
+    "/user/resources/{id}": {
+      "delete": {
+        "description": "",
+        "operationId": "AinComBookingApi.Controllers.User.UserResourceController.delete",
+        "parameters": [
+          {
+            "description": "JWT access token",
+            "in": "header",
+            "name": "Authorization",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "description": "Device Unique Token",
+            "in": "header",
+            "name": "device_token",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "description": "Resource ID",
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "204": {
+            "description": "UserResource deleted"
+          },
+          "404": {
+            "description": "UserResource not found"
+          }
+        },
+        "summary": "Delete user resource",
+        "tags": [
+          "User"
+        ]
+      },
+      "patch": {
+        "consumes": [
+          "application/json"
+        ],
+        "description": "Updates resource details",
+        "operationId": "AinComBookingApi.Controllers.User.UserResourceController.update",
+        "parameters": [
+          {
+            "description": "JWT access token",
+            "in": "header",
+            "name": "Authorization",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "description": "Device Unique Token",
+            "in": "header",
+            "name": "device_token",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "description": "UserResource ID",
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "description": "Resource attributes to update",
+            "in": "body",
+            "name": "resource",
+            "required": false,
+            "schema": {
+              "$ref": "#/definitions/UserResourceRequest"
+            }
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "UserResource updated",
+            "schema": {
+              "$ref": "#/definitions/UserResource"
+            }
+          },
+          "404": {
+            "description": "UserResource not found"
+          },
+          "422": {
+            "description": "Invalid input"
+          }
+        },
+        "summary": "Update a company resource",
+        "tags": [
+          "User"
+        ]
+      }
+    },
+    "/user/services": {
+      "get": {
+        "description": "",
+        "operationId": "AinComBookingApi.Controllers.User.UserServiceController.index",
+        "parameters": [
+          {
+            "description": "JWT access token",
+            "in": "header",
+            "name": "Authorization",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "description": "Device Unique Token",
+            "in": "header",
+            "name": "device_token",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {},
+        "summary": "List services",
+        "tags": [
+          "User"
+        ]
+      },
+      "post": {
+        "consumes": [
+          "application/json"
+        ],
+        "description": "Create a new company service",
+        "operationId": "AinComBookingApi.Controllers.User.UserServiceController.create",
+        "parameters": [
+          {
+            "description": "JWT access token",
+            "in": "header",
+            "name": "Authorization",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "description": "Device Unique Token",
+            "in": "header",
+            "name": "device_token",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "description": "UserService attributes",
+            "in": "body",
+            "name": "service",
+            "required": false,
+            "schema": {
+              "$ref": "#/definitions/UserServiceRequest"
+            }
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "201": {
+            "description": "UserService created",
+            "schema": {
+              "$ref": "#/definitions/UserService"
+            }
+          },
+          "422": {
+            "description": "Invalid input"
+          }
+        },
+        "summary": "Create user service",
+        "tags": [
+          "User"
+        ]
+      }
+    },
+    "/user/services/{id}": {
+      "delete": {
+        "description": "",
+        "operationId": "AinComBookingApi.Controllers.User.UserServiceController.delete",
+        "parameters": [
+          {
+            "description": "JWT access token",
+            "in": "header",
+            "name": "Authorization",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "description": "Device Unique Token",
+            "in": "header",
+            "name": "device_token",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "description": "Service ID",
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "204": {
+            "description": "Service deleted"
+          },
+          "404": {
+            "description": "Service not found"
+          }
+        },
+        "summary": "Delete service",
+        "tags": [
+          "User"
+        ]
+      },
+      "patch": {
+        "consumes": [
+          "application/json"
+        ],
+        "description": "Updates an existing service",
+        "operationId": "AinComBookingApi.Controllers.User.UserServiceController.update",
+        "parameters": [
+          {
+            "description": "JWT access token",
+            "in": "header",
+            "name": "Authorization",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "description": "Device Unique Token",
+            "in": "header",
+            "name": "device_token",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "description": "Service ID",
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "description": "UserService attributes",
+            "in": "body",
+            "name": "service",
+            "required": false,
+            "schema": {
+              "$ref": "#/definitions/UserServiceRequest"
+            }
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "UserService updated",
+            "schema": {
+              "$ref": "#/definitions/UserService"
+            }
+          },
+          "404": {
+            "description": "UserService not found"
+          },
+          "422": {
+            "description": "Invalid input"
+          }
+        },
+        "summary": "Update service",
+        "tags": [
+          "User"
+        ]
+      }
+    },
+    "/user/slots": {
+      "get": {
+        "description": "Fetches available slots for a user service within a date range",
+        "operationId": "AinComBookingApi.Controllers.User.UserSlotController.index",
+        "parameters": [
+          {
+            "description": "JWT access token",
+            "in": "header",
+            "name": "Authorization",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "description": "Device Unique Token",
+            "in": "header",
+            "name": "device_token",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "description": "Service ID",
+            "in": "string",
+            "name": "service_id",
+            "required": true,
+            "type": "query"
+          },
+          {
+            "description": "Start date (YYYY-MM-DD)",
+            "in": "string",
+            "name": "from",
+            "required": true,
+            "type": "query"
+          },
+          {
+            "description": "End date (YYYY-MM-DD)",
+            "in": "string",
+            "name": "to",
+            "required": true,
+            "type": "query"
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "List of user slots"
+          }
+        },
+        "summary": "List available user slots",
+        "tags": [
+          "User"
+        ]
+      },
+      "post": {
+        "consumes": [
+          "application/json"
+        ],
+        "description": "Add a new time slot for user services",
+        "operationId": "AinComBookingApi.Controllers.User.UserSlotController.create",
+        "parameters": [
+          {
+            "description": "JWT access token",
+            "in": "header",
+            "name": "Authorization",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "description": "Device Unique Token",
+            "in": "header",
+            "name": "device_token",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "description": "User Slot attributes",
+            "in": "body",
+            "name": "slot",
+            "required": false,
+            "schema": {
+              "$ref": "#/definitions/UserSlotRequest"
+            }
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "201": {
+            "description": "Slot created",
+            "schema": {
+              "$ref": "#/definitions/UserSlot"
+            }
+          },
+          "422": {
+            "description": "Validation failed"
+          }
+        },
+        "summary": "Create a user slot",
+        "tags": [
+          "User"
+        ]
+      }
+    },
+    "/user/slots/{id}": {
+      "delete": {
+        "description": "",
+        "operationId": "AinComBookingApi.Controllers.User.UserSlotController.delete",
+        "parameters": [
+          {
+            "description": "JWT access token",
+            "in": "header",
+            "name": "Authorization",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "description": "Device Unique Token",
+            "in": "header",
+            "name": "device_token",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "description": "UserSlot ID",
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "204": {
+            "description": "UserSlot deleted"
+          },
+          "404": {
+            "description": "UserSlot not found"
+          }
+        },
+        "summary": "Delete a user slot",
+        "tags": [
+          "User"
+        ]
+      },
+      "patch": {
+        "consumes": [
+          "application/json"
+        ],
+        "description": "Modify an existing user slot",
+        "operationId": "AinComBookingApi.Controllers.User.UserSlotController.update",
+        "parameters": [
+          {
+            "description": "JWT access token",
+            "in": "header",
+            "name": "Authorization",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "description": "Device Unique Token",
+            "in": "header",
+            "name": "device_token",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "description": "Slot ID",
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "description": "Slot attributes to update",
+            "in": "body",
+            "name": "slot",
+            "required": false,
+            "schema": {
+              "$ref": "#/definitions/UserSlotRequest"
+            }
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Slot updated",
+            "schema": {
+              "$ref": "#/definitions/UserSlot"
+            }
+          },
+          "404": {
+            "description": "Slot not found"
+          },
+          "422": {
+            "description": "Invalid input"
+          }
+        },
+        "summary": "Update a user slot",
+        "tags": [
+          "User"
         ]
       }
     }
   },
-  "swagger": "2.0",
-  "basePath": "/api",
-  "tags": [
-    {
-      "name": "Users",
-      "description": "Operations about users"
-    },
-    {
-      "name": "Bookings",
-      "description": "Booking management"
-    }
-  ]
+  "swagger": "2.0"
 }

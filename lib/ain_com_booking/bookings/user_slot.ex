@@ -16,6 +16,8 @@ defmodule AinComBooking.Bookings.UserSlot do
     belongs_to(:service, AinComBooking.Catalog.UserService, type: :binary_id)
     belongs_to(:resource, AinComBooking.Catalog.UserResource, type: :binary_id)
 
+    has_many(:bookings, AinComBooking.Bookings.UserBooking, foreign_key: :slot_id)
+
     timestamps()
   end
 

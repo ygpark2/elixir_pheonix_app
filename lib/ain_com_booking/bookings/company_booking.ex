@@ -13,7 +13,7 @@ defmodule AinComBooking.Bookings.CompanyBooking do
     field(:phone, :string)
     field(:status, :string, default: "confirmed")
 
-    belongs_to(:slot, CompanySlot, type: :binary_id, optional: false)
+    belongs_to(:slot, CompanySlot, type: :binary_id)
 
     timestamps()
   end

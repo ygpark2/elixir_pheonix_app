@@ -5,7 +5,7 @@ defmodule AinComBookingApi.Controllers.AuthController do
   import AinComBookingApi.Errors
 
   alias AinComBooking.Accounts
-  alias AinComBooking.Guardian
+  alias AinComBookingApi.Guardian
 
   # POST /api/auth/signup
   swagger_path :signup do

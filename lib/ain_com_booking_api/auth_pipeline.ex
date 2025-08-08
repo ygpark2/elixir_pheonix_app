@@ -2,7 +2,7 @@
 defmodule AinComBookingApi.AuthPipeline do
   @moduledoc false
   use Guardian.Plug.Pipeline,
-    otp_app: :ain_com_booking_api,
+    otp_app: :ain_com_booking,
     module: AinComBookingApi.Guardian,
     error_handler: AinComBookingApi.AuthErrorHandler
 

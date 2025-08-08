@@ -7,11 +7,6 @@ config :absinthe_security, AbsintheSecurity.Phase.MaxDepthCheck, max_depth_count
 config :absinthe_security, AbsintheSecurity.Phase.MaxDirectivesCheck, max_directive_count: 100
 
 config :ain_com_booking, AinComBooking.Gettext, default_locale: "en"
-
-config :ain_com_booking, AinComBooking.Guardian,
-  issuer: "ain_com_booking",
-  secret_key: "LChh25xnTb9CFOZKW90mZ+MGDZKqXFMzbRlGxeaEAqOQlRbmQqDDHlIdyLj1pf3b"
-
 config :ain_com_booking, AinComBooking.Mailer, adapter: Swoosh.Adapters.Local
 
 config :ain_com_booking, AinComBooking.Repo,
@@ -20,6 +15,10 @@ config :ain_com_booking, AinComBooking.Repo,
   migration_timestamps: [type: :utc_datetime_usec],
   start_apps_before_migration: [:ssl]
 
+config :ain_com_booking, AinComBookingApi.Guardian,
+  issuer: "ain_com_booking",
+  secret_key: "LChh25xnTb9CFOZKW90mZ+MGDZKqXFMzbRlGxeaEAqOQlRbmQqDDHlIdyLj1pf3b"
+
 config :ain_com_booking, AinComBookingGraphQL, token_limit: 2000
 config :ain_com_booking, AinComBookingWeb.Endpoint, live_view: [signing_salt: "DtRf6n528OmwGAAyY876p4tzT1pH2oyQ"]
 
@@ -27,8 +26,8 @@ config :ain_com_booking, AinComBookingWeb.Endpoint,
   pubsub_server: AinComBooking.PubSub,
   render_errors: [view: AinComBookingWeb.Errors, accepts: ~w(html json)]
 
-config :ain_com_booking, AinComBookingWeb.Plugs.Security, allow_unsafe_scripts: false
 # 선택 사항
+config :ain_com_booking, AinComBookingWeb.Plugs.Security, allow_unsafe_scripts: false
 config :ain_com_booking, Corsica, allow_headers: :all
 
 config :ain_com_booking, :phoenix_swagger,
@@ -56,20 +55,20 @@ config :logger, backends: [:console, Sentry.LoggerBackend]
 
 config :phoenix, :json_library, Jason
 
-# dsn: get_env("SENTRY_DSN", :uri),
-# environment_name: Mix.env(),
-
 # 사용할 JSON 인코딩 라이브러리 설정
 config :phoenix_swagger, json_library: Jason
 
 config :sentry,
+  dsn: if(Mix.env() == :prod, do: System.get_env("SENTRY_DSN")),
   enable_source_code_context: true,
   root_source_code_path: File.cwd!(),
   # [:prod, :dev],
-  included_environments: [:prod],
+  # included_environments: [:prod],
+  # dsn: get_env("SENTRY_DSN", :uri),
+  # environment_name: Mix.env(),
+  # Swoosh API 서버 뷰 사용
   release: version
 
-# Swoosh API 서버 뷰 사용
 config :swoosh, :api_client, false
 
 # Import environment configuration

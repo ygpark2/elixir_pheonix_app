@@ -118,6 +118,10 @@ run_init_db: loadEnv ## Run ecto db setup
 	mix ecto.setup
 	mix ecto.migrate
 
+.PHONY: run_swagger
+run_swagger: loadEnv ## Run stop Postgresql server
+	mix phx.swagger.generate
+
 .PHONY: run_db
 run_db: loadEnv ## Run Postgresql server
 	docker compose up postgres-db

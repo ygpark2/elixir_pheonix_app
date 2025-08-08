@@ -18,6 +18,8 @@ defmodule AinComBooking.Bookings.CompanySlot do
     belongs_to(:service, AinComBooking.Catalog.CompanyService, type: :binary_id)
     belongs_to(:resource, AinComBooking.Catalog.CompanyResource, type: :binary_id)
 
+    has_many(:bookings, AinComBooking.Bookings.CompanyBooking, foreign_key: :slot_id)
+
     timestamps()
   end
 

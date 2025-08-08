@@ -2,6 +2,8 @@ defmodule AinComBooking.Catalog.CompanyResource do
   @moduledoc false
   use Ecto.Schema
 
+  import Ecto.Changeset
+
   @primary_key {:id, :binary_id, autogenerate: true}
   schema "company_resources" do
     field(:name, :string)
@@ -14,8 +16,22 @@ defmodule AinComBooking.Catalog.CompanyResource do
 
     many_to_many(:units, AinComBooking.Catalog.Unit, join_through: "resources_units", join_keys: [resource_id: :id, unit_id: :id], on_replace: :delete)
 
-    has_many(:slots, AinComBooking.Bookings.Slot)
+    has_many(:slots, AinComBooking.Bookings.CompanySlot, foreign_key: :resource_id)
 
     timestamps()
+  end
+
+  @doc false
+  def changeset(company_resource, attrs) do
+    company_resource
+    |> cast(attrs, [
+      :name,
+      :type,
+      :location,
+      :description,
+      :user_id,
+      :company_id
+    ])
+    |> validate_required([:name, :company_id])
   end
 end

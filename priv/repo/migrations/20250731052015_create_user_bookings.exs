@@ -11,7 +11,7 @@ defmodule AinComBooking.Repo.Migrations.CreateUserBookings do
       add(:phone, :string, null: false)
       add(:status, :string, null: false, default: "confirmed")
 
-      add(:slot_id, references(:slots, type: :binary_id, on_delete: :delete_all), null: false)
+      add(:slot_id, references(:user_slots, type: :binary_id, on_delete: :delete_all), null: false)
 
       # 🔗 예약한 사용자 연결
       add(:user_id, references(:users, type: :binary_id, on_delete: :nilify_all), null: true)
@@ -20,6 +20,6 @@ defmodule AinComBooking.Repo.Migrations.CreateUserBookings do
     end
 
     # Optional: Add index for foreign key
-    create(index(:bookings, [:slot_id]))
+    create(index(:user_bookings, [:slot_id, :user_id]))
   end
 end

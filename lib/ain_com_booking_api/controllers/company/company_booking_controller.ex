@@ -1,28 +1,38 @@
-defmodule AinComBookingApi.Controllers.BookingController do
+defmodule AinComBookingApi.Controllers.Company.CompanyBookingController do
   use Phoenix.Controller
   use PhoenixSwagger
 
   import AinComBookingApi.Errors
   import Ecto.Query
 
-  alias AinComBooking.Bookings.Booking
-  alias AinComBooking.Bookings.Slot
+  alias AinComBooking.Bookings.CompanyBooking
+  alias AinComBooking.Bookings.CompanySlot
   alias AinComBooking.Repo
+
+  def swagger_paths do
+    [
+      :create,
+      :update,
+      :index,
+      :delete
+    ]
+  end
 
   # POST /api/bookings
   swagger_path :create do
-    post("/bookings")
+    post("/company/bookings")
     summary("Create booking")
     description("Create a booking for a given slot")
     produces("application/json")
     consumes("application/json")
+    tag("Company / Booking")
 
     # 재사용 파라미터 예시: JWT와 device_token 헤더
     AinComBookingApi.CommonParameters.authorization()
 
-    parameter(:booking, :body, Schema.ref(:BookingRequest), "Booking attributes")
+    parameter(:booking, :body, Schema.ref(:CompanyBookingRequest), "CompanyBooking attributes")
 
-    response(201, "Booking created", Schema.ref(:Booking))
+    response(201, "Booking created", Schema.ref(:CompanyBooking))
     response(409, "Slot already taken or unavailable")
   end
 
@@ -30,7 +40,7 @@ defmodule AinComBookingApi.Controllers.BookingController do
     result =
       Repo.transaction(fn ->
         slot =
-          Slot
+          CompanySlot
           |> where([s], s.id == ^slot_id)
           |> lock("FOR UPDATE")
           |> Repo.one()
@@ -39,9 +49,11 @@ defmodule AinComBookingApi.Controllers.BookingController do
           Repo.rollback(:unavailable)
         end
 
+        # %Booking{}
         booking =
-          %Booking{}
-          |> Booking.changeset(%{
+          CompanyBooking
+          # |> struct(%{})
+          |> CompanyBooking.changeset(%{
             slot_id: slot.id,
             customer_name: name,
             email: email,
@@ -62,7 +74,7 @@ defmodule AinComBookingApi.Controllers.BookingController do
       {:error, :unavailable} ->
         conn
         |> put_status(:conflict)
-        |> json(%{error: "Slot already taken or unavailable"})
+        |> json(%{error: "CompanySlot already taken or unavailable"})
 
       {:error, reason} ->
         conn
@@ -73,18 +85,19 @@ defmodule AinComBookingApi.Controllers.BookingController do
 
   # PATCH /api/bookings/{id}
   swagger_path :update do
-    PhoenixSwagger.Path.patch("/bookings/{id}")
+    patch("/company/bookings/{id}")
     summary("Update a booking")
     description("Updates the customer details or status of an existing booking")
     consumes("application/json")
     produces("application/json")
+    tag("Company / Booking")
 
     AinComBookingApi.CommonParameters.authorization()
 
-    parameter(:id, :path, :string, "Booking ID", required: true)
-    parameter(:booking, :body, Schema.ref(:BookingRequest), "Booking attributes to update")
+    parameter(:id, :path, :string, "CompanyBooking ID", required: true)
+    parameter(:booking, :body, Schema.ref(:CompanyBookingRequest), "CompanyBooking attributes to update")
 
-    response(200, "Booking updated", Schema.ref(:Booking))
+    response(200, "Booking updated", Schema.ref(:CompanyBooking))
     response(404, "Booking not found")
     response(409, "Slot already taken or unavailable")
   end
@@ -97,9 +110,9 @@ defmodule AinComBookingApi.Controllers.BookingController do
         |> put_status(:not_found)
         |> json(%{error: "Booking not found"})
 
-      %Booking{} = booking ->
+      booking ->
         # `params` may include keys like "customer_name", "email", etc.
-        changeset = Booking.changeset(booking, Map.delete(params, "id"))
+        changeset = CompanyBooking.changeset(booking, Map.delete(params, "id"))
 
         case Repo.update(changeset) do
           {:ok, updated_booking} ->
@@ -114,10 +127,11 @@ defmodule AinComBookingApi.Controllers.BookingController do
   end
 
   swagger_path :index do
-    get("/bookings")
+    get("/company/bookings")
     produces("application/json")
     AinComBookingApi.CommonParameters.authorization()
     AinComBookingApi.CommonParameters.sorting()
+    tag("Company / Booking")
 
     parameters do
       company_id(:string, :query, "The company id")
@@ -131,20 +145,21 @@ defmodule AinComBookingApi.Controllers.BookingController do
 
   # DELETE /api/bookings/{id}
   swagger_path :delete do
-    PhoenixSwagger.Path.delete("/bookings/{id}")
+    delete("/company/bookings/{id}")
     summary("Delete booking")
     produces("application/json")
+    tag("Company / Booking")
 
     AinComBookingApi.CommonParameters.authorization()
 
-    parameter(:id, :path, :string, "Booking ID", required: true)
+    parameter(:id, :path, :string, "CompanyBooking ID", required: true)
 
-    response(204, "Booking deleted")
-    response(404, "Booking not found")
+    response(204, "CompanyBooking deleted")
+    response(404, "CompanyBooking not found")
   end
 
-  def delete(conn, %{"id" => id}) do
-    case Repo.get(Booking, id) do
+  def remove(conn, %{"id" => id}) do
+    case Repo.get(CompanyBooking, id) do
       nil ->
         send_resp(conn, :not_found, "")
 
@@ -156,13 +171,13 @@ defmodule AinComBookingApi.Controllers.BookingController do
 
   def swagger_definitions do
     %{
-      Booking:
+      CompanyBooking:
         swagger_schema do
-          title("Booking")
+          title("CompanyBooking")
           description("Represents a booking record")
 
           properties do
-            id(:string, "Booking ID")
+            id(:string, "CompanyBooking ID")
             slot_id(:string, "Slot ID")
             customer_name(:string)
             email(:string)
@@ -179,16 +194,16 @@ defmodule AinComBookingApi.Controllers.BookingController do
             status: "confirmed"
           })
         end,
-      BookingRequest:
+      CompanyBookingRequest:
         swagger_schema do
-          title("BookingRequest")
+          title("CompanyBookingRequest")
           description("Payload for creating a booking")
 
           properties do
-            slot_id(:string, "Slot ID", required: true)
-            customer_name(:string, "Customer name", required: true)
-            email(:string, "Email", required: true)
-            phone(:string, "Phone", required: true)
+            slot_id(:string, "Slot ID")
+            customer_name(:string, "Customer name")
+            email(:string, "Email")
+            phone(:string, "Phone")
           end
 
           example(%{

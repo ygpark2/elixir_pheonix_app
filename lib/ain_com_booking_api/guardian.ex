@@ -1,4 +1,4 @@
-defmodule AinComBooking.Guardian do
+defmodule AinComBookingApi.Guardian do
   @moduledoc false
   use Guardian, otp_app: :ain_com_booking
 
