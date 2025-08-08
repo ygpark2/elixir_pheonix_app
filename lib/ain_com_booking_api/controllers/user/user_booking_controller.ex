@@ -27,7 +27,7 @@ defmodule AinComBookingApi.Controllers.User.UserBookingController do
     consumes("application/json")
     tag("User")
 
-    # 재사용 파라미터 예시: JWT와 device_token 헤더
+    # 재사용 파라미터 예시: JWT와 X-Device-Token 헤더
     AinComBookingApi.CommonParameters.authorization()
 
     parameter(:booking, :body, Schema.ref(:UserBookingRequest), "Booking attributes")
