@@ -7,7 +7,7 @@ defmodule AinComBookingWeb.UserRegistrationLive do
 
   def render(assigns) do
     ~H"""
-    <div class="mx-auto max-w-sm">
+    <div class="mx-auto max-w-sm p-4">
       <.header class="text-center">
         Register for an account
         <:subtitle>

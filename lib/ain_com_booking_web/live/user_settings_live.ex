@@ -11,7 +11,7 @@ defmodule AinComBookingWeb.UserSettingsLive do
       <:subtitle>Manage your account email address and password settings</:subtitle>
     </.header>
 
-    <div class="space-y-12 divide-y">
+    <div class="mx-auto max-w-2xl space-y-12 divide-y p-4">
       <div>
         <.simple_form
           for={@email_form}
