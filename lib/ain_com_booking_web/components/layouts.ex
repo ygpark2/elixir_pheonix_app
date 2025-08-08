@@ -1,9 +1,7 @@
 defmodule AinComBookingWeb.Layouts do
   @moduledoc false
-  # use AinComBookingWeb, :html
-  use Phoenix.Component
+  use AinComBookingWeb, :html
 
-  alias AinComBookingWeb.Router.Helpers, as: Routes
   alias Phoenix.LiveView.JS
 
   embed_templates("layouts/*")
