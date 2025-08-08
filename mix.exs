@@ -34,6 +34,7 @@ defmodule AinCom.Mixfile do
   defp aliases do
     [
       "assets.deploy": [
+        "tailwind default --minify",
         "esbuild default --minify",
         "phx.digest"
       ],
@@ -48,6 +49,7 @@ defmodule AinCom.Mixfile do
       {:bcrypt_elixir, "~> 3.0"},
       # Assets bundling
       {:esbuild, "~> 0.9", runtime: Mix.env() == :dev},
+      {:tailwind, "~> 0.2", runtime: Mix.env() == :dev},
       {:dotenv, "~> 3.1", only: [:dev, :test]},
 
       # HTTP Client

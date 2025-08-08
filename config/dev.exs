@@ -5,7 +5,8 @@ config :ain_com_booking, AinComBookingWeb.Endpoint,
   debug_errors: true,
   check_origin: false,
   watchers: [
-    esbuild: {Esbuild, :install_and_run, [:default, ~w(--sourcemap=inline --watch)]}
+    esbuild: {Esbuild, :install_and_run, [:default, ~w(--sourcemap=inline --watch)]},
+    tailwind: {Tailwind, :install_and_run, [:default, ~w(--watch)]}
   ],
   live_reload: [
     interval: 1000,
