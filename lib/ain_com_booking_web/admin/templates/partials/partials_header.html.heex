@@ -91,7 +91,7 @@
       <!-- Application nav menu button -->
       <button
         class="z-99999 flex h-10 w-10 items-center justify-center rounded-lg text-gray-700 hover:bg-gray-100 lg:hidden dark:text-gray-400 dark:hover:bg-gray-800"
-        :class="menuToggle ? 'bg-gray-100 dark:bg-gray-800' : ''"
+        x-bind:class="menuToggle ? 'bg-gray-100 dark:bg-gray-800' : ''"
         @click.stop="menuToggle = !menuToggle"
       >
         <svg
@@ -152,7 +152,7 @@
     </div>
 
     <div
-      :class="menuToggle ? 'flex' : 'hidden'"
+      x-bind:class="menuToggle ? 'flex' : 'hidden'"
       class="shadow-theme-md w-full items-center justify-between gap-4 px-5 py-4 lg:flex lg:justify-end lg:px-0 lg:shadow-none"
     >
       <div class="2xsm:gap-3 flex items-center gap-2">
@@ -203,7 +203,7 @@
             @click.prevent="dropdownOpen = ! dropdownOpen; notifying = false"
           >
             <span
-              :class="!notifying ? 'hidden' : 'flex'"
+              x-bind:class="!notifying ? 'hidden' : 'flex'"
               class="absolute top-0.5 right-0 z-1 h-2 w-2 rounded-full bg-orange-400"
             >
               <span
@@ -599,7 +599,7 @@
           <span class="text-theme-sm mr-1 block font-medium"> Musharof </span>
 
           <svg
-            :class="dropdownOpen && 'rotate-180'"
+            x-bind:class="dropdownOpen && 'rotate-180'"
             class="stroke-gray-500 dark:stroke-gray-400"
             width="18"
             height="20"

@@ -1,14 +1,14 @@
 <aside
-  :class="sidebarToggle ? 'translate-x-0 lg:w-[90px]' : '-translate-x-full'"
+  x-bind:class="sidebarToggle ? 'translate-x-0 lg:w-[90px]' : '-translate-x-full'"
   class="sidebar fixed left-0 top-0 z-9999 flex h-screen w-[290px] flex-col overflow-y-hidden border-r border-gray-200 bg-white px-5 dark:border-gray-800 dark:bg-black lg:static lg:translate-x-0"
 >
   <!-- SIDEBAR HEADER -->
   <div
-    :class="sidebarToggle ? 'justify-center' : 'justify-between'"
+    x-bind:class="sidebarToggle ? 'justify-center' : 'justify-between'"
     class="flex items-center gap-2 pt-8 sidebar-header pb-7"
   >
     <a href="index.html">
-      <span class="logo" :class="sidebarToggle ? 'hidden' : ''">
+      <span class="logo" x-bind:class="sidebarToggle ? 'hidden' : ''">
         <img class="dark:hidden" src="./images/logo/logo.svg" alt="Logo" />
         <img
           class="hidden dark:block"
@@ -19,7 +19,7 @@
 
       <img
         class="logo-icon"
-        :class="sidebarToggle ? 'lg:block' : 'hidden'"
+        x-bind:class="sidebarToggle ? 'lg:block' : 'hidden'"
         src="./images/logo/logo-icon.svg"
         alt="Logo"
       />
@@ -37,13 +37,13 @@
         <h3 class="mb-4 text-xs uppercase leading-[20px] text-gray-400">
           <span
             class="menu-group-title"
-            :class="sidebarToggle ? 'lg:hidden' : ''"
+            x-bind:class="sidebarToggle ? 'lg:hidden' : ''"
           >
             MENU
           </span>
 
           <svg
-            :class="sidebarToggle ? 'lg:block hidden' : 'hidden'"
+            x-bind:class="sidebarToggle ? 'lg:block hidden' : 'hidden'"
             class="mx-auto fill-current menu-group-icon"
             width="24"
             height="24"
@@ -67,10 +67,10 @@
               href="#"
               @click.prevent="selected = (selected === 'Dashboard' ? '':'Dashboard')"
               class="menu-item group"
-              :class=" (selected === 'Dashboard') || (page === 'ecommerce' || page === 'analytics' || page === 'marketing' || page === 'crm' || page === 'stocks') ? 'menu-item-active' : 'menu-item-inactive'"
+              x-bind:class=" (selected === 'Dashboard') || (page === 'ecommerce' || page === 'analytics' || page === 'marketing' || page === 'crm' || page === 'stocks') ? 'menu-item-active' : 'menu-item-inactive'"
             >
               <svg
-                :class="(selected === 'Dashboard') || (page === 'ecommerce' || page === 'analytics' || page === 'marketing' || page === 'crm' || page === 'stocks') ? 'menu-item-icon-active'  :'menu-item-icon-inactive'"
+                x-bind:class="(selected === 'Dashboard') || (page === 'ecommerce' || page === 'analytics' || page === 'marketing' || page === 'crm' || page === 'stocks') ? 'menu-item-icon-active'  :'menu-item-icon-inactive'"
                 width="24"
                 height="24"
                 viewBox="0 0 24 24"
@@ -87,14 +87,14 @@
 
               <span
                 class="menu-item-text"
-                :class="sidebarToggle ? 'lg:hidden' : ''"
+                x-bind:class="sidebarToggle ? 'lg:hidden' : ''"
               >
                 Dashboard
               </span>
 
               <svg
                 class="menu-item-arrow"
-                :class="[(selected === 'Dashboard') ? 'menu-item-arrow-active' : 'menu-item-arrow-inactive', sidebarToggle ? 'lg:hidden' : '' ]"
+                x-bind:class="[(selected === 'Dashboard') ? 'menu-item-arrow-active' : 'menu-item-arrow-inactive', sidebarToggle ? 'lg:hidden' : '' ]"
                 width="20"
                 height="20"
                 viewBox="0 0 20 20"
@@ -114,17 +114,17 @@
             <!-- Dropdown Menu Start -->
             <div
               class="overflow-hidden transform translate"
-              :class="(selected === 'Dashboard') ? 'block' :'hidden'"
+              x-bind:class="(selected === 'Dashboard') ? 'block' :'hidden'"
             >
               <ul
-                :class="sidebarToggle ? 'lg:hidden' : 'flex'"
+                x-bind:class="sidebarToggle ? 'lg:hidden' : 'flex'"
                 class="flex flex-col gap-1 mt-2 menu-dropdown pl-9"
               >
                 <li>
                   <a
                     href="index.html"
                     class="menu-dropdown-item group"
-                    :class="page === 'ecommerce' ? 'menu-dropdown-item-active' : 'menu-dropdown-item-inactive'"
+                    x-bind:class="page === 'ecommerce' ? 'menu-dropdown-item-active' : 'menu-dropdown-item-inactive'"
                   >
                     eCommerce
                   </a>
@@ -141,10 +141,10 @@
               href="calendar.html"
               @click="selected = (selected === 'Calendar' ? '':'Calendar')"
               class="menu-item group"
-              :class=" (selected === 'Calendar') && (page === 'calendar') ? 'menu-item-active' : 'menu-item-inactive'"
+              x-bind:class=" (selected === 'Calendar') && (page === 'calendar') ? 'menu-item-active' : 'menu-item-inactive'"
             >
               <svg
-                :class="(selected === 'Calendar') && (page === 'calendar') ? 'menu-item-icon-active'  :'menu-item-icon-inactive'"
+                x-bind:class="(selected === 'Calendar') && (page === 'calendar') ? 'menu-item-icon-active'  :'menu-item-icon-inactive'"
                 width="24"
                 height="24"
                 viewBox="0 0 24 24"
@@ -161,7 +161,7 @@
 
               <span
                 class="menu-item-text"
-                :class="sidebarToggle ? 'lg:hidden' : ''"
+                x-bind:class="sidebarToggle ? 'lg:hidden' : ''"
               >
                 Calendar
               </span>
@@ -175,10 +175,10 @@
               href="profile.html"
               @click="selected = (selected === 'Profile' ? '':'Profile')"
               class="menu-item group"
-              :class=" (selected === 'Profile') && (page === 'profile') ? 'menu-item-active' : 'menu-item-inactive'"
+              x-bind:class=" (selected === 'Profile') && (page === 'profile') ? 'menu-item-active' : 'menu-item-inactive'"
             >
               <svg
-                :class="(selected === 'Profile') && (page === 'profile') ?  'menu-item-icon-active'  :'menu-item-icon-inactive'"
+                x-bind:class="(selected === 'Profile') && (page === 'profile') ?  'menu-item-icon-active'  :'menu-item-icon-inactive'"
                 width="24"
                 height="24"
                 viewBox="0 0 24 24"
@@ -195,7 +195,7 @@
 
               <span
                 class="menu-item-text"
-                :class="sidebarToggle ? 'lg:hidden' : ''"
+                x-bind:class="sidebarToggle ? 'lg:hidden' : ''"
               >
                 User Profile
               </span>
@@ -209,10 +209,10 @@
               href="#"
               @click.prevent="selected = (selected === 'Forms' ? '':'Forms')"
               class="menu-item group"
-              :class=" (selected === 'Forms') || (page === 'formElements' || page === 'formLayout' || page === 'proFormElements' || page === 'proFormLayout') ? 'menu-item-active' : 'menu-item-inactive'"
+              x-bind:class=" (selected === 'Forms') || (page === 'formElements' || page === 'formLayout' || page === 'proFormElements' || page === 'proFormLayout') ? 'menu-item-active' : 'menu-item-inactive'"
             >
               <svg
-                :class="(selected === 'Forms') || (page === 'formElements' || page === 'formLayout' || page === 'proFormElements' || page === 'proFormLayout') ? 'menu-item-icon-active'  :'menu-item-icon-inactive'"
+                x-bind:class="(selected === 'Forms') || (page === 'formElements' || page === 'formLayout' || page === 'proFormElements' || page === 'proFormLayout') ? 'menu-item-icon-active'  :'menu-item-icon-inactive'"
                 width="24"
                 height="24"
                 viewBox="0 0 24 24"
@@ -229,14 +229,14 @@
 
               <span
                 class="menu-item-text"
-                :class="sidebarToggle ? 'lg:hidden' : ''"
+                x-bind:class="sidebarToggle ? 'lg:hidden' : ''"
               >
                 Forms
               </span>
 
               <svg
                 class="menu-item-arrow absolute right-2.5 top-1/2 -translate-y-1/2 stroke-current"
-                :class="[(selected === 'Forms') ? 'menu-item-arrow-active' : 'menu-item-arrow-inactive', sidebarToggle ? 'lg:hidden' : '' ]"
+                x-bind:class="[(selected === 'Forms') ? 'menu-item-arrow-active' : 'menu-item-arrow-inactive', sidebarToggle ? 'lg:hidden' : '' ]"
                 width="20"
                 height="20"
                 viewBox="0 0 20 20"
@@ -256,17 +256,17 @@
             <!-- Dropdown Menu Start -->
             <div
               class="overflow-hidden transform translate"
-              :class="(selected === 'Forms') ? 'block' :'hidden'"
+              x-bind:class="(selected === 'Forms') ? 'block' :'hidden'"
             >
               <ul
-                :class="sidebarToggle ? 'lg:hidden' : 'flex'"
+                x-bind:class="sidebarToggle ? 'lg:hidden' : 'flex'"
                 class="flex flex-col gap-1 mt-2 menu-dropdown pl-9"
               >
                 <li>
                   <a
                     href="form-elements.html"
                     class="menu-dropdown-item group"
-                    :class="page === 'formElements' ? 'menu-dropdown-item-active' : 'menu-dropdown-item-inactive'"
+                    x-bind:class="page === 'formElements' ? 'menu-dropdown-item-active' : 'menu-dropdown-item-inactive'"
                   >
                     Form Elements
                   </a>
@@ -283,10 +283,10 @@
               href="#"
               @click.prevent="selected = (selected === 'Tables' ? '':'Tables')"
               class="menu-item group"
-              :class="(selected === 'Tables') || (page === 'basicTables' || page === 'dataTables') ? 'menu-item-active' : 'menu-item-inactive'"
+              x-bind:class="(selected === 'Tables') || (page === 'basicTables' || page === 'dataTables') ? 'menu-item-active' : 'menu-item-inactive'"
             >
               <svg
-                :class="(selected === 'Tables') || (page === 'basicTables' || page === 'dataTables') ? 'menu-item-icon-active'  :'menu-item-icon-inactive'"
+                x-bind:class="(selected === 'Tables') || (page === 'basicTables' || page === 'dataTables') ? 'menu-item-icon-active'  :'menu-item-icon-inactive'"
                 width="24"
                 height="24"
                 viewBox="0 0 24 24"
@@ -303,14 +303,14 @@
 
               <span
                 class="menu-item-text"
-                :class="sidebarToggle ? 'lg:hidden' : ''"
+                x-bind:class="sidebarToggle ? 'lg:hidden' : ''"
               >
                 Tables
               </span>
 
               <svg
                 class="menu-item-arrow absolute right-2.5 top-1/2 -translate-y-1/2 stroke-current"
-                :class="[(selected === 'Tables') ? 'menu-item-arrow-active' : 'menu-item-arrow-inactive', sidebarToggle ? 'lg:hidden' : '' ]"
+                x-bind:class="[(selected === 'Tables') ? 'menu-item-arrow-active' : 'menu-item-arrow-inactive', sidebarToggle ? 'lg:hidden' : '' ]"
                 width="20"
                 height="20"
                 viewBox="0 0 20 20"
@@ -330,17 +330,17 @@
             <!-- Dropdown Menu Start -->
             <div
               class="overflow-hidden transform translate"
-              :class="(selected === 'Tables') ? 'block' :'hidden'"
+              x-bind:class="(selected === 'Tables') ? 'block' :'hidden'"
             >
               <ul
-                :class="sidebarToggle ? 'lg:hidden' : 'flex'"
+                x-bind:class="sidebarToggle ? 'lg:hidden' : 'flex'"
                 class="flex flex-col gap-1 mt-2 menu-dropdown pl-9"
               >
                 <li>
                   <a
                     href="basic-tables.html"
                     class="menu-dropdown-item group"
-                    :class="page === 'basicTables' ? 'menu-dropdown-item-active' : 'menu-dropdown-item-inactive'"
+                    x-bind:class="page === 'basicTables' ? 'menu-dropdown-item-active' : 'menu-dropdown-item-inactive'"
                   >
                     Basic Tables
                   </a>
@@ -357,10 +357,10 @@
               href="#"
               @click.prevent="selected = (selected === 'Pages' ? '':'Pages')"
               class="menu-item group"
-              :class="(selected === 'Pages') || (page === 'fileManager' || page === 'pricingTables' || page === 'blank' || page === 'page404' || page === 'page500' || page === 'page503' || page === 'success' || page === 'faq' || page === 'comingSoon' || page === 'maintenance') ? 'menu-item-active' : 'menu-item-inactive'"
+              x-bind:class="(selected === 'Pages') || (page === 'fileManager' || page === 'pricingTables' || page === 'blank' || page === 'page404' || page === 'page500' || page === 'page503' || page === 'success' || page === 'faq' || page === 'comingSoon' || page === 'maintenance') ? 'menu-item-active' : 'menu-item-inactive'"
             >
               <svg
-                :class="(selected === 'Pages') || (page === 'fileManager' || page === 'pricingTables' || page === 'blank' || page === 'page404' || page === 'page500' || page === 'page503' || page === 'success' || page === 'faq' || page === 'comingSoon' || page === 'maintenance') ? 'menu-item-icon-active'  :'menu-item-icon-inactive'"
+                x-bind:class="(selected === 'Pages') || (page === 'fileManager' || page === 'pricingTables' || page === 'blank' || page === 'page404' || page === 'page500' || page === 'page503' || page === 'success' || page === 'faq' || page === 'comingSoon' || page === 'maintenance') ? 'menu-item-icon-active'  :'menu-item-icon-inactive'"
                 width="24"
                 height="24"
                 viewBox="0 0 24 24"
@@ -377,14 +377,14 @@
 
               <span
                 class="menu-item-text"
-                :class="sidebarToggle ? 'lg:hidden' : ''"
+                x-bind:class="sidebarToggle ? 'lg:hidden' : ''"
               >
                 Pages
               </span>
 
               <svg
                 class="menu-item-arrow absolute right-2.5 top-1/2 -translate-y-1/2 stroke-current"
-                :class="[(selected === 'Pages') ? 'menu-item-arrow-active' : 'menu-item-arrow-inactive', sidebarToggle ? 'lg:hidden' : '' ]"
+                x-bind:class="[(selected === 'Pages') ? 'menu-item-arrow-active' : 'menu-item-arrow-inactive', sidebarToggle ? 'lg:hidden' : '' ]"
                 width="20"
                 height="20"
                 viewBox="0 0 20 20"
@@ -404,17 +404,17 @@
             <!-- Dropdown Menu Start -->
             <div
               class="overflow-hidden transform translate"
-              :class="(selected === 'Pages') ? 'block' :'hidden'"
+              x-bind:class="(selected === 'Pages') ? 'block' :'hidden'"
             >
               <ul
-                :class="sidebarToggle ? 'lg:hidden' : 'flex'"
+                x-bind:class="sidebarToggle ? 'lg:hidden' : 'flex'"
                 class="flex flex-col gap-1 mt-2 menu-dropdown pl-9"
               >
                 <li>
                   <a
                     href="blank.html"
                     class="menu-dropdown-item group"
-                    :class="page === 'blank' ? 'menu-dropdown-item-active' : 'menu-dropdown-item-inactive'"
+                    x-bind:class="page === 'blank' ? 'menu-dropdown-item-active' : 'menu-dropdown-item-inactive'"
                   >
                     Blank Page
                   </a>
@@ -423,7 +423,7 @@
                   <a
                     href="404.html"
                     class="menu-dropdown-item group"
-                    :class="page === 'page404' ? 'menu-dropdown-item-active' : 'menu-dropdown-item-inactive'"
+                    x-bind:class="page === 'page404' ? 'menu-dropdown-item-active' : 'menu-dropdown-item-inactive'"
                   >
                     404 Error
                   </a>
@@ -441,13 +441,13 @@
         <h3 class="mb-4 text-xs uppercase leading-[20px] text-gray-400">
           <span
             class="menu-group-title"
-            :class="sidebarToggle ? 'lg:hidden' : ''"
+            x-bind:class="sidebarToggle ? 'lg:hidden' : ''"
           >
             others
           </span>
 
           <svg
-            :class="sidebarToggle ? 'lg:block hidden' : 'hidden'"
+            x-bind:class="sidebarToggle ? 'lg:block hidden' : 'hidden'"
             class="mx-auto fill-current menu-group-icon"
             width="24"
             height="24"
@@ -471,10 +471,10 @@
               href="#"
               @click.prevent="selected = (selected === 'Charts' ? '':'Charts')"
               class="menu-item group"
-              :class="(selected === 'Charts') || (page === 'lineChart' || page === 'barChart' || page === 'pieChart') ? 'menu-item-active' : 'menu-item-inactive'"
+              x-bind:class="(selected === 'Charts') || (page === 'lineChart' || page === 'barChart' || page === 'pieChart') ? 'menu-item-active' : 'menu-item-inactive'"
             >
               <svg
-                :class="(selected === 'Charts') || (page === 'lineChart' || page === 'barChart' || page === 'pieChart') ? 'menu-item-icon-active'  :'menu-item-icon-inactive'"
+                x-bind:class="(selected === 'Charts') || (page === 'lineChart' || page === 'barChart' || page === 'pieChart') ? 'menu-item-icon-active'  :'menu-item-icon-inactive'"
                 width="24"
                 height="24"
                 viewBox="0 0 24 24"
@@ -491,14 +491,14 @@
 
               <span
                 class="menu-item-text"
-                :class="sidebarToggle ? 'lg:hidden' : ''"
+                x-bind:class="sidebarToggle ? 'lg:hidden' : ''"
               >
                 Charts
               </span>
 
               <svg
                 class="menu-item-arrow absolute right-2.5 top-1/2 -translate-y-1/2 stroke-current"
-                :class="[(selected === 'Charts') ? 'menu-item-arrow-active' : 'menu-item-arrow-inactive', sidebarToggle ? 'lg:hidden' : '' ]"
+                x-bind:class="[(selected === 'Charts') ? 'menu-item-arrow-active' : 'menu-item-arrow-inactive', sidebarToggle ? 'lg:hidden' : '' ]"
                 width="20"
                 height="20"
                 viewBox="0 0 20 20"
@@ -518,17 +518,17 @@
             <!-- Dropdown Menu Start -->
             <div
               class="overflow-hidden transform translate"
-              :class="(selected === 'Charts') ? 'block' :'hidden'"
+              x-bind:class="(selected === 'Charts') ? 'block' :'hidden'"
             >
               <ul
-                :class="sidebarToggle ? 'lg:hidden' : 'flex'"
+                x-bind:class="sidebarToggle ? 'lg:hidden' : 'flex'"
                 class="flex flex-col gap-1 mt-2 menu-dropdown pl-9"
               >
                 <li>
                   <a
                     href="line-chart.html"
                     class="menu-dropdown-item group"
-                    :class="page === 'lineChart' ? 'menu-dropdown-item-active' : 'menu-dropdown-item-inactive'"
+                    x-bind:class="page === 'lineChart' ? 'menu-dropdown-item-active' : 'menu-dropdown-item-inactive'"
                   >
                     Line Chart
                   </a>
@@ -537,7 +537,7 @@
                   <a
                     href="bar-chart.html"
                     class="menu-dropdown-item group"
-                    :class="page === 'barChart' ? 'menu-dropdown-item-active' : 'menu-dropdown-item-inactive'"
+                    x-bind:class="page === 'barChart' ? 'menu-dropdown-item-active' : 'menu-dropdown-item-inactive'"
                   >
                     Bar Chart
                   </a>
@@ -554,10 +554,10 @@
               href="#"
               @click.prevent="selected = (selected === 'UIElements' ? '':'UIElements')"
               class="menu-item group"
-              :class="(selected === 'UIElements') || (page === 'alerts' || page === 'avatars' || page === 'badge' || page === 'buttons' || page === 'buttonsGroup' || page === 'cards'|| page === 'carousel' || page === 'dropdowns' || page === 'images' || page === 'list' || page === 'modals' || page === 'videos') ? 'menu-item-active' : 'menu-item-inactive'"
+              x-bind:class="(selected === 'UIElements') || (page === 'alerts' || page === 'avatars' || page === 'badge' || page === 'buttons' || page === 'buttonsGroup' || page === 'cards'|| page === 'carousel' || page === 'dropdowns' || page === 'images' || page === 'list' || page === 'modals' || page === 'videos') ? 'menu-item-active' : 'menu-item-inactive'"
             >
               <svg
-                :class="(selected === 'UIElements') || (page === 'alerts' || page === 'avatars' || page === 'badge' || page === 'breadcrumb' || page === 'buttons' || page === 'buttonsGroup' || page === 'cards'|| page === 'carousel' || page === 'dropdowns' || page === 'images' || page === 'list' || page === 'modals' || page === 'notifications' || page === 'popovers' || page === 'progress' || page === 'spinners' || page === 'tooltips' || page === 'videos') ? 'menu-item-icon-active'  :'menu-item-icon-inactive'"
+                x-bind:class="(selected === 'UIElements') || (page === 'alerts' || page === 'avatars' || page === 'badge' || page === 'breadcrumb' || page === 'buttons' || page === 'buttonsGroup' || page === 'cards'|| page === 'carousel' || page === 'dropdowns' || page === 'images' || page === 'list' || page === 'modals' || page === 'notifications' || page === 'popovers' || page === 'progress' || page === 'spinners' || page === 'tooltips' || page === 'videos') ? 'menu-item-icon-active'  :'menu-item-icon-inactive'"
                 width="24"
                 height="24"
                 viewBox="0 0 24 24"
@@ -574,14 +574,14 @@
 
               <span
                 class="menu-item-text"
-                :class="sidebarToggle ? 'lg:hidden' : ''"
+                x-bind:class="sidebarToggle ? 'lg:hidden' : ''"
               >
                 UI Elements
               </span>
 
               <svg
                 class="menu-item-arrow absolute right-2.5 top-1/2 -translate-y-1/2 stroke-current"
-                :class="[(selected === 'UIElements') ? 'menu-item-arrow-active' : 'menu-item-arrow-inactive', sidebarToggle ? 'lg:hidden' : '' ]"
+                x-bind:class="[(selected === 'UIElements') ? 'menu-item-arrow-active' : 'menu-item-arrow-inactive', sidebarToggle ? 'lg:hidden' : '' ]"
                 width="20"
                 height="20"
                 viewBox="0 0 20 20"
@@ -601,17 +601,17 @@
             <!-- Dropdown Menu Start -->
             <div
               class="overflow-hidden transform translate"
-              :class="(selected === 'UIElements') ? 'block' :'hidden'"
+              x-bind:class="(selected === 'UIElements') ? 'block' :'hidden'"
             >
               <ul
-                :class="sidebarToggle ? 'lg:hidden' : 'flex'"
+                x-bind:class="sidebarToggle ? 'lg:hidden' : 'flex'"
                 class="flex flex-col gap-1 mt-2 menu-dropdown pl-9"
               >
                 <li>
                   <a
                     href="alerts.html"
                     class="menu-dropdown-item group"
-                    :class="page === 'alerts' ? 'menu-dropdown-item-active' : 'menu-dropdown-item-inactive'"
+                    x-bind:class="page === 'alerts' ? 'menu-dropdown-item-active' : 'menu-dropdown-item-inactive'"
                   >
                     Alerts
                   </a>
@@ -620,7 +620,7 @@
                   <a
                     href="avatars.html"
                     class="menu-dropdown-item group"
-                    :class="page === 'avatars' ? 'menu-dropdown-item-active' : 'menu-dropdown-item-inactive'"
+                    x-bind:class="page === 'avatars' ? 'menu-dropdown-item-active' : 'menu-dropdown-item-inactive'"
                   >
                     Avatars
                   </a>
@@ -629,7 +629,7 @@
                   <a
                     href="badge.html"
                     class="menu-dropdown-item group"
-                    :class="page === 'badge' ? 'menu-dropdown-item-active' : 'menu-dropdown-item-inactive'"
+                    x-bind:class="page === 'badge' ? 'menu-dropdown-item-active' : 'menu-dropdown-item-inactive'"
                   >
                     Badges
                   </a>
@@ -638,7 +638,7 @@
                   <a
                     href="buttons.html"
                     class="menu-dropdown-item group"
-                    :class="page === 'buttons' ? 'menu-dropdown-item-active' : 'menu-dropdown-item-inactive'"
+                    x-bind:class="page === 'buttons' ? 'menu-dropdown-item-active' : 'menu-dropdown-item-inactive'"
                   >
                     Buttons
                   </a>
@@ -647,7 +647,7 @@
                   <a
                     href="images.html"
                     class="menu-dropdown-item group"
-                    :class="page === 'images' ? 'menu-dropdown-item-active' : 'menu-dropdown-item-inactive'"
+                    x-bind:class="page === 'images' ? 'menu-dropdown-item-active' : 'menu-dropdown-item-inactive'"
                   >
                     Images
                   </a>
@@ -656,7 +656,7 @@
                   <a
                     href="videos.html"
                     class="menu-dropdown-item group"
-                    :class="page === 'videos' ? 'menu-dropdown-item-active' : 'menu-dropdown-item-inactive'"
+                    x-bind:class="page === 'videos' ? 'menu-dropdown-item-active' : 'menu-dropdown-item-inactive'"
                   >
                     Videos
                   </a>
@@ -673,10 +673,10 @@
               href="#"
               @click.prevent="selected = (selected === 'Authentication' ? '':'Authentication')"
               class="menu-item group"
-              :class="(selected === 'Authentication') || (page === 'basicChart' || page === 'advancedChart') ? 'menu-item-active' : 'menu-item-inactive'"
+              x-bind:class="(selected === 'Authentication') || (page === 'basicChart' || page === 'advancedChart') ? 'menu-item-active' : 'menu-item-inactive'"
             >
               <svg
-                :class="(selected === 'Authentication') || (page === 'basicChart' || page === 'advancedChart') ? 'menu-item-icon-active'  :'menu-item-icon-inactive'"
+                x-bind:class="(selected === 'Authentication') || (page === 'basicChart' || page === 'advancedChart') ? 'menu-item-icon-active'  :'menu-item-icon-inactive'"
                 width="24"
                 height="24"
                 viewBox="0 0 24 24"
@@ -693,14 +693,14 @@
 
               <span
                 class="menu-item-text"
-                :class="sidebarToggle ? 'lg:hidden' : ''"
+                x-bind:class="sidebarToggle ? 'lg:hidden' : ''"
               >
                 Authentication
               </span>
 
               <svg
                 class="menu-item-arrow absolute right-2.5 top-1/2 -translate-y-1/2 stroke-current"
-                :class="[(selected === 'Authentication') ? 'menu-item-arrow-active' : 'menu-item-arrow-inactive', sidebarToggle ? 'lg:hidden' : '' ]"
+                x-bind:class="[(selected === 'Authentication') ? 'menu-item-arrow-active' : 'menu-item-arrow-inactive', sidebarToggle ? 'lg:hidden' : '' ]"
                 width="20"
                 height="20"
                 viewBox="0 0 20 20"
@@ -720,17 +720,17 @@
             <!-- Dropdown Menu Start -->
             <div
               class="overflow-hidden transform translate"
-              :class="(selected === 'Authentication') ? 'block' :'hidden'"
+              x-bind:class="(selected === 'Authentication') ? 'block' :'hidden'"
             >
               <ul
-                :class="sidebarToggle ? 'lg:hidden' : 'flex'"
+                x-bind:class="sidebarToggle ? 'lg:hidden' : 'flex'"
                 class="flex flex-col gap-1 mt-2 menu-dropdown pl-9"
               >
                 <li>
                   <a
                     href="signin.html"
                     class="menu-dropdown-item group"
-                    :class="page === 'signin' ? 'menu-dropdown-item-active' : 'menu-dropdown-item-inactive'"
+                    x-bind:class="page === 'signin' ? 'menu-dropdown-item-active' : 'menu-dropdown-item-inactive'"
                   >
                     Sign In
                   </a>
@@ -739,7 +739,7 @@
                   <a
                     href="signup.html"
                     class="menu-dropdown-item group"
-                    :class="page === 'signup' ? 'menu-dropdown-item-active' : 'menu-dropdown-item-inactive'"
+                    x-bind:class="page === 'signup' ? 'menu-dropdown-item-active' : 'menu-dropdown-item-inactive'"
                   >
                     Sign Up
                   </a>
@@ -756,7 +756,7 @@
 
     <!-- Promo Box -->
     <div
-      :class="sidebarToggle ? 'lg:hidden' : ''"
+      x-bind:class="sidebarToggle ? 'lg:hidden' : ''"
       class="mx-auto mb-10 w-full max-w-60 rounded-2xl bg-gray-50 px-4 py-5 text-center dark:bg-white/[0.03]"
     >
       <h3 class="mb-2 font-semibold text-gray-900 dark:text-white">
