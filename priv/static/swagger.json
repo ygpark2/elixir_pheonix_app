@@ -951,6 +951,23 @@
       "type": "object"
     }
   },
+  "tags": [
+    {
+      "name": "Company",
+      "description": "Company-related endpoints"
+    },
+    {
+      "name": "User",
+      "description": "User-related endpoints"
+    }
+  ],
+  "basePath": "/api",
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
   "paths": {
     "/auth/login": {
       "post": {
@@ -3056,22 +3073,5 @@
       }
     }
   },
-  "swagger": "2.0",
-  "basePath": "/api",
-  "consumes": [
-    "application/json"
-  ],
-  "produces": [
-    "application/json"
-  ],
-  "tags": [
-    {
-      "name": "Company",
-      "description": "Company-related endpoints"
-    },
-    {
-      "name": "User",
-      "description": "User-related endpoints"
-    }
-  ]
+  "swagger": "2.0"
 }

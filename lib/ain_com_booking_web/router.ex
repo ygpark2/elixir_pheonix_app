@@ -70,12 +70,9 @@ defmodule AinComBookingWeb.Router do
     pipe_through(:browser)
 
     get("/", Home.Controller, :index, as: :home)
-  end
-
-  scope "/", AinComBookingWeb do
-    pipe_through(:browser)
-
     live("/live", Home.Live, :index, as: :live_home)
+
+    get("/admin", Admin.Controller, :index, as: :admin)
   end
 
   scope "/api", AinComBookingApi.Controllers do
