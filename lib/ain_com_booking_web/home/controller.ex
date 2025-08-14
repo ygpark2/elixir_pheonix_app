@@ -5,6 +5,9 @@ defmodule AinComBookingWeb.Home.Controller do
 
   @spec index(Plug.Conn.t(), map) :: Plug.Conn.t()
   def index(conn, _) do
-    render(conn, "index.html", message: "Hello, world!")
+    conn
+    |> assign(:variant, :main)
+    |> assign(:body_class, "main")
+    |> render(:index, message: "Hello, world!")
   end
 end

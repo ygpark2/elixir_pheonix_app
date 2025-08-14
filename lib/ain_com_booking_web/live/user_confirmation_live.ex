@@ -26,7 +26,17 @@ defmodule AinComBookingWeb.UserConfirmationLive do
 
   def mount(%{"token" => token}, _session, socket) do
     form = to_form(%{"token" => token}, as: "user")
-    {:ok, assign(socket, form: form), temporary_assigns: [form: nil]}
+
+    socket =
+      socket
+      |> assign(page_title: "User Confirmation")
+      |> assign(layout_variant: :auth)
+      |> assign(body_class: "bg-gray-50")
+      |> assign(form: form)
+
+    {:ok, socket, temporary_assigns: [form: nil]}
+
+    # {:ok, assign(socket, form: form), temporary_assigns: [form: nil]}
   end
 
   # Do not log in the user after confirmation to avoid a

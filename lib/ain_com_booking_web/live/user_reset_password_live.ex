@@ -51,7 +51,15 @@ defmodule AinComBookingWeb.UserResetPasswordLive do
           %{}
       end
 
-    {:ok, assign_form(socket, form_source), temporary_assigns: [form: nil]}
+    socket =
+      socket
+      |> assign(page_title: "User Registration")
+      |> assign(layout_variant: :auth)
+      |> assign(body_class: "bg-gray-50")
+      |> assign_form(form_source)
+
+    {:ok, socket, temporary_assigns: [form: nil]}
+    # {:ok, assign_form(socket, form_source), temporary_assigns: [form: nil]}
   end
 
   # Do not log in the user after reset password to avoid a

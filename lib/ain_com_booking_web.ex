@@ -24,11 +24,11 @@ defmodule AinComBookingWeb do
     quote do
       use Phoenix.Component
 
+      import AinComBooking.Gettext
       import AinComBookingWeb.CoreComponents
-      import AinComBookingWeb.Gettext
       import Phoenix.HTML
       import Phoenix.HTML.Form
-      import Phoenix.HTML.Link
+      # import Phoenix.HTML.Tag
 
       alias AinComBookingWeb.Router.Helpers, as: Routes
 

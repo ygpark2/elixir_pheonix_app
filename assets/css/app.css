@@ -1,13 +1,6 @@
-/* 기본 리셋과 프로젝트별 스타일 */
-@import 'simple-css-reset';
-
 /* Ant Design 스타일 */
 @import '~antd/dist/reset.css';
 @import '~antd/dist/antd.min.css';
-
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
 
 .home {
   display: flex;

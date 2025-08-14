@@ -48,6 +48,9 @@ defmodule AinComBookingWeb.UserRegistrationLive do
 
     socket =
       socket
+      |> assign(page_title: "User Registration")
+      |> assign(layout_variant: :auth)
+      |> assign(body_class: "bg-gray-50")
       |> assign(trigger_submit: false, check_errors: false)
       |> assign_form(changeset)
 

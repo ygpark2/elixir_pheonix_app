@@ -1,10 +1,9 @@
 <main role="main">
-  <AinComBookingWeb.Home.HTML.header />
 
   <div class="flash-messages">
-    <.flash flash={@flash} kind={:success} />
-    <.flash flash={@flash} kind={:error} />
-    <.flash flash={@flash} kind={:info} />
+    <.layout_flash flash={@flash} kind={:success} />
+    <.layout_flash flash={@flash} kind={:error} />
+    <.layout_flash flash={@flash} kind={:info} />
   </div>
 
   <%= @inner_content %>

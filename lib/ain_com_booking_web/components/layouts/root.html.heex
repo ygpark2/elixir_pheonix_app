@@ -1,14 +1,95 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <%= csrf_meta_tag() %>
-    <link phx-track-static rel="stylesheet" href={Routes.static_path(@conn, "/assets/app.css")} />
-    <script defer phx-track-static type="text/javascript" src={Routes.static_path(@conn, "/assets/app.js")}></script>
-  </head>
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="csrf-token" content={Phoenix.Controller.get_csrf_token()} />
+  <link phx-track-static rel="stylesheet" href={~p"/assets/app.css"} />
+  <script defer phx-track-static type="text/javascript" src={~p"/assets/app.js"}></script>
+</head>
+<body class={[
+        "home",
+        AinComBookingWeb.Layouts.body_class_for(@variant),
+        @body_class
+      ]}>
+  <%= case @variant do %>
+    <% :auth -> %>
+      <main class="w-full" role="main" style="max-width: 420px;">
+        <div class="flash-messages">
+          <!-- Ant Design style alerts -->
+          <%= for kind <- [:error, :info, :success] do %>
+            <%= if msg = Phoenix.Flash.get(@flash, kind) do %>
+              <div class={["ant-alert", "ant-alert-#{kind}", "ant-alert-no-icon"]} role="alert" style="margin-bottom: 10px;">
+                <div class="ant-alert-content"><%= msg %></div>
+              </div>
+            <% end %>
+          <% end %>
+        </div>
+        <%= @inner_content %>
+      </main>
 
-  <body class="antialiased">
-    <%= @inner_content %>
-  </body>
+    <% :main -> %>
+      <main class="w-full max-w-md mx-auto p-6">
+        <%= if @show_flash do %>
+          <div class="mb-4 space-y-2">
+            <.layout_flash flash={@flash} kind={:success} />
+            <.layout_flash flash={@flash} kind={:error} />
+            <.layout_flash flash={@flash} kind={:info} />
+          </div>
+        <% end %>
+        <%= @inner_content %>
+      </main>
+
+    <% :settings -> %>
+      <div class="flex min-h-screen">
+        <aside class="w-64 border-r bg-white">
+          <!-- settings sidebar -->
+          <nav class="p-4 space-y-2">
+            <a class="block hover:underline" href={~p"/settings/profile"}>Profile</a>
+            <a class="block hover:underline" href={~p"/settings/security"}>Security</a>
+          </nav>
+        </aside>
+        <main class="flex-1 p-6">
+          <%= if @show_flash do %>
+            <div class="mb-4 space-y-2">
+              <.layout_flash flash={@flash} kind={:error} />
+              <.layout_flash flash={@flash} kind={:info} />
+            </div>
+          <% end %>
+          <%= @inner_content %>
+        </main>
+      </div>
+
+    <% :dashboard -> %>
+      <header class="border-b">
+        <div class="max-w-6xl mx-auto p-4 flex justify-between">
+          <a href={~p"/"} class="font-semibold">AinCom</a>
+          <nav class="space-x-4">
+            <a href={~p"/pricing"}>Pricing</a>
+            <a href={~p"/docs"}>Docs</a>
+          </nav>
+        </div>
+      </header>
+      <main class="max-w-6xl mx-auto p-6">
+        <%= @inner_content %>
+      </main>
+      <footer class="border-t">
+        <div class="max-w-6xl mx-auto p-4 text-sm text-slate-500">
+          © <%= Date.utc_today().year %> AinCom
+        </div>
+      </footer>
+
+    <% :app -> %>
+      <main role="main" class="p-6">
+        <%= if @show_flash do %>
+          <div class="mb-4 space-y-2">
+            <.layout_flash flash={@flash} kind={:success} />
+            <.layout_flash flash={@flash} kind={:error} />
+            <.layout_flash flash={@flash} kind={:info} />
+          </div>
+        <% end %>
+        <%= @inner_content %>
+      </main>
+  <% end %>
+</body>
 </html>

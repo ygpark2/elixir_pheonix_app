@@ -94,6 +94,9 @@ defmodule AinComBookingWeb.UserSettingsLive do
 
     socket =
       socket
+      |> assign(page_title: "User Settings")
+      |> assign(layout_variant: :auth)
+      |> assign(body_class: "bg-gray-50")
       |> assign(:current_password, nil)
       |> assign(:email_form_current_password, nil)
       |> assign(:current_email, user.email)

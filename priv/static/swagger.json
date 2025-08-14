@@ -4,48 +4,6 @@
     "title": "AinComBooking API"
   },
   "definitions": {
-    "SignupRequest": {
-      "description": "Parameters to register a new user",
-      "example": {
-        "email": "user@example.com",
-        "password": "password123"
-      },
-      "properties": {
-        "email": {
-          "description": "User email",
-          "type": "string"
-        },
-        "password": {
-          "description": "User password",
-          "type": "string"
-        }
-      },
-      "required": [
-        "email",
-        "password"
-      ],
-      "title": "SignupRequest",
-      "type": "object"
-    },
-    "UserResponse": {
-      "description": "Response returned after successful registration",
-      "example": {
-        "email": "user@example.com",
-        "id": "550e8400-e29b-41d4-a716-446655440000"
-      },
-      "properties": {
-        "email": {
-          "description": "User email",
-          "type": "string"
-        },
-        "id": {
-          "description": "User ID",
-          "type": "string"
-        }
-      },
-      "title": "UserResponse",
-      "type": "object"
-    },
     "ErrorsResponse": {
       "description": "Validation error response",
       "example": {
@@ -71,6 +29,46 @@
       "description": "Parameters to authenticate a user",
       "example": {
         "email": "user@example.com",
+        "fingerprint": "abcdef123456",
+        "password": "password123"
+      },
+      "properties": {
+        "device_name": {
+          "description": "Device name",
+          "type": "string"
+        },
+        "email": {
+          "description": "User email",
+          "type": "string"
+        },
+        "fingerprint": {
+          "description": "Device fingerprint",
+          "type": "string"
+        },
+        "os": {
+          "description": "Operating system",
+          "type": "string"
+        },
+        "password": {
+          "description": "User password",
+          "type": "string"
+        },
+        "version": {
+          "description": "Device version",
+          "type": "string"
+        }
+      },
+      "required": [
+        "email",
+        "password"
+      ],
+      "title": "LoginRequest",
+      "type": "object"
+    },
+    "SignupRequest": {
+      "description": "Parameters to register a new user",
+      "example": {
+        "email": "user@example.com",
         "password": "password123"
       },
       "properties": {
@@ -87,21 +85,55 @@
         "email",
         "password"
       ],
-      "title": "LoginRequest",
+      "title": "SignupRequest",
       "type": "object"
     },
     "TokenResponse": {
-      "description": "Response containing a JWT access token",
+      "description": "Response containing tokens",
       "example": {
-        "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+        "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+        "device_expires_at": "2025-08-08T00:00:00Z",
+        "device_token": "86b5b3e2-34c9-43ab-9940-19c0ad19f4b2",
+        "expires_in": 3600
       },
       "properties": {
         "access_token": {
           "description": "Access token",
           "type": "string"
+        },
+        "device_expires_at": {
+          "description": "ISO8601 expiry of device token",
+          "type": "string"
+        },
+        "device_token": {
+          "description": "Device token",
+          "type": "string"
+        },
+        "expires_in": {
+          "description": "Access token TTL in seconds",
+          "type": "integer"
         }
       },
       "title": "TokenResponse",
+      "type": "object"
+    },
+    "UserResponse": {
+      "description": "Response returned after successful registration",
+      "example": {
+        "email": "user@example.com",
+        "id": "550e8400-e29b-41d4-a716-446655440000"
+      },
+      "properties": {
+        "email": {
+          "description": "User email",
+          "type": "string"
+        },
+        "id": {
+          "description": "User ID",
+          "type": "string"
+        }
+      },
+      "title": "UserResponse",
       "type": "object"
     },
     "Company": {
@@ -919,30 +951,13 @@
       "type": "object"
     }
   },
-  "consumes": [
-    "application/json"
-  ],
-  "produces": [
-    "application/json"
-  ],
-  "tags": [
-    {
-      "name": "Company",
-      "description": "Company-related endpoints"
-    },
-    {
-      "name": "User",
-      "description": "User-related endpoints"
-    }
-  ],
-  "basePath": "/api",
   "paths": {
     "/auth/login": {
       "post": {
         "consumes": [
           "application/json"
         ],
-        "description": "Generates a JWT access token for valid credentials",
+        "description": "Generates a JWT access token and device token for valid credentials",
         "operationId": "AinComBookingApi.Controllers.AuthController.login",
         "parameters": [
           {
@@ -961,6 +976,12 @@
         "responses": {
           "200": {
             "description": "Authenticated",
+            "schema": {
+              "$ref": "#/definitions/TokenResponse"
+            }
+          },
+          "201": {
+            "description": "Authenticated (new device)",
             "schema": {
               "$ref": "#/definitions/TokenResponse"
             }
@@ -3035,5 +3056,22 @@
       }
     }
   },
-  "swagger": "2.0"
+  "swagger": "2.0",
+  "basePath": "/api",
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "tags": [
+    {
+      "name": "Company",
+      "description": "Company-related endpoints"
+    },
+    {
+      "name": "User",
+      "description": "User-related endpoints"
+    }
+  ]
 }

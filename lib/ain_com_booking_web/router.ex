@@ -47,19 +47,6 @@ defmodule AinComBookingWeb.Router do
     plug(:put_root_layout, {AinComBookingWeb.Layouts, :root})
   end
 
-  scope "/" do
-    pipe_through(:browser)
-
-    # pow_routes()
-    # pow_extension_routes()
-
-    # To enable metrics dashboard use `telemetry_ui_allowed: true` as assigns value
-    #
-    # Metrics can contains sensitive data you should protect it under authorization
-    # See https://github.com/mirego/telemetry_ui#security
-    get("/metrics", TelemetryUI.Web, [], assigns: %{telemetry_ui_allowed: true})
-  end
-
   if Mix.env() == :dev do
     scope "/dev" do
       pipe_through(:browser)
@@ -70,6 +57,12 @@ defmodule AinComBookingWeb.Router do
       )
 
       forward("/mailbox", Plug.Swoosh.MailboxPreview)
+
+      # To enable metrics dashboard use `telemetry_ui_allowed: true` as assigns value
+      #
+      # Metrics can contains sensitive data you should protect it under authorization
+      # See https://github.com/mirego/telemetry_ui#security
+      get("/metrics", TelemetryUI.Web, [], assigns: %{telemetry_ui_allowed: true})
     end
   end
 
