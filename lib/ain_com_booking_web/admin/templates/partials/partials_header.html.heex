@@ -1,5 +1,5 @@
 <header
-  x-data="{menuToggle: false}"
+  x-data="{menuToggle: @menu_toggle, sidebarToggle: @sidebar_toggle, darkMode: @dark_mode}"
   class="sticky top-0 z-99999 flex w-full border-gray-200 bg-white lg:border-b dark:border-gray-800 dark:bg-gray-900"
 >
   <div
@@ -195,7 +195,7 @@
         <!-- Notification Menu Area -->
         <div
           class="relative"
-          x-data="{ dropdownOpen: false, notifying: true }"
+          x-data="{ dropdownOpen: @notification_dropdown_open, notifying: @notifying }"
           @click.outside="dropdownOpen = false"
         >
           <button
@@ -584,7 +584,7 @@
       <!-- User Area -->
       <div
         class="relative"
-        x-data="{ dropdownOpen: false }"
+        x-data="{ dropdownOpen: @user_dropdown_open }"
         @click.outside="dropdownOpen = false"
       >
         <a

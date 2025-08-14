@@ -5,11 +5,16 @@ defmodule AinComBookingWeb.Admin.Controller do
 
   @spec index(Plug.Conn.t(), map) :: Plug.Conn.t()
   def index(conn, _) do
-    # <%= render "partials/header.html", assigns |> Map.merge(%{title: "Dashboard", user: @current_user}) %>
     conn
     |> assign(:variant, :main)
     |> assign(:body_class, "main")
-    |> Map.merge(%{title: "Dashboard", sidebarToggle: true})
+    |> assign(:title, "Dashboard")
+    |> assign(:sidebar_toggle, true)
+    |> assign(:menu_toggle, false)
+    |> assign(:dark_mode, false)
+    |> assign(:notification_dropdown_open, false)
+    |> assign(:notifying, true)
+    |> assign(:user_dropdown_open, false)
     |> render(:index, message: "Hello, world!")
   end
 end
