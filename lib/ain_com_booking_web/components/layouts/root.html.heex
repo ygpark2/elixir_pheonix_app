@@ -7,11 +7,11 @@
   <link phx-track-static rel="stylesheet" href={~p"/assets/app.css"} />
   <script defer phx-track-static type="text/javascript" src={~p"/assets/app.js"}></script>
 </head>
-<body class={[
-        "home",
-        AinComBookingWeb.Layouts.body_class_for(@variant),
-        @body_class
-      ]}>
+<body
+  x-data="{ menuToggle: false, sidebarToggle: false, darkMode: false }"
+  x-init="darkMode = JSON.parse(localStorage.getItem('darkMode') || 'false'); $watch('darkMode', value => localStorage.setItem('darkMode', JSON.stringify(value)))"
+  x-bind:class="{ 'dark bg-gray-900': darkMode }"
+  class={["home", AinComBookingWeb.Layouts.body_class_for(@variant), @body_class]}>
   <%= case @variant do %>
     <% :auth -> %>
       <main class="w-full" role="main" style="max-width: 420px;">
@@ -61,11 +61,12 @@
       </div>
 
     <% :dashboard -> %>
-      <div class="flex">
+      <AdminComponents.preloader />
+      <div class="flex h-screen overflow-hidden">
         <AdminComponents.sidebar />
-        <div class="flex-1">
+        <div class="relative flex flex-1 flex-col overflow-y-auto overflow-x-hidden">
           <AdminComponents.header />
-          <main class="p-6">
+          <main class="mx-auto max-w-screen-2xl p-4 md:p-6">
             <%= @inner_content %>
           </main>
         </div>

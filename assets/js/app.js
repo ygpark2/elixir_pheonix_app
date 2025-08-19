@@ -1,5 +1,11 @@
 import {Socket} from 'phoenix';
 import {LiveSocket} from 'phoenix_live_view';
+import Alpine from 'alpinejs';
+import persist from '@alpinejs/persist';
+
+Alpine.plugin(persist);
+window.Alpine = Alpine;
+Alpine.start();
 
 const FLASH_TTL = 8000;
 const Hooks = {};
