@@ -1,0 +1,12 @@
+defmodule AinComBookingWeb.AdminComponents do
+  use Phoenix.Component
+
+  embed_templates "admin/*"
+
+  attr(:menu_toggle, :boolean, default: false)
+  attr(:sidebar_toggle, :boolean, default: false)
+  attr(:dark_mode, :boolean, default: false)
+  def header(assigns)
+
+  def sidebar(assigns)
+end
