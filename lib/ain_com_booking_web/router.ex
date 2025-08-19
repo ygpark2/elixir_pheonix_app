@@ -73,6 +73,7 @@ defmodule AinComBookingWeb.Router do
     live("/live", Home.Live, :index, as: :live_home)
 
     get("/admin", Admin.Controller, :index, as: :admin)
+    live("/admin/live", Admin.Live, :index, as: :live_admin)
   end
 
   scope "/api", AinComBookingApi.Controllers do

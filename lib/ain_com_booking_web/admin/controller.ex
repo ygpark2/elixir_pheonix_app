@@ -9,12 +9,6 @@ defmodule AinComBookingWeb.Admin.Controller do
     |> assign(:variant, :main)
     |> assign(:body_class, "main")
     |> assign(:title, "Dashboard")
-    |> assign(:sidebar_toggle, true)
-    |> assign(:menu_toggle, false)
-    |> assign(:dark_mode, false)
-    |> assign(:notification_dropdown_open, false)
-    |> assign(:notifying, true)
-    |> assign(:user_dropdown_open, false)
     |> render(:index, message: "Hello, world!")
   end
 end
