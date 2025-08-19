@@ -1,17 +1,24 @@
-<div class="home">
-  <.header/>
-  <.message text={@message}/>
+<div
+  x-data="{ menuToggle: false, sidebarToggle: false, darkMode: false, loaded: true }"
+  class="flex"
+>
+  <.preloader />
+  <.sidebar />
+  <div class="flex-1 home">
+    <.header />
+    <.message text={@message} />
 
-  <hr />
+    <hr />
 
-  <div style="display: flex; gap: 10px">
-    <button type="button" phx-click="decrement_counter">-</button>
-    <strong><%= @counter %></strong>
-    <button type="button" phx-click="increment_counter">+</button>
+    <div style="display: flex; gap: 10px">
+      <button type="button" phx-click="decrement_counter">-</button>
+      <strong><%= @counter %></strong>
+      <button type="button" phx-click="increment_counter">+</button>
+    </div>
+
+    <hr />
+
+    <button type="button" phx-click="add_flash_success">Add flash success</button>
+    <button type="button" phx-click="add_flash_error">Add flash error</button>
   </div>
-
-  <hr />
-
-  <button type="button" phx-click="add_flash_success">Add flash success</button>
-  <button type="button" phx-click="add_flash_error">Add flash error</button>
 </div>

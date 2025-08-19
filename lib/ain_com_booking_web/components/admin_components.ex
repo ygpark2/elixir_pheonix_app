@@ -9,4 +9,6 @@ defmodule AinComBookingWeb.AdminComponents do
   def header(assigns)
 
   def sidebar(assigns)
+
+  def preloader(assigns)
 end
