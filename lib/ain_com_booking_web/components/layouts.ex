@@ -3,6 +3,7 @@ defmodule AinComBookingWeb.Layouts do
   use AinComBookingWeb, :html
 
   alias Phoenix.LiveView.JS
+  import AinComBookingWeb.AdminComponents
 
   # knobs the layout responds to
   attr(:variant, :atom, values: [:app, :auth, :settings, :main, :dashboard], default: :app)
