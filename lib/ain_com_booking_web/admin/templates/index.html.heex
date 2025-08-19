@@ -1,4 +1,11 @@
-<div class="home">
-  <.header/>
-  <.message text={@message}/>
+<div
+  x-data="{ menuToggle: false, sidebarToggle: false, darkMode: false, loaded: true }"
+  class="flex"
+>
+  <.preloader />
+  <.sidebar />
+  <div class="flex-1 home">
+    <.header />
+    <.message text={@message} />
+  </div>
 </div>

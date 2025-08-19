@@ -1,5 +1,6 @@
 defmodule AinComBookingWeb.Admin.HTML do
   use Phoenix.Component
+  import AinComBookingWeb.AdminComponents
 
   embed_templates("templates/**/*")
 
@@ -7,9 +8,6 @@ defmodule AinComBookingWeb.Admin.HTML do
 
   attr(:text, :string, required: true)
   def message(assigns)
-
-  attr(:url, :string, default: "https://github.com/mirego/ain-com")
-  def header(assigns)
 
   """
   def partials_header(assigns) do
