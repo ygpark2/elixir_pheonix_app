@@ -1,7 +1,7 @@
 # -----------------------------------------------
 # Stage: npm dependencies
 # -----------------------------------------------
-FROM node:24.4-bookworm-slim AS npm-builder
+FROM node:24.7-bookworm-slim AS npm-builder
 
 # Install Debian dependencies
 RUN apt-get update -y && \
@@ -65,7 +65,7 @@ RUN mix release
 # -----------------------------------------------
 # Stage: Bundle release in a docker image
 # -----------------------------------------------
-FROM debian:bookworm-20250721-slim
+FROM debian:bookworm-20250811-slim
 
 RUN apt-get update -y && \
     apt-get install -y libstdc++6 openssl libncurses5 locales && \
