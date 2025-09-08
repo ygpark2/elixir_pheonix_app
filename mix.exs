@@ -107,7 +107,7 @@ defmodule AinCom.Mixfile do
       {:gettext, "~> 0.26"},
 
       # Errors
-      {:sentry, "~> 10.9"},
+      {:sentry, "~> 11.0"},
 
       # Monitoring
       {:new_relic_agent, "~> 1.34"},
