@@ -12,7 +12,7 @@
     "phoenix_html": "^4.2.1",
     "phoenix_live_view": "^1.1.8",
     "simple-css-reset": "^3.0.0",
-    "antd": "^5.27.1",
+    "antd": "^5.27.3",
     "alpinejs": "^3.13.0",
     "@alpinejs/persist": "^3.15.0"
   },
