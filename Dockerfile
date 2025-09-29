@@ -18,7 +18,7 @@ RUN npm ci --prefix assets
 # -----------------------------------------------
 # Stage: hex dependencies
 # -----------------------------------------------
-FROM hexpm/elixir:1.18.4-erlang-28.0-debian-bookworm-20250610-slim AS otp-builder
+FROM hexpm/elixir:1.18.4-erlang-28.1-debian-bookworm-20250908-slim AS otp-builder
 
 # Install Debian dependencies
 RUN apt-get update -y && \
@@ -65,7 +65,7 @@ RUN mix release
 # -----------------------------------------------
 # Stage: Bundle release in a docker image
 # -----------------------------------------------
-FROM debian:bookworm-20250811-slim
+FROM debian:bookworm-20250908-slim
 
 RUN apt-get update -y && \
     apt-get install -y libstdc++6 openssl libncurses5 locales && \
