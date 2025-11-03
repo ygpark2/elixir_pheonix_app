@@ -1,7 +1,7 @@
 # -----------------------------------------------
 # Stage: npm dependencies
 # -----------------------------------------------
-FROM node:24.9-bookworm-slim AS npm-builder
+FROM node:25.1-bookworm-slim AS npm-builder
 
 # Install Debian dependencies
 RUN apt-get update -y && \
@@ -18,7 +18,7 @@ RUN npm ci --prefix assets
 # -----------------------------------------------
 # Stage: hex dependencies
 # -----------------------------------------------
-FROM hexpm/elixir:1.18.4-erlang-28.1-debian-bookworm-20250929-slim AS otp-builder
+FROM hexpm/elixir:1.19-erlang-28.1-debian-bookworm-20251020-slim AS otp-builder
 
 # Install Debian dependencies
 RUN apt-get update -y && \
@@ -65,7 +65,7 @@ RUN mix release
 # -----------------------------------------------
 # Stage: Bundle release in a docker image
 # -----------------------------------------------
-FROM debian:bookworm-20250929-slim
+FROM debian:bookworm-20251020-slim
 
 RUN apt-get update -y && \
     apt-get install -y libstdc++6 openssl libncurses5 locales && \
