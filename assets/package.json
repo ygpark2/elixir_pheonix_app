@@ -10,15 +10,15 @@
   "dependencies": {
     "phoenix": "^1.7.7",
     "phoenix_html": "^4.2.1",
-    "phoenix_live_view": "^1.1.16",
+    "phoenix_live_view": "^1.1.17",
     "simple-css-reset": "^3.0.0",
-    "antd": "^5.27.4",
+    "antd": "^5.29.0",
     "alpinejs": "^3.15.1",
-    "@alpinejs/persist": "^3.15.0"
+    "@alpinejs/persist": "^3.15.2"
   },
   "devDependencies": {
     "@babel/eslint-parser": "^7.28.5",
-    "eslint": "^9.37.0",
+    "eslint": "^9.39.1",
     "eslint-plugin-mirego": "^1.0.0",
     "prettier": "^3.6.2",
     "stylelint": "^15.11.0",
