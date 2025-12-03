@@ -45,7 +45,7 @@ config :ain_com_booking,
 config :esbuild,
   version: "0.16.4",
   default: [
-    args: ~w(js/app.jsx --bundle --target=es2017 --outdir=../priv/static/assets
+    args: ~w(js/app.js --bundle --target=es2017 --outdir=../priv/static/assets
       --loader:.js=jsx --loader:.jsx=jsx --jsx=automatic),
     cd: Path.expand("../assets", __DIR__),
     env: %{"NODE_PATH" => Path.expand("../deps", __DIR__)}

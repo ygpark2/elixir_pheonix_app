@@ -4,138 +4,6 @@
     "title": "AinComBooking API"
   },
   "definitions": {
-    "ErrorsResponse": {
-      "description": "Validation error response",
-      "example": {
-        "errors": {
-          "email": [
-            "has invalid format"
-          ],
-          "password": [
-            "too short"
-          ]
-        }
-      },
-      "properties": {
-        "errors": {
-          "description": "A map of field names to error messages",
-          "type": "object"
-        }
-      },
-      "title": "ErrorsResponse",
-      "type": "object"
-    },
-    "LoginRequest": {
-      "description": "Parameters to authenticate a user",
-      "example": {
-        "email": "user@example.com",
-        "fingerprint": "abcdef123456",
-        "password": "password123"
-      },
-      "properties": {
-        "device_name": {
-          "description": "Device name",
-          "type": "string"
-        },
-        "email": {
-          "description": "User email",
-          "type": "string"
-        },
-        "fingerprint": {
-          "description": "Device fingerprint",
-          "type": "string"
-        },
-        "os": {
-          "description": "Operating system",
-          "type": "string"
-        },
-        "password": {
-          "description": "User password",
-          "type": "string"
-        },
-        "version": {
-          "description": "Device version",
-          "type": "string"
-        }
-      },
-      "required": [
-        "email",
-        "password"
-      ],
-      "title": "LoginRequest",
-      "type": "object"
-    },
-    "SignupRequest": {
-      "description": "Parameters to register a new user",
-      "example": {
-        "email": "user@example.com",
-        "password": "password123"
-      },
-      "properties": {
-        "email": {
-          "description": "User email",
-          "type": "string"
-        },
-        "password": {
-          "description": "User password",
-          "type": "string"
-        }
-      },
-      "required": [
-        "email",
-        "password"
-      ],
-      "title": "SignupRequest",
-      "type": "object"
-    },
-    "TokenResponse": {
-      "description": "Response containing tokens",
-      "example": {
-        "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
-        "device_expires_at": "2025-08-08T00:00:00Z",
-        "device_token": "86b5b3e2-34c9-43ab-9940-19c0ad19f4b2",
-        "expires_in": 3600
-      },
-      "properties": {
-        "access_token": {
-          "description": "Access token",
-          "type": "string"
-        },
-        "device_expires_at": {
-          "description": "ISO8601 expiry of device token",
-          "type": "string"
-        },
-        "device_token": {
-          "description": "Device token",
-          "type": "string"
-        },
-        "expires_in": {
-          "description": "Access token TTL in seconds",
-          "type": "integer"
-        }
-      },
-      "title": "TokenResponse",
-      "type": "object"
-    },
-    "UserResponse": {
-      "description": "Response returned after successful registration",
-      "example": {
-        "email": "user@example.com",
-        "id": "550e8400-e29b-41d4-a716-446655440000"
-      },
-      "properties": {
-        "email": {
-          "description": "User email",
-          "type": "string"
-        },
-        "id": {
-          "description": "User ID",
-          "type": "string"
-        }
-      },
-      "title": "UserResponse",
-      "type": "object"
-    },
     "Company": {
       "description": "Represents a company",
       "example": {
@@ -186,58 +54,155 @@
       "title": "Company",
       "type": "object"
     },
-    "CompanyRequest": {
-      "description": "Payload for creating/updating a company",
+    "UserService": {
+      "description": "A user service",
       "example": {
-        "address1": "123 Main St",
-        "city": "Seoul",
-        "country_id": "KR",
-        "description_text": "A leading provider of tech services",
-        "email": "contact@acme.com",
-        "logo": "acme-logo.png",
-        "name": "Acme Corp",
-        "phone": "123-456-7890",
-        "timezone": "Asia/Seoul"
+        "currency": "USD",
+        "description_text": "30-min consultation",
+        "duration": 30,
+        "id": "xyz789",
+        "is_active": true,
+        "is_public": true,
+        "name": "Consulting",
+        "price": 49.99
       },
       "properties": {
-        "address1": {
-          "description": "Company address1",
-          "type": "string"
-        },
-        "city": {
-          "description": "Company address city",
-          "type": "string"
-        },
-        "country_id": {
-          "description": "Company country code",
+        "currency": {
           "type": "string"
         },
         "description_text": {
-          "description": "Company description",
           "type": "string"
         },
-        "email": {
-          "description": "Company email",
+        "duration": {
+          "type": "integer"
+        },
+        "id": {
           "type": "string"
         },
-        "logo": {
-          "description": "Company logo",
+        "is_active": {
+          "type": "boolean"
+        },
+        "is_public": {
+          "type": "boolean"
+        },
+        "name": {
+          "type": "string"
+        },
+        "price": {
+          "type": "number"
+        }
+      },
+      "title": "UserService",
+      "type": "object"
+    },
+    "UserResource": {
+      "description": "Represents a company resource",
+      "example": {
+        "company_id": "comp123",
+        "description": "High quality projector",
+        "id": "res123",
+        "location": "Room 101",
+        "name": "Projector",
+        "type": "equipment",
+        "user_id": "user123"
+      },
+      "properties": {
+        "company_id": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "id": {
+          "description": "Resource ID",
+          "type": "string"
+        },
+        "location": {
           "type": "string"
         },
         "name": {
-          "description": "Company name",
           "type": "string"
         },
-        "phone": {
-          "description": "Company phone",
+        "type": {
           "type": "string"
         },
-        "timezone": {
-          "description": "Company timezone",
+        "user_id": {
           "type": "string"
         }
       },
-      "title": "CompanyRequest",
+      "title": "UserResource",
+      "type": "object"
+    },
+    "CompanyBooking": {
+      "description": "Represents a booking record",
+      "example": {
+        "customer_name": "John Doe",
+        "email": "john@example.com",
+        "id": "12c9be95-2c09-4cc2-9a24-6c42f8fae54d",
+        "phone": "010-0000-0000",
+        "slot_id": "27d9be95-2c09-4cc2-9a24-6c42f8fae54d",
+        "status": "confirmed"
+      },
+      "properties": {
+        "customer_name": {
+          "type": "string"
+        },
+        "email": {
+          "type": "string"
+        },
+        "id": {
+          "description": "CompanyBooking ID",
+          "type": "string"
+        },
+        "phone": {
+          "type": "string"
+        },
+        "slot_id": {
+          "description": "Slot ID",
+          "type": "string"
+        },
+        "status": {
+          "type": "string"
+        }
+      },
+      "title": "CompanyBooking",
+      "type": "object"
+    },
+    "CompanySlot": {
+      "description": "A slot for booking",
+      "example": {
+        "booked_count": 1,
+        "capacity": 4,
+        "date": "2025-08-01",
+        "end_time": "10:30:00",
+        "id": "slot123",
+        "start_time": "10:00:00",
+        "status": "available"
+      },
+      "properties": {
+        "booked_count": {
+          "type": "integer"
+        },
+        "capacity": {
+          "type": "integer"
+        },
+        "date": {
+          "type": "string"
+        },
+        "end_time": {
+          "type": "string"
+        },
+        "id": {
+          "type": "string"
+        },
+        "start_time": {
+          "type": "string"
+        },
+        "status": {
+          "type": "string"
+        }
+      },
+      "title": "CompanySlot",
       "type": "object"
     },
     "Unit": {
@@ -299,6 +264,491 @@
       "title": "Unit",
       "type": "object"
     },
+    "CompanyService": {
+      "description": "A company service",
+      "example": {
+        "currency": "USD",
+        "description_text": "30-min consultation",
+        "duration": 30,
+        "id": "xyz789",
+        "is_active": true,
+        "is_public": true,
+        "name": "Consulting",
+        "price": 49.99
+      },
+      "properties": {
+        "currency": {
+          "type": "string"
+        },
+        "description_text": {
+          "type": "string"
+        },
+        "duration": {
+          "type": "integer"
+        },
+        "id": {
+          "type": "string"
+        },
+        "is_active": {
+          "type": "boolean"
+        },
+        "is_public": {
+          "type": "boolean"
+        },
+        "name": {
+          "type": "string"
+        },
+        "price": {
+          "type": "number"
+        }
+      },
+      "title": "CompanyService",
+      "type": "object"
+    },
+    "CompanyResource": {
+      "description": "Represents a company resource",
+      "example": {
+        "company_id": "comp123",
+        "description": "High quality projector",
+        "id": "res123",
+        "location": "Room 101",
+        "name": "Projector",
+        "type": "equipment",
+        "user_id": "user123"
+      },
+      "properties": {
+        "company_id": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "id": {
+          "description": "Resource ID",
+          "type": "string"
+        },
+        "location": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "type": {
+          "type": "string"
+        },
+        "user_id": {
+          "type": "string"
+        }
+      },
+      "title": "CompanyResource",
+      "type": "object"
+    },
+    "UserSlot": {
+      "description": "A slot for user booking",
+      "example": {
+        "booked_count": 1,
+        "capacity": 3,
+        "date": "2025-08-01",
+        "end_time": "09:30:00",
+        "id": "uslot123",
+        "start_time": "09:00:00",
+        "status": "available"
+      },
+      "properties": {
+        "booked_count": {
+          "type": "integer"
+        },
+        "capacity": {
+          "type": "integer"
+        },
+        "date": {
+          "type": "string"
+        },
+        "end_time": {
+          "type": "string"
+        },
+        "id": {
+          "type": "string"
+        },
+        "start_time": {
+          "type": "string"
+        },
+        "status": {
+          "type": "string"
+        }
+      },
+      "title": "UserSlot",
+      "type": "object"
+    },
+    "UserBooking": {
+      "description": "Represents a user booking record",
+      "example": {
+        "customer_name": "John Doe",
+        "email": "john@example.com",
+        "id": "12c9be95-2c09-4cc2-9a24-6c42f8fae54d",
+        "phone": "010-0000-0000",
+        "slot_id": "27d9be95-2c09-4cc2-9a24-6c42f8fae54d",
+        "status": "confirmed"
+      },
+      "properties": {
+        "customer_name": {
+          "type": "string"
+        },
+        "email": {
+          "type": "string"
+        },
+        "id": {
+          "description": "UserBooking ID",
+          "type": "string"
+        },
+        "phone": {
+          "type": "string"
+        },
+        "slot_id": {
+          "description": "Slot ID",
+          "type": "string"
+        },
+        "status": {
+          "type": "string"
+        }
+      },
+      "title": "UserBooking",
+      "type": "object"
+    },
+    "SignupRequest": {
+      "description": "Parameters to register a new user",
+      "example": {
+        "email": "user@example.com",
+        "password": "password123"
+      },
+      "properties": {
+        "email": {
+          "description": "User email",
+          "type": "string"
+        },
+        "password": {
+          "description": "User password",
+          "type": "string"
+        }
+      },
+      "required": [
+        "email",
+        "password"
+      ],
+      "title": "SignupRequest",
+      "type": "object"
+    },
+    "UserResponse": {
+      "description": "Response returned after successful registration",
+      "example": {
+        "email": "user@example.com",
+        "id": "550e8400-e29b-41d4-a716-446655440000"
+      },
+      "properties": {
+        "email": {
+          "description": "User email",
+          "type": "string"
+        },
+        "id": {
+          "description": "User ID",
+          "type": "string"
+        }
+      },
+      "title": "UserResponse",
+      "type": "object"
+    },
+    "ErrorsResponse": {
+      "description": "Validation error response",
+      "example": {
+        "errors": {
+          "email": [
+            "has invalid format"
+          ],
+          "password": [
+            "too short"
+          ]
+        }
+      },
+      "properties": {
+        "errors": {
+          "description": "A map of field names to error messages",
+          "type": "object"
+        }
+      },
+      "title": "ErrorsResponse",
+      "type": "object"
+    },
+    "LoginRequest": {
+      "description": "Parameters to authenticate a user",
+      "example": {
+        "email": "user@example.com",
+        "fingerprint": "abcdef123456",
+        "password": "password123"
+      },
+      "properties": {
+        "device_name": {
+          "description": "Device name",
+          "type": "string"
+        },
+        "email": {
+          "description": "User email",
+          "type": "string"
+        },
+        "fingerprint": {
+          "description": "Device fingerprint",
+          "type": "string"
+        },
+        "os": {
+          "description": "Operating system",
+          "type": "string"
+        },
+        "password": {
+          "description": "User password",
+          "type": "string"
+        },
+        "version": {
+          "description": "Device version",
+          "type": "string"
+        }
+      },
+      "required": [
+        "email",
+        "password"
+      ],
+      "title": "LoginRequest",
+      "type": "object"
+    },
+    "TokenResponse": {
+      "description": "Response containing tokens",
+      "example": {
+        "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+        "device_expires_at": "2025-08-08T00:00:00Z",
+        "device_token": "86b5b3e2-34c9-43ab-9940-19c0ad19f4b2",
+        "expires_in": 3600
+      },
+      "properties": {
+        "access_token": {
+          "description": "Access token",
+          "type": "string"
+        },
+        "device_expires_at": {
+          "description": "ISO8601 expiry of device token",
+          "type": "string"
+        },
+        "device_token": {
+          "description": "Device token",
+          "type": "string"
+        },
+        "expires_in": {
+          "description": "Access token TTL in seconds",
+          "type": "integer"
+        }
+      },
+      "title": "TokenResponse",
+      "type": "object"
+    },
+    "CompanyBookingRequest": {
+      "description": "Payload for creating a booking",
+      "example": {
+        "customer_name": "John Doe",
+        "email": "john@example.com",
+        "phone": "010-0000-0000",
+        "slot_id": "27d9be95-2c09-4cc2-9a24-6c42f8fae54d"
+      },
+      "properties": {
+        "customer_name": {
+          "description": "Customer name",
+          "type": "string"
+        },
+        "email": {
+          "description": "Email",
+          "type": "string"
+        },
+        "phone": {
+          "description": "Phone",
+          "type": "string"
+        },
+        "slot_id": {
+          "description": "Slot ID",
+          "type": "string"
+        }
+      },
+      "title": "CompanyBookingRequest",
+      "type": "object"
+    },
+    "CompanyRequest": {
+      "description": "Payload for creating/updating a company",
+      "example": {
+        "address1": "123 Main St",
+        "city": "Seoul",
+        "country_id": "KR",
+        "description_text": "A leading provider of tech services",
+        "email": "contact@acme.com",
+        "logo": "acme-logo.png",
+        "name": "Acme Corp",
+        "phone": "123-456-7890",
+        "timezone": "Asia/Seoul"
+      },
+      "properties": {
+        "address1": {
+          "description": "Company address1",
+          "type": "string"
+        },
+        "city": {
+          "description": "Company address city",
+          "type": "string"
+        },
+        "country_id": {
+          "description": "Company country code",
+          "type": "string"
+        },
+        "description_text": {
+          "description": "Company description",
+          "type": "string"
+        },
+        "email": {
+          "description": "Company email",
+          "type": "string"
+        },
+        "logo": {
+          "description": "Company logo",
+          "type": "string"
+        },
+        "name": {
+          "description": "Company name",
+          "type": "string"
+        },
+        "phone": {
+          "description": "Company phone",
+          "type": "string"
+        },
+        "timezone": {
+          "description": "Company timezone",
+          "type": "string"
+        }
+      },
+      "title": "CompanyRequest",
+      "type": "object"
+    },
+    "CompanyResourceRequest": {
+      "description": "Payload for creating/updating a resource",
+      "example": {
+        "company_id": "comp123",
+        "description": "High quality projector",
+        "location": "Room 101",
+        "name": "Projector",
+        "type": "equipment",
+        "user_id": "user123"
+      },
+      "properties": {
+        "company_id": {
+          "description": "Company ID",
+          "type": "string"
+        },
+        "description": {
+          "description": "Description",
+          "type": "string"
+        },
+        "location": {
+          "description": "Location",
+          "type": "string"
+        },
+        "name": {
+          "description": "Resource name",
+          "type": "string"
+        },
+        "type": {
+          "description": "Resource type",
+          "type": "string"
+        },
+        "user_id": {
+          "description": "User ID",
+          "type": "string"
+        }
+      },
+      "required": [
+        "name",
+        "type",
+        "company_id"
+      ],
+      "title": "CompanyResourceRequest",
+      "type": "object"
+    },
+    "CompanyServiceRequest": {
+      "description": "Attributes for creating/updating a service",
+      "example": {
+        "currency": "USD",
+        "description_text": "30-min consultation",
+        "duration": 30,
+        "is_active": true,
+        "is_public": true,
+        "name": "Consulting",
+        "price": 49.99
+      },
+      "properties": {
+        "currency": {
+          "description": "Currency",
+          "type": "string"
+        },
+        "description_text": {
+          "description": "Description",
+          "type": "string"
+        },
+        "duration": {
+          "description": "Duration in minutes",
+          "type": "integer"
+        },
+        "is_active": {
+          "type": "boolean"
+        },
+        "is_public": {
+          "type": "boolean"
+        },
+        "name": {
+          "description": "Service name",
+          "type": "string"
+        },
+        "price": {
+          "description": "Price",
+          "type": "number"
+        }
+      },
+      "title": "CompanyServiceRequest",
+      "type": "object"
+    },
+    "CompanySlotRequest": {
+      "description": "Attributes for creating or updating a slot",
+      "example": {
+        "booked_count": 0,
+        "capacity": 4,
+        "date": "2025-08-01",
+        "end_time": "10:30:00",
+        "start_time": "10:00:00",
+        "status": "available"
+      },
+      "properties": {
+        "booked_count": {
+          "type": "integer"
+        },
+        "capacity": {
+          "type": "integer"
+        },
+        "date": {
+          "type": "string"
+        },
+        "end_time": {
+          "type": "string"
+        },
+        "start_time": {
+          "type": "string"
+        },
+        "status": {
+          "type": "string"
+        }
+      },
+      "title": "CompanySlotRequest",
+      "type": "object"
+    },
     "UnitRequest": {
       "description": "Payload for creating/updating a unit",
       "example": {
@@ -352,410 +802,6 @@
       "title": "UnitRequest",
       "type": "object"
     },
-    "CompanySlot": {
-      "description": "A slot for booking",
-      "example": {
-        "booked_count": 1,
-        "capacity": 4,
-        "date": "2025-08-01",
-        "end_time": "10:30:00",
-        "id": "slot123",
-        "start_time": "10:00:00",
-        "status": "available"
-      },
-      "properties": {
-        "booked_count": {
-          "type": "integer"
-        },
-        "capacity": {
-          "type": "integer"
-        },
-        "date": {
-          "type": "string"
-        },
-        "end_time": {
-          "type": "string"
-        },
-        "id": {
-          "type": "string"
-        },
-        "start_time": {
-          "type": "string"
-        },
-        "status": {
-          "type": "string"
-        }
-      },
-      "title": "CompanySlot",
-      "type": "object"
-    },
-    "CompanySlotRequest": {
-      "description": "Attributes for creating or updating a slot",
-      "example": {
-        "booked_count": 0,
-        "capacity": 4,
-        "date": "2025-08-01",
-        "end_time": "10:30:00",
-        "start_time": "10:00:00",
-        "status": "available"
-      },
-      "properties": {
-        "booked_count": {
-          "type": "integer"
-        },
-        "capacity": {
-          "type": "integer"
-        },
-        "date": {
-          "type": "string"
-        },
-        "end_time": {
-          "type": "string"
-        },
-        "start_time": {
-          "type": "string"
-        },
-        "status": {
-          "type": "string"
-        }
-      },
-      "title": "CompanySlotRequest",
-      "type": "object"
-    },
-    "CompanyBooking": {
-      "description": "Represents a booking record",
-      "example": {
-        "customer_name": "John Doe",
-        "email": "john@example.com",
-        "id": "12c9be95-2c09-4cc2-9a24-6c42f8fae54d",
-        "phone": "010-0000-0000",
-        "slot_id": "27d9be95-2c09-4cc2-9a24-6c42f8fae54d",
-        "status": "confirmed"
-      },
-      "properties": {
-        "customer_name": {
-          "type": "string"
-        },
-        "email": {
-          "type": "string"
-        },
-        "id": {
-          "description": "CompanyBooking ID",
-          "type": "string"
-        },
-        "phone": {
-          "type": "string"
-        },
-        "slot_id": {
-          "description": "Slot ID",
-          "type": "string"
-        },
-        "status": {
-          "type": "string"
-        }
-      },
-      "title": "CompanyBooking",
-      "type": "object"
-    },
-    "CompanyBookingRequest": {
-      "description": "Payload for creating a booking",
-      "example": {
-        "customer_name": "John Doe",
-        "email": "john@example.com",
-        "phone": "010-0000-0000",
-        "slot_id": "27d9be95-2c09-4cc2-9a24-6c42f8fae54d"
-      },
-      "properties": {
-        "customer_name": {
-          "description": "Customer name",
-          "type": "string"
-        },
-        "email": {
-          "description": "Email",
-          "type": "string"
-        },
-        "phone": {
-          "description": "Phone",
-          "type": "string"
-        },
-        "slot_id": {
-          "description": "Slot ID",
-          "type": "string"
-        }
-      },
-      "title": "CompanyBookingRequest",
-      "type": "object"
-    },
-    "CompanyService": {
-      "description": "A company service",
-      "example": {
-        "currency": "USD",
-        "description_text": "30-min consultation",
-        "duration": 30,
-        "id": "xyz789",
-        "is_active": true,
-        "is_public": true,
-        "name": "Consulting",
-        "price": 49.99
-      },
-      "properties": {
-        "currency": {
-          "type": "string"
-        },
-        "description_text": {
-          "type": "string"
-        },
-        "duration": {
-          "type": "integer"
-        },
-        "id": {
-          "type": "string"
-        },
-        "is_active": {
-          "type": "boolean"
-        },
-        "is_public": {
-          "type": "boolean"
-        },
-        "name": {
-          "type": "string"
-        },
-        "price": {
-          "type": "number"
-        }
-      },
-      "title": "CompanyService",
-      "type": "object"
-    },
-    "CompanyServiceRequest": {
-      "description": "Attributes for creating/updating a service",
-      "example": {
-        "currency": "USD",
-        "description_text": "30-min consultation",
-        "duration": 30,
-        "is_active": true,
-        "is_public": true,
-        "name": "Consulting",
-        "price": 49.99
-      },
-      "properties": {
-        "currency": {
-          "description": "Currency",
-          "type": "string"
-        },
-        "description_text": {
-          "description": "Description",
-          "type": "string"
-        },
-        "duration": {
-          "description": "Duration in minutes",
-          "type": "integer"
-        },
-        "is_active": {
-          "type": "boolean"
-        },
-        "is_public": {
-          "type": "boolean"
-        },
-        "name": {
-          "description": "Service name",
-          "type": "string"
-        },
-        "price": {
-          "description": "Price",
-          "type": "number"
-        }
-      },
-      "title": "CompanyServiceRequest",
-      "type": "object"
-    },
-    "CompanyResource": {
-      "description": "Represents a company resource",
-      "example": {
-        "company_id": "comp123",
-        "description": "High quality projector",
-        "id": "res123",
-        "location": "Room 101",
-        "name": "Projector",
-        "type": "equipment",
-        "user_id": "user123"
-      },
-      "properties": {
-        "company_id": {
-          "type": "string"
-        },
-        "description": {
-          "type": "string"
-        },
-        "id": {
-          "description": "Resource ID",
-          "type": "string"
-        },
-        "location": {
-          "type": "string"
-        },
-        "name": {
-          "type": "string"
-        },
-        "type": {
-          "type": "string"
-        },
-        "user_id": {
-          "type": "string"
-        }
-      },
-      "title": "CompanyResource",
-      "type": "object"
-    },
-    "CompanyResourceRequest": {
-      "description": "Payload for creating/updating a resource",
-      "example": {
-        "company_id": "comp123",
-        "description": "High quality projector",
-        "location": "Room 101",
-        "name": "Projector",
-        "type": "equipment",
-        "user_id": "user123"
-      },
-      "properties": {
-        "company_id": {
-          "description": "Company ID",
-          "type": "string"
-        },
-        "description": {
-          "description": "Description",
-          "type": "string"
-        },
-        "location": {
-          "description": "Location",
-          "type": "string"
-        },
-        "name": {
-          "description": "Resource name",
-          "type": "string"
-        },
-        "type": {
-          "description": "Resource type",
-          "type": "string"
-        },
-        "user_id": {
-          "description": "User ID",
-          "type": "string"
-        }
-      },
-      "required": [
-        "name",
-        "type",
-        "company_id"
-      ],
-      "title": "CompanyResourceRequest",
-      "type": "object"
-    },
-    "UserSlot": {
-      "description": "A slot for user booking",
-      "example": {
-        "booked_count": 1,
-        "capacity": 3,
-        "date": "2025-08-01",
-        "end_time": "09:30:00",
-        "id": "uslot123",
-        "start_time": "09:00:00",
-        "status": "available"
-      },
-      "properties": {
-        "booked_count": {
-          "type": "integer"
-        },
-        "capacity": {
-          "type": "integer"
-        },
-        "date": {
-          "type": "string"
-        },
-        "end_time": {
-          "type": "string"
-        },
-        "id": {
-          "type": "string"
-        },
-        "start_time": {
-          "type": "string"
-        },
-        "status": {
-          "type": "string"
-        }
-      },
-      "title": "UserSlot",
-      "type": "object"
-    },
-    "UserSlotRequest": {
-      "description": "Attributes for creating or updating a user slot",
-      "example": {
-        "booked_count": 0,
-        "capacity": 3,
-        "date": "2025-08-01",
-        "end_time": "09:30:00",
-        "start_time": "09:00:00",
-        "status": "available"
-      },
-      "properties": {
-        "booked_count": {
-          "type": "integer"
-        },
-        "capacity": {
-          "type": "integer"
-        },
-        "date": {
-          "type": "string"
-        },
-        "end_time": {
-          "type": "string"
-        },
-        "start_time": {
-          "type": "string"
-        },
-        "status": {
-          "type": "string"
-        }
-      },
-      "title": "UserSlotRequest",
-      "type": "object"
-    },
-    "UserBooking": {
-      "description": "Represents a user booking record",
-      "example": {
-        "customer_name": "John Doe",
-        "email": "john@example.com",
-        "id": "12c9be95-2c09-4cc2-9a24-6c42f8fae54d",
-        "phone": "010-0000-0000",
-        "slot_id": "27d9be95-2c09-4cc2-9a24-6c42f8fae54d",
-        "status": "confirmed"
-      },
-      "properties": {
-        "customer_name": {
-          "type": "string"
-        },
-        "email": {
-          "type": "string"
-        },
-        "id": {
-          "description": "UserBooking ID",
-          "type": "string"
-        },
-        "phone": {
-          "type": "string"
-        },
-        "slot_id": {
-          "description": "Slot ID",
-          "type": "string"
-        },
-        "status": {
-          "type": "string"
-        }
-      },
-      "title": "UserBooking",
-      "type": "object"
-    },
     "UserBookingRequest": {
       "description": "Payload for creating a booking",
       "example": {
@@ -783,127 +829,6 @@
         }
       },
       "title": "UserBookingRequest",
-      "type": "object"
-    },
-    "UserService": {
-      "description": "A user service",
-      "example": {
-        "currency": "USD",
-        "description_text": "30-min consultation",
-        "duration": 30,
-        "id": "xyz789",
-        "is_active": true,
-        "is_public": true,
-        "name": "Consulting",
-        "price": 49.99
-      },
-      "properties": {
-        "currency": {
-          "type": "string"
-        },
-        "description_text": {
-          "type": "string"
-        },
-        "duration": {
-          "type": "integer"
-        },
-        "id": {
-          "type": "string"
-        },
-        "is_active": {
-          "type": "boolean"
-        },
-        "is_public": {
-          "type": "boolean"
-        },
-        "name": {
-          "type": "string"
-        },
-        "price": {
-          "type": "number"
-        }
-      },
-      "title": "UserService",
-      "type": "object"
-    },
-    "UserServiceRequest": {
-      "description": "Attributes for creating/updating a service",
-      "example": {
-        "currency": "USD",
-        "description_text": "30-min consultation",
-        "duration": 30,
-        "is_active": true,
-        "is_public": true,
-        "name": "Consulting",
-        "price": 49.99
-      },
-      "properties": {
-        "currency": {
-          "description": "Currency",
-          "type": "string"
-        },
-        "description_text": {
-          "description": "Description",
-          "type": "string"
-        },
-        "duration": {
-          "description": "Duration in minutes",
-          "type": "integer"
-        },
-        "is_active": {
-          "type": "boolean"
-        },
-        "is_public": {
-          "type": "boolean"
-        },
-        "name": {
-          "description": "Service name",
-          "type": "string"
-        },
-        "price": {
-          "description": "Price",
-          "type": "number"
-        }
-      },
-      "title": "UserServiceRequest",
-      "type": "object"
-    },
-    "UserResource": {
-      "description": "Represents a company resource",
-      "example": {
-        "company_id": "comp123",
-        "description": "High quality projector",
-        "id": "res123",
-        "location": "Room 101",
-        "name": "Projector",
-        "type": "equipment",
-        "user_id": "user123"
-      },
-      "properties": {
-        "company_id": {
-          "type": "string"
-        },
-        "description": {
-          "type": "string"
-        },
-        "id": {
-          "description": "Resource ID",
-          "type": "string"
-        },
-        "location": {
-          "type": "string"
-        },
-        "name": {
-          "type": "string"
-        },
-        "type": {
-          "type": "string"
-        },
-        "user_id": {
-          "type": "string"
-        }
-      },
-      "title": "UserResource",
       "type": "object"
     },
     "UserResourceRequest": {
@@ -948,6 +873,81 @@
         "company_id"
       ],
       "title": "UserResourceRequest",
+      "type": "object"
+    },
+    "UserServiceRequest": {
+      "description": "Attributes for creating/updating a service",
+      "example": {
+        "currency": "USD",
+        "description_text": "30-min consultation",
+        "duration": 30,
+        "is_active": true,
+        "is_public": true,
+        "name": "Consulting",
+        "price": 49.99
+      },
+      "properties": {
+        "currency": {
+          "description": "Currency",
+          "type": "string"
+        },
+        "description_text": {
+          "description": "Description",
+          "type": "string"
+        },
+        "duration": {
+          "description": "Duration in minutes",
+          "type": "integer"
+        },
+        "is_active": {
+          "type": "boolean"
+        },
+        "is_public": {
+          "type": "boolean"
+        },
+        "name": {
+          "description": "Service name",
+          "type": "string"
+        },
+        "price": {
+          "description": "Price",
+          "type": "number"
+        }
+      },
+      "title": "UserServiceRequest",
+      "type": "object"
+    },
+    "UserSlotRequest": {
+      "description": "Attributes for creating or updating a user slot",
+      "example": {
+        "booked_count": 0,
+        "capacity": 3,
+        "date": "2025-08-01",
+        "end_time": "09:30:00",
+        "start_time": "09:00:00",
+        "status": "available"
+      },
+      "properties": {
+        "booked_count": {
+          "type": "integer"
+        },
+        "capacity": {
+          "type": "integer"
+        },
+        "date": {
+          "type": "string"
+        },
+        "end_time": {
+          "type": "string"
+        },
+        "start_time": {
+          "type": "string"
+        },
+        "status": {
+          "type": "string"
+        }
+      },
+      "title": "UserSlotRequest",
       "type": "object"
     }
   },
@@ -3056,14 +3056,6 @@
       }
     }
   },
-  "swagger": "2.0",
-  "basePath": "/api",
-  "consumes": [
-    "application/json"
-  ],
-  "produces": [
-    "application/json"
-  ],
   "tags": [
     {
       "name": "Company",
@@ -3073,5 +3065,13 @@
       "name": "User",
       "description": "User-related endpoints"
     }
-  ]
+  ],
+  "swagger": "2.0",
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "basePath": "/api"
 }
