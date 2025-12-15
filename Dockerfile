@@ -18,7 +18,7 @@ RUN npm ci --prefix assets
 # -----------------------------------------------
 # Stage: hex dependencies
 # -----------------------------------------------
-FROM hexpm/elixir:1.19-erlang-28.1-debian-bookworm-20251117-slim AS otp-builder
+FROM hexpm/elixir:1.19-erlang-28.3-debian-bookworm-20251208-slim AS otp-builder
 
 # Install Debian dependencies
 RUN apt-get update -y && \
