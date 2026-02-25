@@ -15,14 +15,15 @@ defmodule AinComBookingApi.Controllers.Company.CompanySlotController do
   swagger_path :index do
     get("/company/slots")
     summary("List available slots")
-    description("Fetches available slots within a date range for a service")
+    description("Fetches available slots within a date range. At least one of service_id or resource_id is required.")
     produces("application/json")
     tag("Company / Slot")
 
     AinComBookingApi.CommonParameters.authorization()
 
     parameters do
-      service_id(:string, :query, "Service ID", required: true)
+      service_id(:string, :query, "Service ID (optional)")
+      resource_id(:string, :query, "Resource ID (optional)")
       from(:string, :query, "Start date (YYYY-MM-DD)", required: true)
       to(:string, :query, "End date (YYYY-MM-DD)", required: true)
     end
@@ -30,22 +31,67 @@ defmodule AinComBookingApi.Controllers.Company.CompanySlotController do
     response(200, "List of available slots")
   end
 
-  def index(conn, %{"service_id" => service_id, "from" => from_str, "to" => to_str}) do
-    {:ok, from_date} = Date.from_iso8601(from_str)
-    {:ok, to_date} = Date.from_iso8601(to_str)
+  def index(conn, %{"from" => from_str, "to" => to_str} = params) do
+    service_id = normalize_optional_id(Map.get(params, "service_id"))
+    resource_id = normalize_optional_id(Map.get(params, "resource_id"))
 
-    from_dt = DateTime.new!(from_date, ~T[00:00:00], "Asia/Seoul")
-    to_dt = DateTime.new!(to_date, ~T[23:59:59], "Asia/Seoul")
-
-    slots = Repo.all(from(s in CompanySlot, where: s.service_id == ^service_id and s.date >= ^from_date and s.date <= ^to_date and s.status == :available))
-
-    json(conn, slots)
+    if is_nil(service_id) and is_nil(resource_id) do
+      conn
+      |> put_status(:bad_request)
+      |> json(%{error: "Required params: at least one of service_id or resource_id, plus from and to"})
+    else
+      do_index(conn, service_id, resource_id, from_str, to_str)
+    end
   end
+
+  def index(conn, _params) do
+    conn
+    |> put_status(:bad_request)
+    |> json(%{error: "Required params: from, to and at least one of service_id or resource_id"})
+  end
+
+  defp do_index(conn, service_id, resource_id, from_str, to_str) do
+    with {:ok, from_date} <- Date.from_iso8601(from_str),
+         {:ok, to_date} <- Date.from_iso8601(to_str) do
+      from_dt = DateTime.new!(from_date, ~T[00:00:00], "Etc/UTC")
+      to_dt = DateTime.new!(to_date, ~T[23:59:59], "Etc/UTC")
+
+      query =
+        from(s in CompanySlot,
+          where: s.start_time >= ^from_dt and s.start_time <= ^to_dt and s.status == :available
+        )
+
+      query = if service_id, do: from(s in query, where: s.service_id == ^service_id), else: query
+      query = if resource_id, do: from(s in query, where: s.resource_id == ^resource_id), else: query
+
+      slots =
+        Repo.all(from(s in query, order_by: [asc: s.start_time]))
+
+      json(conn, slots)
+    else
+      _ ->
+        conn
+        |> put_status(:bad_request)
+        |> json(%{error: "Invalid date format. Use YYYY-MM-DD for from/to."})
+    end
+  end
+
+  defp normalize_optional_id(nil), do: nil
+  defp normalize_optional_id(""), do: nil
+  defp normalize_optional_id(value), do: value
 
   swagger_path :create do
     post("/company/slots")
     summary("Create a new slot")
-    description("Add a new time slot")
+
+    description("""
+    Add a new time slot.
+    Cases:
+    1) Service + Resource: {"service_id":"svc_123","resource_id":"res_123",...}
+    2) Service only: {"service_id":"svc_123",...}
+    3) Resource only: {"resource_id":"res_123",...}
+    """)
+
     produces("application/json")
     consumes("application/json")
     tag("Company / Slot")
@@ -144,45 +190,48 @@ defmodule AinComBookingApi.Controllers.Company.CompanySlotController do
 
           properties do
             id(:string)
-            date(:string)
             start_time(:string)
             end_time(:string)
             status(:string)
-            capacity(:integer)
-            booked_count(:integer)
+            service_id(:string)
+            resource_id(:string)
           end
 
           example(%{
             id: "slot123",
-            date: "2025-08-01",
-            start_time: "10:00:00",
-            end_time: "10:30:00",
+            start_time: "2026-02-24T10:00:00Z",
+            end_time: "2026-02-24T10:30:00Z",
             status: "available",
-            capacity: 4,
-            booked_count: 1
+            service_id: "svc_123",
+            resource_id: "res_123"
           })
         end,
       CompanySlotRequest:
         swagger_schema do
           title("CompanySlotRequest")
-          description("Attributes for creating or updating a slot")
+
+          description("""
+          Attributes for creating or updating a slot.
+          Examples:
+          1) Service + Resource: {"start_time":"2026-02-24T10:00:00Z","end_time":"2026-02-24T10:30:00Z","status":"available","service_id":"svc_123","resource_id":"res_123"}
+          2) Service only: {"start_time":"2026-02-24T10:00:00Z","end_time":"2026-02-24T10:30:00Z","status":"available","service_id":"svc_123"}
+          3) Resource only: {"start_time":"2026-02-24T10:00:00Z","end_time":"2026-02-24T10:30:00Z","status":"available","resource_id":"res_123"}
+          """)
 
           properties do
-            date(:string)
             start_time(:string)
             end_time(:string)
             status(:string)
-            capacity(:integer)
-            booked_count(:integer)
+            service_id(:string, "Optional when booking resource-only")
+            resource_id(:string, "Optional when booking service-only")
           end
 
           example(%{
-            date: "2025-08-01",
-            start_time: "10:00:00",
-            end_time: "10:30:00",
+            start_time: "2026-02-24T10:00:00Z",
+            end_time: "2026-02-24T10:30:00Z",
             status: "available",
-            capacity: 4,
-            booked_count: 0
+            service_id: "svc_123",
+            resource_id: "res_123"
           })
         end
     }

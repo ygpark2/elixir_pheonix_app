@@ -23,7 +23,7 @@ defmodule AinComBookingWeb.Endpoint do
   plug(Plug.Static,
     at: "/",
     from: :ain_com_booking,
-    gzip: true,
+    gzip: false,
     only: ~w(assets fonts images favicon.ico robots.txt)
   )
 
@@ -52,12 +52,7 @@ defmodule AinComBookingWeb.Endpoint do
     remote_address_reader: {AinComBookingApi.Errors.Sentry, :scrubbed_remote_address}
   )
 
-  @session_options [
-    store: :cookie,
-    key: "_bookstore_key",
-    signing_salt: "/uVdH/rU"
-  ]
-  plug(Plug.Session, @session_options)
+  plug(AinComBookingWeb.Session)
 
   plug(Plug.MethodOverride)
   plug(Plug.Head)

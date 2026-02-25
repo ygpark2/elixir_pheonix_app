@@ -20,7 +20,7 @@ defmodule AinComBookingApi.Controllers.User.UserResourceController do
   swagger_path :create do
     post("/user/resources")
     summary("Create user resource")
-    description("Create a new resource for a company")
+    description("Create a new resource for a user")
     produces("application/json")
     consumes("application/json")
     tag("User")
@@ -47,7 +47,7 @@ defmodule AinComBookingApi.Controllers.User.UserResourceController do
 
   swagger_path :update do
     patch("/user/resources/{id}")
-    summary("Update a company resource")
+    summary("Update a user resource")
     description("Updates resource details")
     consumes("application/json")
     produces("application/json")
@@ -118,7 +118,7 @@ defmodule AinComBookingApi.Controllers.User.UserResourceController do
       UserResource:
         swagger_schema do
           title("UserResource")
-          description("Represents a company resource")
+          description("Represents a user resource")
 
           properties do
             id(:string, "Resource ID")
@@ -126,7 +126,8 @@ defmodule AinComBookingApi.Controllers.User.UserResourceController do
             type(:string)
             location(:string)
             description(:string)
-            company_id(:string)
+            price(:number)
+            currency(:string)
             user_id(:string)
           end
 
@@ -136,7 +137,8 @@ defmodule AinComBookingApi.Controllers.User.UserResourceController do
             type: "equipment",
             location: "Room 101",
             description: "High quality projector",
-            company_id: "comp123",
+            price: 10_000,
+            currency: "KRW",
             user_id: "user123"
           })
         end,
@@ -150,18 +152,20 @@ defmodule AinComBookingApi.Controllers.User.UserResourceController do
             type(:string, "Resource type")
             location(:string, "Location")
             description(:string, "Description")
-            company_id(:string, "Company ID")
+            price(:number, "Bookable resource price")
+            currency(:string, "Currency")
             user_id(:string, "User ID")
           end
 
-          required([:name, :type, :company_id])
+          required([:name, :type, :price, :currency, :user_id])
 
           example(%{
             name: "Projector",
             type: "equipment",
             location: "Room 101",
             description: "High quality projector",
-            company_id: "comp123",
+            price: 10_000,
+            currency: "KRW",
             user_id: "user123"
           })
         end

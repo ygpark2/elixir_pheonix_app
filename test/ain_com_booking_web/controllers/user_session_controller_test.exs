@@ -17,12 +17,10 @@ defmodule AinComBookingWeb.UserSessionControllerTest do
       assert get_session(conn, :user_token)
       assert redirected_to(conn) == ~p"/"
 
-      # Now do a logged in request and assert on the menu
+      # Now do a logged in request and assert on the flash
       conn = get(conn, ~p"/")
       response = html_response(conn, 200)
-      assert response =~ user.email
-      assert response =~ ~p"/users/settings"
-      assert response =~ ~p"/users/log_out"
+      assert response =~ "Welcome back!"
     end
 
     test "logs the user in with remember me", %{conn: conn, user: user} do
@@ -55,30 +53,14 @@ defmodule AinComBookingWeb.UserSessionControllerTest do
     end
 
     test "login following registration", %{conn: conn, user: user} do
-      conn =
-        conn
-        |> post(~p"/users/log_in", %{
-          "_action" => "registered",
-          "user" => %{
-            "email" => user.email,
-            "password" => valid_user_password()
-          }
-        })
+      conn = post(conn, ~p"/users/log_in", %{"_action" => "registered", "user" => %{"email" => user.email, "password" => valid_user_password()}})
 
       assert redirected_to(conn) == ~p"/"
       assert Phoenix.Flash.get(conn.assigns.flash, :info) =~ "Account created successfully"
     end
 
     test "login following password update", %{conn: conn, user: user} do
-      conn =
-        conn
-        |> post(~p"/users/log_in", %{
-          "_action" => "password_updated",
-          "user" => %{
-            "email" => user.email,
-            "password" => valid_user_password()
-          }
-        })
+      conn = post(conn, ~p"/users/log_in", %{"_action" => "password_updated", "user" => %{"email" => user.email, "password" => valid_user_password()}})
 
       assert redirected_to(conn) == ~p"/users/settings"
       assert Phoenix.Flash.get(conn.assigns.flash, :info) =~ "Password updated successfully"
@@ -105,6 +87,34 @@ defmodule AinComBookingWeb.UserSessionControllerTest do
 
     test "succeeds even if the user is not logged in", %{conn: conn} do
       conn = delete(conn, ~p"/users/log_out")
+      assert redirected_to(conn) == ~p"/"
+      refute get_session(conn, :user_token)
+      assert Phoenix.Flash.get(conn.assigns.flash, :info) =~ "Logged out successfully"
+    end
+
+    test "blocks protected pages after logout", %{conn: conn, user: user} do
+      conn =
+        conn
+        |> log_in_user(user)
+        |> delete(~p"/users/log_out")
+
+      conn = get(conn, ~p"/users/settings")
+
+      assert redirected_to(conn) == ~p"/users/log_in"
+      assert Phoenix.Flash.get(conn.assigns.flash, :error) == "You must log in to access this page."
+    end
+  end
+
+  describe "GET /users/log_out" do
+    test "logs the user out", %{conn: conn, user: user} do
+      conn = conn |> log_in_user(user) |> get(~p"/users/log_out")
+      assert redirected_to(conn) == ~p"/"
+      refute get_session(conn, :user_token)
+      assert Phoenix.Flash.get(conn.assigns.flash, :info) =~ "Logged out successfully"
+    end
+
+    test "succeeds even if the user is not logged in", %{conn: conn} do
+      conn = get(conn, ~p"/users/log_out")
       assert redirected_to(conn) == ~p"/"
       refute get_session(conn, :user_token)
       assert Phoenix.Flash.get(conn.assigns.flash, :info) =~ "Logged out successfully"

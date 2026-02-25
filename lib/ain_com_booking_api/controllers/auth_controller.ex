@@ -5,8 +5,8 @@ defmodule AinComBookingApi.Controllers.AuthController do
   import AinComBookingApi.Errors
 
   alias AinComBooking.Accounts
-  alias AinComBookingApi.Guardian
   alias AinComBookingApi.Devices
+  alias AinComBookingApi.Guardian
 
   # POST /api/auth/signup
   swagger_path :signup do
@@ -60,8 +60,8 @@ defmodule AinComBookingApi.Controllers.AuthController do
         name: Map.get(params, "device_name", "web"),
         os: Map.get(params, "os", "browser"),
         version: Map.get(params, "version"),
-        user_agent: get_req_header(conn, "user-agent") |> List.first(),
-        ip: get_req_header(conn, "x-forwarded-for") |> List.first()
+        user_agent: conn |> get_req_header("user-agent") |> List.first(),
+        ip: conn |> get_req_header("x-forwarded-for") |> List.first()
       }
 
       case Devices.create_or_get_device(user, fingerprint, device_info) do
@@ -96,9 +96,9 @@ defmodule AinComBookingApi.Controllers.AuthController do
   end
 
   defp default_fingerprint(conn) do
-    ua = get_req_header(conn, "user-agent") |> List.first() || "unknown"
-    ip = get_req_header(conn, "x-forwarded-for") |> List.first() || "ip"
-    :crypto.hash(:sha256, ua <> "|" <> ip) |> Base.encode16(case: :lower)
+    ua = conn |> get_req_header("user-agent") |> List.first() || "unknown"
+    ip = conn |> get_req_header("x-forwarded-for") |> List.first() || "ip"
+    :sha256 |> :crypto.hash(ua <> "|" <> ip) |> Base.encode16(case: :lower)
   end
 
   # === Schema definitions for Swagger ===

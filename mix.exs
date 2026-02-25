@@ -9,6 +9,7 @@ defmodule AinCom.Mixfile do
       elixir: "~> 1.18",
       elixirc_paths: elixirc_paths(Mix.env()),
       compilers: Mix.compilers() ++ [:phoenix_swagger],
+      listeners: [Phoenix.CodeReloader],
       test_paths: ["test"],
       test_pattern: "**/*_test.exs",
       test_coverage: [tool: ExCoveralls],
@@ -99,6 +100,7 @@ defmodule AinCom.Mixfile do
       {:ecto_sql, "~> 3.12"},
       {:postgrex, "~> 0.20"},
       {:ecto_psql_extras, "~> 0.6"},
+      {:ecto_sqlite3, "~> 0.10", only: :test},
 
       # Database check
       {:excellent_migrations, "~> 0.1", only: [:dev, :test], runtime: false},
@@ -132,6 +134,7 @@ defmodule AinCom.Mixfile do
       # Test factories
       {:ex_machina, "~> 2.8", only: :test},
       {:faker, "~> 0.18", only: :test},
+      {:lazy_html, ">= 0.1.0", only: :test},
 
       # Test coverage
       {:excoveralls, "~> 0.18", only: :test},

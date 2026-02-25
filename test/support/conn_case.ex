@@ -23,6 +23,9 @@ defmodule AinComBookingWeb.ConnCase do
   using do
     quote do
       # Import conveniences for testing with connections
+      use AinComBookingWeb, :verified_routes
+
+      import AinComBookingWeb.ConnCase
       import AinComBookingWeb.Router.Helpers
       import Phoenix.ConnTest
       import Plug.Conn
@@ -39,7 +42,12 @@ defmodule AinComBookingWeb.ConnCase do
       Sandbox.mode(Repo, {:shared, self()})
     end
 
-    {:ok, conn: %{ConnTest.build_conn() | host: host()}}
+    secret_key_base =
+      :ain_com_booking
+      |> Application.fetch_env!(Endpoint)
+      |> Keyword.fetch!(:secret_key_base)
+
+    {:ok, conn: %{ConnTest.build_conn() | host: host(), secret_key_base: secret_key_base}}
   end
 
   defp host, do: Application.get_env(:ain_com_booking, :canonical_host)
@@ -64,9 +72,17 @@ defmodule AinComBookingWeb.ConnCase do
   """
   def log_in_user(conn, user) do
     token = AinComBooking.Accounts.generate_user_session_token(user)
+    live_socket_id = "users_sessions:#{Base.url_encode64(token)}"
+    session_opts = Plug.Session.init(AinComBookingWeb.Session.config())
 
     conn
-    |> Phoenix.ConnTest.init_test_session(%{})
+    |> Plug.Session.call(session_opts)
+    |> Plug.Conn.fetch_session()
     |> Plug.Conn.put_session(:user_token, token)
+    |> Plug.Conn.put_session("user_token", token)
+    |> Plug.Conn.put_session(:live_socket_id, live_socket_id)
+    |> Plug.Conn.put_session("live_socket_id", live_socket_id)
+    |> Plug.Conn.send_resp(200, "")
+    |> ConnTest.recycle()
   end
 end

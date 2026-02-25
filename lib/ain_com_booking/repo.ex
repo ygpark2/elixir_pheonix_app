@@ -1,6 +1,11 @@
 defmodule AinComBooking.Repo do
   use Ecto.Repo,
-    adapter: Ecto.Adapters.Postgres,
+    adapter:
+      Application.compile_env(
+        :ain_com_booking,
+        [AinComBooking.Repo, :adapter],
+        Ecto.Adapters.Postgres
+      ),
     otp_app: :ain_com_booking
 
   @doc """
@@ -8,6 +13,11 @@ defmodule AinComBooking.Repo do
   DATABASE_URL environment variable.
   """
   def init(_, opts) do
-    {:ok, Keyword.put(opts, :url, Application.get_env(:ain_com_booking, __MODULE__)[:url])}
+    config = Application.get_env(:ain_com_booking, __MODULE__)
+
+    case Keyword.get(config, :url) do
+      nil -> {:ok, opts}
+      url -> {:ok, Keyword.put(opts, :url, url)}
+    end
   end
 end

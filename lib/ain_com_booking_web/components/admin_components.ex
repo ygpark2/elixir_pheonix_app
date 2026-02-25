@@ -1,7 +1,8 @@
 defmodule AinComBookingWeb.AdminComponents do
+  @moduledoc false
   use Phoenix.Component
 
-  embed_templates "admin/*"
+  embed_templates("admin/*")
 
   attr(:menu_toggle, :boolean, default: false)
   attr(:sidebar_toggle, :boolean, default: false)

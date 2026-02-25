@@ -126,6 +126,8 @@ defmodule AinComBookingApi.Controllers.Company.CompanyResourceController do
             type(:string)
             location(:string)
             description(:string)
+            price(:number)
+            currency(:string)
             company_id(:string)
             user_id(:string)
           end
@@ -136,6 +138,8 @@ defmodule AinComBookingApi.Controllers.Company.CompanyResourceController do
             type: "equipment",
             location: "Room 101",
             description: "High quality projector",
+            price: 10_000,
+            currency: "KRW",
             company_id: "comp123",
             user_id: "user123"
           })
@@ -150,17 +154,21 @@ defmodule AinComBookingApi.Controllers.Company.CompanyResourceController do
             type(:string, "Resource type")
             location(:string, "Location")
             description(:string, "Description")
+            price(:number, "Bookable resource price")
+            currency(:string, "Currency")
             company_id(:string, "Company ID")
             user_id(:string, "User ID")
           end
 
-          required([:name, :type, :company_id])
+          required([:name, :type, :company_id, :price, :currency])
 
           example(%{
             name: "Projector",
             type: "equipment",
             location: "Room 101",
             description: "High quality projector",
+            price: 10_000,
+            currency: "KRW",
             company_id: "comp123",
             user_id: "user123"
           })

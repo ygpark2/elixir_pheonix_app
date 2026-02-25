@@ -7,6 +7,10 @@ defmodule AinComBooking.Accounts.User do
   @primary_key {:id, :binary_id, autogenerate: true}
   schema "users" do
     field(:email, :string)
+    field(:name, :string)
+    field(:phone, :string)
+    field(:address, :string)
+    field(:feed_visibility, Ecto.Enum, values: [:public, :followers, :link, :private], default: :public)
     field(:password, :string, virtual: true, redact: true)
     field(:hashed_password, :string, redact: true)
     field(:current_password, :string, virtual: true, redact: true)
@@ -44,9 +48,22 @@ defmodule AinComBooking.Accounts.User do
   """
   def registration_changeset(user, attrs, opts \\ []) do
     user
-    |> cast(attrs, [:email, :password])
+    |> cast(attrs, [:email, :password, :name, :phone, :address, :feed_visibility])
     |> validate_email(opts)
+    |> validate_required([:name, :phone, :address])
+    |> validate_length(:name, min: 1, max: 100)
+    |> validate_phone()
+    |> validate_length(:address, min: 1, max: 255)
     |> validate_password(opts)
+  end
+
+  def profile_changeset(user, attrs) do
+    user
+    |> cast(attrs, [:name, :phone, :address, :feed_visibility])
+    |> validate_required([:name, :phone, :address])
+    |> validate_length(:name, min: 1, max: 100)
+    |> validate_phone()
+    |> validate_length(:address, min: 1, max: 255)
   end
 
   defp validate_email(changeset, opts) do
@@ -54,6 +71,7 @@ defmodule AinComBooking.Accounts.User do
     |> validate_required([:email])
     |> validate_format(:email, ~r/^[^\s]+@[^\s]+$/, message: "must have the @ sign and no spaces")
     |> validate_length(:email, max: 160)
+    |> update_change(:email, &String.downcase/1)
     |> maybe_validate_unique_email(opts)
   end
 
@@ -66,6 +84,12 @@ defmodule AinComBooking.Accounts.User do
     # |> validate_format(:password, ~r/[A-Z]/, message: "at least one upper case character")
     # |> validate_format(:password, ~r/[!?@#$%^&*_0-9]/, message: "at least one digit or punctuation character")
     |> maybe_hash_password(opts)
+  end
+
+  defp validate_phone(changeset) do
+    changeset
+    |> validate_length(:phone, min: 7, max: 20)
+    |> validate_format(:phone, ~r/^[0-9+\-\s]+$/)
   end
 
   defp maybe_hash_password(changeset, opts) do

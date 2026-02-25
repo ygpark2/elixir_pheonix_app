@@ -14,6 +14,34 @@ defmodule AinComBookingWeb.UserSettingsLive do
     <div class="mx-auto max-w-2xl space-y-12 divide-y p-4">
       <div>
         <.simple_form
+          for={@profile_form}
+          id="profile_form"
+          phx-submit="update_profile"
+          phx-change="validate_profile"
+        >
+          <.input
+            name="profile_email"
+            type="email"
+            label="Email"
+            value={@current_email}
+            disabled
+          />
+          <.input field={@profile_form[:name]} type="text" label="Name" required />
+          <.input field={@profile_form[:phone]} type="text" label="Phone" required />
+          <.input field={@profile_form[:address]} type="text" label="Address" required />
+          <.input
+            field={@profile_form[:feed_visibility]}
+            type="select"
+            label="Feed visibility"
+            options={feed_visibility_options()}
+          />
+          <:actions>
+            <.button phx-disable-with="Saving...">Update Profile</.button>
+          </:actions>
+        </.simple_form>
+      </div>
+      <div>
+        <.simple_form
           for={@email_form}
           id="email_form"
           phx-submit="update_email"
@@ -89,6 +117,7 @@ defmodule AinComBookingWeb.UserSettingsLive do
 
   def mount(_params, _session, socket) do
     user = socket.assigns.current_user
+    profile_changeset = Accounts.change_user_profile(user)
     email_changeset = Accounts.change_user_email(user)
     password_changeset = Accounts.change_user_password(user)
 
@@ -100,11 +129,43 @@ defmodule AinComBookingWeb.UserSettingsLive do
       |> assign(:current_password, nil)
       |> assign(:email_form_current_password, nil)
       |> assign(:current_email, user.email)
+      |> assign(:profile_form, to_form(profile_changeset))
       |> assign(:email_form, to_form(email_changeset))
       |> assign(:password_form, to_form(password_changeset))
       |> assign(:trigger_submit, false)
 
     {:ok, socket}
+  end
+
+  def handle_event("validate_profile", %{"user" => user_params}, socket) do
+    profile_form =
+      socket.assigns.current_user
+      |> Accounts.change_user_profile(user_params)
+      |> Map.put(:action, :validate)
+      |> to_form()
+
+    {:noreply, assign(socket, profile_form: profile_form)}
+  end
+
+  def handle_event("update_profile", %{"user" => user_params}, socket) do
+    case Accounts.update_user_profile(socket.assigns.current_user, user_params) do
+      {:ok, user} ->
+        profile_form =
+          user
+          |> Accounts.change_user_profile()
+          |> to_form()
+
+        socket =
+          socket
+          |> assign(:current_user, user)
+          |> assign(:profile_form, profile_form)
+          |> put_flash(:info, "Profile updated successfully.")
+
+        {:noreply, socket}
+
+      {:error, changeset} ->
+        {:noreply, assign(socket, :profile_form, to_form(changeset))}
+    end
   end
 
   def handle_event("validate_email", params, socket) do
@@ -167,5 +228,14 @@ defmodule AinComBookingWeb.UserSettingsLive do
       {:error, changeset} ->
         {:noreply, assign(socket, password_form: to_form(changeset))}
     end
+  end
+
+  defp feed_visibility_options do
+    [
+      {"Public", :public},
+      {"Followers only", :followers},
+      {"Link only", :link},
+      {"Private", :private}
+    ]
   end
 end

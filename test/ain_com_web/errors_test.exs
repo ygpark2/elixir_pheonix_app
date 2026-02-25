@@ -1,5 +1,5 @@
 defmodule AinComBookingWeb.ErrorsTest do
-  use AinCom.DataCase, async: true
+  use AinComBooking.DataCase, async: true
 
   alias AinComBookingWeb.Errors
 

@@ -1,6 +1,7 @@
 defmodule AinComBookingApi.Plugs.DeviceTokenAuth do
   @moduledoc false
   import Plug.Conn
+
   alias AinComBookingApi.Devices
 
   @header "x-device-token"
@@ -13,7 +14,7 @@ defmodule AinComBookingApi.Plugs.DeviceTokenAuth do
         with {:ok, device} <- Devices.get_by_raw_token_ok(raw),
              :ok <- Devices.valid?(device) do
           ip = parse_ip(conn)
-          ua = get_req_header(conn, "user-agent") |> List.first()
+          ua = conn |> get_req_header("user-agent") |> List.first()
           _ = Devices.touch_seen(device, ip, ua)
           assign(conn, :current_device, device)
         else
@@ -28,11 +29,11 @@ defmodule AinComBookingApi.Plugs.DeviceTokenAuth do
   end
 
   defp parse_ip(conn) do
-    forwarded = get_req_header(conn, "x-forwarded-for") |> List.first()
+    forwarded = conn |> get_req_header("x-forwarded-for") |> List.first()
 
     cond do
       forwarded && forwarded != "" -> forwarded |> String.split(",") |> List.first() |> String.trim()
-      conn.remote_ip -> :inet.ntoa(conn.remote_ip) |> to_string()
+      conn.remote_ip -> conn.remote_ip |> :inet.ntoa() |> to_string()
       true -> nil
     end
   end

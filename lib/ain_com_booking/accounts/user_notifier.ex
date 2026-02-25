@@ -1,4 +1,5 @@
 defmodule AinComBooking.Accounts.UserNotifier do
+  @moduledoc false
   import Swoosh.Email
 
   alias AinComBooking.Mailer

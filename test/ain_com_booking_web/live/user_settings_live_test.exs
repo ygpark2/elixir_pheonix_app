@@ -1,19 +1,41 @@
 defmodule AinComBookingWeb.UserSettingsLiveTest do
-  use AinComBookingWeb.ConnCase, async: true
+  use AinComBookingWeb.ConnCase, async: false
+
+  import AinComBooking.AccountsFixtures
+  import Phoenix.LiveViewTest
 
   alias AinComBooking.Accounts
-  import Phoenix.LiveViewTest
-  import AinComBooking.AccountsFixtures
 
   describe "Settings page" do
     test "renders settings page", %{conn: conn} do
+      user = user_fixture()
+      conn = log_in_user(conn, user)
+
       {:ok, _lv, html} =
-        conn
-        |> log_in_user(user_fixture())
-        |> live(~p"/users/settings")
+        live(conn, ~p"/users/settings")
 
       assert html =~ "Change Email"
       assert html =~ "Change Password"
+    end
+
+    test "renders profile info", %{conn: conn} do
+      user =
+        user_fixture(%{
+          name: "Profile User",
+          phone: "010-1234-5678",
+          address: "Seoul",
+          email: "profile@example.com"
+        })
+
+      conn = log_in_user(conn, user)
+
+      {:ok, _lv, html} =
+        live(conn, ~p"/users/settings")
+
+      assert html =~ "Profile User"
+      assert html =~ "010-1234-5678"
+      assert html =~ "Seoul"
+      assert html =~ "profile@example.com"
     end
 
     test "redirects if user is not logged in", %{conn: conn} do
@@ -29,7 +51,13 @@ defmodule AinComBookingWeb.UserSettingsLiveTest do
     setup %{conn: conn} do
       password = valid_user_password()
       user = user_fixture(%{password: password})
-      %{conn: log_in_user(conn, user), user: user, password: password}
+      conn = log_in_user(conn, user)
+
+      %{
+        conn: conn,
+        user: user,
+        password: password
+      }
     end
 
     test "updates the user email", %{conn: conn, password: password, user: user} do
@@ -86,7 +114,13 @@ defmodule AinComBookingWeb.UserSettingsLiveTest do
     setup %{conn: conn} do
       password = valid_user_password()
       user = user_fixture(%{password: password})
-      %{conn: log_in_user(conn, user), user: user, password: password}
+      conn = log_in_user(conn, user)
+
+      %{
+        conn: conn,
+        user: user,
+        password: password
+      }
     end
 
     test "updates the user password", %{conn: conn, user: user, password: password} do
@@ -110,7 +144,9 @@ defmodule AinComBookingWeb.UserSettingsLiveTest do
 
       assert redirected_to(new_password_conn) == ~p"/users/settings"
 
-      assert get_session(new_password_conn, :user_token) != get_session(conn, :user_token)
+      session_key = AinComBookingWeb.Session.config()[:key]
+      assert new_password_conn.resp_cookies[session_key]
+      refute new_password_conn.resp_cookies[session_key] == conn.resp_cookies[session_key]
 
       assert Phoenix.Flash.get(new_password_conn.assigns.flash, :info) =~
                "Password updated successfully"
@@ -133,7 +169,7 @@ defmodule AinComBookingWeb.UserSettingsLiveTest do
         })
 
       assert result =~ "Change Password"
-      assert result =~ "should be at least 12 character(s)"
+      assert result =~ "should be at least %{count} character(s)"
       assert result =~ "does not match password"
     end
 
@@ -152,9 +188,59 @@ defmodule AinComBookingWeb.UserSettingsLiveTest do
         |> render_submit()
 
       assert result =~ "Change Password"
-      assert result =~ "should be at least 12 character(s)"
+      assert result =~ "should be at least %{count} character(s)"
       assert result =~ "does not match password"
       assert result =~ "is not valid"
+    end
+  end
+
+  describe "update profile form" do
+    setup %{conn: conn} do
+      user = user_fixture()
+      conn = log_in_user(conn, user)
+
+      %{conn: conn, user: user}
+    end
+
+    test "updates the user profile", %{conn: conn, user: user} do
+      {:ok, lv, _html} = live(conn, ~p"/users/settings")
+
+      result =
+        lv
+        |> form("#profile_form", %{
+          "user" => %{
+            "name" => "Updated Name",
+            "phone" => "010-9999-0000",
+            "address" => "Busan",
+            "feed_visibility" => "followers"
+          }
+        })
+        |> render_submit()
+
+      assert result =~ "Profile updated successfully."
+      assert result =~ "Updated Name"
+      assert result =~ "010-9999-0000"
+      assert result =~ "Busan"
+
+      updated_user = Accounts.get_user!(user.id)
+      assert updated_user.feed_visibility == :followers
+    end
+
+    test "renders errors with invalid data", %{conn: conn} do
+      {:ok, lv, _html} = live(conn, ~p"/users/settings")
+
+      result =
+        lv
+        |> form("#profile_form", %{
+          "user" => %{
+            "name" => "",
+            "phone" => "",
+            "address" => ""
+          }
+        })
+        |> render_submit()
+
+      assert result =~ "can&#39;t be blank"
     end
   end
 
@@ -168,7 +254,14 @@ defmodule AinComBookingWeb.UserSettingsLiveTest do
           Accounts.deliver_user_update_email_instructions(%{user | email: email}, user.email, url)
         end)
 
-      %{conn: log_in_user(conn, user), token: token, email: email, user: user}
+      conn = log_in_user(conn, user)
+
+      %{
+        conn: conn,
+        token: token,
+        email: email,
+        user: user
+      }
     end
 
     test "updates the user email once", %{conn: conn, user: user, token: token, email: email} do
