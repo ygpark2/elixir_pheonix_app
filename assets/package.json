@@ -10,17 +10,17 @@
   "dependencies": {
     "phoenix": "^1.7.7",
     "phoenix_html": "^4.2.1",
-    "phoenix_live_view": "^1.1.17",
+    "phoenix_live_view": "^1.1.19",
     "simple-css-reset": "^3.0.0",
     "antd": "^5.29.0",
-    "alpinejs": "^3.15.1",
+    "alpinejs": "^3.15.3",
     "@alpinejs/persist": "^3.15.2"
   },
   "devDependencies": {
     "@babel/eslint-parser": "^7.28.5",
-    "eslint": "^9.39.1",
+    "eslint": "^9.39.2",
     "eslint-plugin-mirego": "^1.0.0",
-    "prettier": "^3.6.2",
+    "prettier": "^3.7.4",
     "stylelint": "^15.11.0",
     "stylelint-config-mirego": "^2.3.0",
     "stylelint-scss": "^5.3.2",
