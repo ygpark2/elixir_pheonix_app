@@ -1,8 +1,8 @@
 defmodule AinComBookingWeb.UserConfirmationLiveTest do
   use AinComBookingWeb.ConnCase, async: true
 
-  import Phoenix.LiveViewTest
   import AinComBooking.AccountsFixtures
+  import Phoenix.LiveViewTest
 
   alias AinComBooking.Accounts
   alias AinComBooking.Repo
@@ -55,9 +55,13 @@ defmodule AinComBookingWeb.UserConfirmationLiveTest do
                "User confirmation link is invalid or it has expired"
 
       # when logged in
-      conn =
-        build_conn()
-        |> log_in_user(user)
+      fresh_conn = %{
+        Phoenix.ConnTest.build_conn()
+        | host: conn.host,
+          secret_key_base: conn.secret_key_base
+      }
+
+      conn = log_in_user(fresh_conn, user)
 
       {:ok, lv, _html} = live(conn, ~p"/users/confirm/#{token}")
 

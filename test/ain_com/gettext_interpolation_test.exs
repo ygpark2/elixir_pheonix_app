@@ -1,5 +1,5 @@
-defmodule AinCom.GettextInterpolationTest do
+defmodule AinComBooking.GettextInterpolationTest do
   use ExUnit.Case, async: true
 
-  doctest AinCom.GettextInterpolation, import: true
+  doctest AinComBooking.GettextInterpolation, import: true
 end

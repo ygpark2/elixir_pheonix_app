@@ -2,8 +2,8 @@ defmodule AinComBookingWeb.Layouts do
   @moduledoc false
   use AinComBookingWeb, :html
 
-  alias Phoenix.LiveView.JS
   alias AinComBookingWeb.AdminComponents
+  alias Phoenix.LiveView.JS
 
   # knobs the layout responds to
   attr(:variant, :atom, values: [:app, :auth, :settings, :main, :dashboard], default: :app)

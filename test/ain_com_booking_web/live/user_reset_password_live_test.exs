@@ -1,8 +1,8 @@
 defmodule AinComBookingWeb.UserResetPasswordLiveTest do
   use AinComBookingWeb.ConnCase, async: true
 
-  import Phoenix.LiveViewTest
   import AinComBooking.AccountsFixtures
+  import Phoenix.LiveViewTest
 
   alias AinComBooking.Accounts
 
@@ -39,11 +39,9 @@ defmodule AinComBookingWeb.UserResetPasswordLiveTest do
       result =
         lv
         |> element("#reset_password_form")
-        |> render_change(
-          user: %{"password" => "secret12", "password_confirmation" => "secret123456"}
-        )
+        |> render_change(user: %{"password" => "secret12", "password_confirmation" => "secret123456"})
 
-      assert result =~ "should be at least 12 character"
+      assert result =~ "should be at least %{count} character(s)"
       assert result =~ "does not match password"
     end
   end
@@ -82,7 +80,7 @@ defmodule AinComBookingWeb.UserResetPasswordLiveTest do
         |> render_submit()
 
       assert result =~ "Reset Password"
-      assert result =~ "should be at least 12 character(s)"
+      assert result =~ "should be at least %{count} character(s)"
       assert result =~ "does not match password"
     end
   end
@@ -93,7 +91,7 @@ defmodule AinComBookingWeb.UserResetPasswordLiveTest do
 
       {:ok, conn} =
         lv
-        |> element(~s|main a:fl-contains("Log in")|)
+        |> element("main a", "Log in")
         |> render_click()
         |> follow_redirect(conn, ~p"/users/log_in")
 
@@ -108,7 +106,7 @@ defmodule AinComBookingWeb.UserResetPasswordLiveTest do
 
       {:ok, conn} =
         lv
-        |> element(~s|main a:fl-contains("Register")|)
+        |> element("main a", "Register")
         |> render_click()
         |> follow_redirect(conn, ~p"/users/register")
 

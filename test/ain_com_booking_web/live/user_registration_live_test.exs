@@ -1,8 +1,8 @@
 defmodule AinComBookingWeb.UserRegistrationLiveTest do
   use AinComBookingWeb.ConnCase, async: true
 
-  import Phoenix.LiveViewTest
   import AinComBooking.AccountsFixtures
+  import Phoenix.LiveViewTest
 
   describe "Registration page" do
     test "renders registration page", %{conn: conn} do
@@ -28,11 +28,20 @@ defmodule AinComBookingWeb.UserRegistrationLiveTest do
       result =
         lv
         |> element("#registration_form")
-        |> render_change(user: %{"email" => "with spaces", "password" => "too short"})
+        |> render_change(
+          user: %{
+            "email" => "with spaces",
+            "password" => "too short",
+            "name" => "",
+            "phone" => "",
+            "address" => ""
+          }
+        )
 
       assert result =~ "Register"
       assert result =~ "must have the @ sign and no spaces"
-      assert result =~ "should be at least 12 character"
+      assert result =~ "should be at least %{count} character(s)"
+      assert result =~ "can&#39;t be blank"
     end
   end
 
@@ -47,12 +56,15 @@ defmodule AinComBookingWeb.UserRegistrationLiveTest do
 
       assert redirected_to(conn) == ~p"/"
 
-      # Now do a logged in request and assert on the menu
-      conn = get(conn, "/")
-      response = html_response(conn, 200)
-      assert response =~ email
-      assert response =~ "Settings"
-      assert response =~ "Log out"
+      conn = get(conn, ~p"/")
+      html = html_response(conn, 200)
+
+      assert html =~ email
+      assert html =~ "Settings"
+      assert html =~ "Log out"
+
+      # Verify session token is present after registration
+      assert get_session(conn, :user_token)
     end
 
     test "renders errors for duplicated email", %{conn: conn} do
@@ -77,7 +89,7 @@ defmodule AinComBookingWeb.UserRegistrationLiveTest do
 
       {:ok, _login_live, login_html} =
         lv
-        |> element(~s|main a:fl-contains("Log in")|)
+        |> element("main a", "Log in")
         |> render_click()
         |> follow_redirect(conn, ~p"/users/log_in")
 

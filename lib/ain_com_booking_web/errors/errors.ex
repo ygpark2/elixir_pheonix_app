@@ -29,9 +29,9 @@ defmodule AinComBookingWeb.Errors do
 
   defp translate_error({message, options}) do
     if options[:count] do
-      Gettext.dngettext(AinCom.Gettext, "errors", message, message, options[:count], options)
+      Gettext.dngettext(AinComBooking.Gettext, "errors", message, message, options[:count], options)
     else
-      Gettext.dgettext(AinCom.Gettext, "errors", message, options)
+      Gettext.dgettext(AinComBooking.Gettext, "errors", message, options)
     end
   end
 

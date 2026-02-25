@@ -10,6 +10,8 @@ defmodule AinComBooking.Catalog.UserResource do
     field(:type, :string)
     field(:location, :string)
     field(:description, :string)
+    field(:price, :decimal)
+    field(:currency, :string)
 
     belongs_to(:user, AinComBooking.Accounts.User, type: :binary_id)
 
@@ -22,7 +24,8 @@ defmodule AinComBooking.Catalog.UserResource do
 
   def changeset(resource, attrs) do
     resource
-    |> cast(attrs, [:name, :type, :location, :description, :user_id])
-    |> validate_required([:name, :type])
+    |> cast(attrs, [:name, :type, :location, :description, :price, :currency, :user_id])
+    |> validate_required([:name, :type, :price, :currency, :user_id])
+    |> validate_number(:price, greater_than_or_equal_to: 0)
   end
 end

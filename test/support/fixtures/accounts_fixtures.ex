@@ -6,10 +6,16 @@ defmodule AinComBooking.AccountsFixtures do
 
   def unique_user_email, do: "user#{System.unique_integer()}@example.com"
   def valid_user_password, do: "hello world!"
+  def valid_user_name, do: "Test User"
+  def valid_user_phone, do: "010-0000-0000"
+  def valid_user_address, do: "Seoul"
 
   def valid_user_attributes(attrs \\ %{}) do
     Enum.into(attrs, %{
       email: unique_user_email(),
+      name: valid_user_name(),
+      phone: valid_user_phone(),
+      address: valid_user_address(),
       password: valid_user_password()
     })
   end

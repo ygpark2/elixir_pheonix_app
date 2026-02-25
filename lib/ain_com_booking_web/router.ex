@@ -19,8 +19,6 @@ defmodule AinComBookingWeb.Router do
 
   pipeline :api do
     plug(:accepts, ["json"])
-
-    plug(:session)
     plug(:fetch_session)
 
     # 선택 사항 (예: Pow 등에서 사용)
@@ -36,9 +34,8 @@ defmodule AinComBookingWeb.Router do
 
   pipeline :browser do
     plug(:accepts, ["html", "json"])
-
-    plug(:session)
     plug(:fetch_session)
+    plug(:fetch_current_user)
 
     plug(:protect_from_forgery)
     plug(:fetch_live_flash)
@@ -127,14 +124,6 @@ defmodule AinComBookingWeb.Router do
     }
   end
 
-  # The session will be stored in the cookie and signed,
-  # this means its contents can be read but not tampered with.
-  # Set :encryption_salt if you would also like to encrypt it.
-  defp session(conn, _opts) do
-    opts = Plug.Session.init(AinComBookingWeb.Session.config())
-    Plug.Session.call(conn, opts)
-  end
-
   ## Authentication routes
   scope "/", AinComBookingWeb do
     pipe_through([:browser, :redirect_if_user_is_authenticated])
@@ -155,14 +144,20 @@ defmodule AinComBookingWeb.Router do
 
     live_session :require_authenticated_user,
       on_mount: [{AinComBookingWeb.UserAuth, :ensure_authenticated}] do
+      live("/admin/dashboard", AdminDashboardLive, :index)
+      live("/feed", SocialFeedLive, :index)
+      live("/users/search", UserSearchLive, :index)
       live("/users/settings", UserSettingsLive, :edit)
       live("/users/settings/confirm_email/:token", UserSettingsLive, :confirm_email)
+      live("/profiles/:id", UserProfileLive, :show)
     end
   end
 
   scope "/", AinComBookingWeb do
     pipe_through([:browser])
 
+    # Fallback route for clients that issue GET requests (e.g. stale JS/cached pages).
+    get("/users/log_out", UserSessionController, :delete)
     delete("/users/log_out", UserSessionController, :delete)
 
     live_session :current_user,

@@ -1,3 +1,9 @@
+
+.codex/
+.opencode/
+_bmad-output/
+_bmad/
+
 # App artifacts
 /_build
 /db

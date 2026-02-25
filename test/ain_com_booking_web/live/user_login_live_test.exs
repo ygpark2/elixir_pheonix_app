@@ -1,16 +1,16 @@
 defmodule AinComBookingWeb.UserLoginLiveTest do
   use AinComBookingWeb.ConnCase, async: true
 
-  import Phoenix.LiveViewTest
   import AinComBooking.AccountsFixtures
+  import Phoenix.LiveViewTest
 
   describe "Log in page" do
     test "renders log in page", %{conn: conn} do
       {:ok, _lv, html} = live(conn, ~p"/users/log_in")
 
       assert html =~ "Log in"
-      assert html =~ "Register"
-      assert html =~ "Forgot your password?"
+      assert html =~ "Sign up"
+      assert html =~ "Forgot password?"
     end
 
     test "redirects if already logged in", %{conn: conn} do
@@ -37,6 +37,7 @@ defmodule AinComBookingWeb.UserLoginLiveTest do
       conn = submit_form(form, conn)
 
       assert redirected_to(conn) == ~p"/"
+      assert get_session(conn, :user_token)
     end
 
     test "redirects to login page with a flash error if there are no valid credentials", %{
@@ -45,15 +46,16 @@ defmodule AinComBookingWeb.UserLoginLiveTest do
       {:ok, lv, _html} = live(conn, ~p"/users/log_in")
 
       form =
-        form(lv, "#login_form",
-          user: %{email: "test@email.com", password: "123456", remember_me: true}
-        )
+        form(lv, "#login_form", user: %{email: "test@email.com", password: "123456", remember_me: true})
 
       conn = submit_form(form, conn)
 
       assert Phoenix.Flash.get(conn.assigns.flash, :error) == "Invalid email or password"
 
       assert redirected_to(conn) == "/users/log_in"
+
+      conn = get(conn, ~p"/users/log_in")
+      assert html_response(conn, 200) =~ "Invalid email or password"
     end
   end
 
@@ -61,13 +63,13 @@ defmodule AinComBookingWeb.UserLoginLiveTest do
     test "redirects to registration page when the Register button is clicked", %{conn: conn} do
       {:ok, lv, _html} = live(conn, ~p"/users/log_in")
 
-      {:ok, _login_live, login_html} =
+      {:ok, conn} =
         lv
-        |> element(~s|main a:fl-contains("Sign up")|)
+        |> element("main a", "Sign up")
         |> render_click()
         |> follow_redirect(conn, ~p"/users/register")
 
-      assert login_html =~ "Register"
+      assert html_response(conn, 200) =~ "Register for an account"
     end
 
     test "redirects to forgot password page when the Forgot Password button is clicked", %{
@@ -77,7 +79,7 @@ defmodule AinComBookingWeb.UserLoginLiveTest do
 
       {:ok, conn} =
         lv
-        |> element(~s|main a:fl-contains("Forgot your password?")|)
+        |> element("a[href=\"/users/reset_password\"]")
         |> render_click()
         |> follow_redirect(conn, ~p"/users/reset_password")
 

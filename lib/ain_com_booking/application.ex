@@ -9,9 +9,15 @@ defmodule AinComBooking.Application do
     children = [
       AinComBooking.Repo,
       {Phoenix.PubSub, [name: AinComBooking.PubSub, adapter: Phoenix.PubSub.PG2]},
-      AinComBookingWeb.Endpoint,
-      {TelemetryUI, AinComBooking.TelemetryUI.config()}
+      AinComBookingWeb.Endpoint
     ]
+
+    children =
+      if Application.get_env(:ain_com_booking, :telemetry_ui_enabled, true) do
+        children ++ [{TelemetryUI, AinComBooking.TelemetryUI.config()}]
+      else
+        children
+      end
 
     :logger.add_handler(:sentry_handler, Sentry.LoggerHandler, %{})
 

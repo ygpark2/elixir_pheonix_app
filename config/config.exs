@@ -23,6 +23,8 @@ config :ain_com_booking, AinComBookingGraphQL, token_limit: 2000
 config :ain_com_booking, AinComBookingWeb.Endpoint, live_view: [signing_salt: "DtRf6n528OmwGAAyY876p4tzT1pH2oyQ"]
 
 config :ain_com_booking, AinComBookingWeb.Endpoint,
+  session_key: "_ain_com_booking_session",
+  session_signing_salt: "DtRf6n528OmwGAAyY876p4tzT1pH2oyQ",
   pubsub_server: AinComBooking.PubSub,
   render_errors: [view: AinComBookingWeb.Errors, accepts: ~w(html json)]
 
@@ -45,7 +47,7 @@ config :ain_com_booking,
 config :esbuild,
   version: "0.16.4",
   default: [
-    args: ~w(js/app.jsx --bundle --target=es2017 --outdir=../priv/static/assets
+    args: ~w(js/app.js --bundle --target=es2017 --outdir=../priv/static/assets
       --loader:.js=jsx --loader:.jsx=jsx --jsx=automatic),
     cd: Path.expand("../assets", __DIR__),
     env: %{"NODE_PATH" => Path.expand("../deps", __DIR__)}

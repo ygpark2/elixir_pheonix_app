@@ -5,6 +5,7 @@ defmodule AinComBooking.Accounts do
 
   import Ecto.Query, warn: false
 
+  alias AinComBooking.Accounts.Follow
   alias AinComBooking.Accounts.User
   alias AinComBooking.Accounts.UserNotifier
   alias AinComBooking.Accounts.UserToken
@@ -68,6 +69,67 @@ defmodule AinComBooking.Accounts do
   """
   def get_user!(id), do: Repo.get!(User, id)
 
+  @doc """
+  Follows a user.
+  """
+  def follow_user(%User{id: follower_id}, %User{id: followed_id}) do
+    follow_user(follower_id, followed_id)
+  end
+
+  def follow_user(follower_id, followed_id) when is_binary(follower_id) and is_binary(followed_id) do
+    %Follow{}
+    |> Follow.changeset(%{follower_id: follower_id, followed_id: followed_id})
+    |> Repo.insert()
+  end
+
+  @doc """
+  Unfollows a user.
+  """
+  def unfollow_user(%User{id: follower_id}, %User{id: followed_id}) do
+    unfollow_user(follower_id, followed_id)
+  end
+
+  def unfollow_user(follower_id, followed_id) when is_binary(follower_id) and is_binary(followed_id) do
+    Repo.delete_all(from(f in Follow, where: f.follower_id == ^follower_id and f.followed_id == ^followed_id))
+    :ok
+  end
+
+  @doc """
+  Returns true if follower is following the followed user.
+  """
+  def following?(%User{id: follower_id}, %User{id: followed_id}) do
+    following?(follower_id, followed_id)
+  end
+
+  def following?(follower_id, followed_id) when is_binary(follower_id) and is_binary(followed_id) do
+    Repo.exists?(from(f in Follow, where: f.follower_id == ^follower_id and f.followed_id == ^followed_id))
+  end
+
+  @doc """
+  Searches users by name keyword or id.
+
+  Returns only public fields (id, name).
+  """
+  def search_users(query) when is_binary(query) do
+    # Visibility/follow-based filtering will be layered on once social scope is implemented.
+    trimmed = String.trim(query)
+
+    if trimmed == "" do
+      []
+    else
+      case Ecto.UUID.cast(trimmed) do
+        {:ok, uuid} ->
+          Repo.all(from(u in User, where: u.id == ^uuid, select: %{id: u.id, name: u.name}))
+
+        :error ->
+          like = "%#{trimmed}%"
+          Repo.all(from(u in User, where: fragment("lower(?) LIKE lower(?)", u.name, ^like), select: %{id: u.id, name: u.name}))
+      end
+    end
+  end
+
+  def search_users(_), do: []
+
   ## User registration
 
   @doc """
@@ -102,6 +164,37 @@ defmodule AinComBooking.Accounts do
   end
 
   ## Settings
+
+  @doc """
+  Returns an `%Ecto.Changeset{}` for changing the user profile.
+
+  ## Examples
+
+      iex> change_user_profile(user)
+      %Ecto.Changeset{data: %User{}}
+
+  """
+  def change_user_profile(user, attrs \\ %{}) do
+    User.profile_changeset(user, attrs)
+  end
+
+  @doc """
+  Updates the user profile.
+
+  ## Examples
+
+      iex> update_user_profile(user, %{name: ..., phone: ..., address: ...})
+      {:ok, %User{}}
+
+      iex> update_user_profile(user, %{name: ""})
+      {:error, %Ecto.Changeset{}}
+
+  """
+  def update_user_profile(user, attrs) do
+    user
+    |> User.profile_changeset(attrs)
+    |> Repo.update()
+  end
 
   @doc """
   Returns an `%Ecto.Changeset{}` for changing the user email.

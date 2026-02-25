@@ -1,5 +1,6 @@
 defmodule AinComBookingWeb.Admin.HTML do
   use Phoenix.Component
+
   import AinComBookingWeb.AdminComponents
 
   embed_templates("templates/**/*")
