@@ -33,6 +33,9 @@ defmodule AinComBookingWeb.UserRegistrationLive do
         </.error>
 
         <.input field={@form[:email]} type="email" label="Email" required />
+        <.input field={@form[:name]} type="text" label="Name" required />
+        <.input field={@form[:phone]} type="text" label="Phone" required />
+        <.input field={@form[:address]} type="text" label="Address" required />
         <.input field={@form[:password]} type="password" label="Password" required />
 
         <:actions>

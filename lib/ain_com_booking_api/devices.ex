@@ -9,13 +9,13 @@ defmodule AinComBookingApi.Devices do
   @default_ttl_days 90
 
   def generate_raw_and_hash do
-    raw = :crypto.strong_rand_bytes(@token_bytes) |> Base.url_encode64(padding: false)
+    raw = @token_bytes |> :crypto.strong_rand_bytes() |> Base.url_encode64(padding: false)
     hashed = hash(raw)
     {raw, hashed}
   end
 
   def hash(raw) when is_binary(raw) do
-    :crypto.hash(:sha256, raw) |> Base.encode16(case: :lower)
+    :sha256 |> :crypto.hash(raw) |> Base.encode16(case: :lower)
   end
 
   def get_by_raw_token(raw) do
@@ -40,14 +40,7 @@ defmodule AinComBookingApi.Devices do
         now = DateTime.utc_now()
         expires_at = DateTime.add(now, @default_ttl_days * 24 * 3600, :second)
 
-        attrs =
-          info
-          |> Map.merge(%{
-            user_id: user_id,
-            token_hash: token_hash,
-            fingerprint: fingerprint,
-            expires_at: expires_at
-          })
+        attrs = Map.merge(info, %{user_id: user_id, token_hash: token_hash, fingerprint: fingerprint, expires_at: expires_at})
 
         with {:ok, device} <- create_device(attrs) do
           {:created, raw, device}
@@ -102,10 +95,14 @@ defmodule AinComBookingApi.Devices do
 
   def valid?(%Device{} = device) do
     cond do
-      device.revoked_at -> {:error, :revoked}
-      device.expires_at && DateTime.compare(device.expires_at, DateTime.utc_now()) == :lt ->
+      device.revoked_at ->
+        {:error, :revoked}
+
+      device.expires_at && DateTime.before?(device.expires_at, DateTime.utc_now()) ->
         {:error, :expired}
-      true -> :ok
+
+      true ->
+        :ok
     end
   end
 end

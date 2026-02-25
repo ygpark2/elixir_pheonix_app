@@ -1,4 +1,4 @@
-defmodule AinCom.GettextInterpolation do
+defmodule AinComBooking.GettextInterpolation do
   @moduledoc """
   Default Gettext.Interpolation implementation for testing purposes
 

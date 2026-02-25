@@ -4,7 +4,7 @@ defmodule AinCom.FactoryTest do
   You’ll probably want to delete it.
   """
 
-  use AinCom.DataCase, async: true
+  use AinComBooking.DataCase, async: true
 
   import AinCom.Factory
 

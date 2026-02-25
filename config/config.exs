@@ -23,6 +23,8 @@ config :ain_com_booking, AinComBookingGraphQL, token_limit: 2000
 config :ain_com_booking, AinComBookingWeb.Endpoint, live_view: [signing_salt: "DtRf6n528OmwGAAyY876p4tzT1pH2oyQ"]
 
 config :ain_com_booking, AinComBookingWeb.Endpoint,
+  session_key: "_ain_com_booking_session",
+  session_signing_salt: "DtRf6n528OmwGAAyY876p4tzT1pH2oyQ",
   pubsub_server: AinComBooking.PubSub,
   render_errors: [view: AinComBookingWeb.Errors, accepts: ~w(html json)]
 

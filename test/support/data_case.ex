@@ -1,4 +1,4 @@
-defmodule AinCom.DataCase do
+defmodule AinComBooking.DataCase do
   @moduledoc """
   This module defines the setup for tests requiring
   access to the application's data layer.
@@ -20,7 +20,7 @@ defmodule AinCom.DataCase do
 
   using do
     quote do
-      import AinCom.DataCase
+      import AinComBooking.DataCase
       import Ecto
       import Ecto.Changeset
       import Ecto.Query
@@ -50,7 +50,14 @@ defmodule AinCom.DataCase do
   def errors_on(changeset) do
     Changeset.traverse_errors(changeset, fn {message, opts} ->
       Enum.reduce(opts, message, fn {key, value}, acc ->
-        String.replace(acc, "%{#{key}}", to_string(value))
+        rendered =
+          if is_list(value) do
+            Enum.map_join(value, ", ", &to_string/1)
+          else
+            to_string(value)
+          end
+
+        String.replace(acc, "%{#{key}}", rendered)
       end)
     end)
   end

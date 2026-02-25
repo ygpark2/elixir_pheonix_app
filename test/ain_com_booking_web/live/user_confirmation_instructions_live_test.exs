@@ -1,8 +1,8 @@
 defmodule AinComBookingWeb.UserConfirmationInstructionsLiveTest do
   use AinComBookingWeb.ConnCase, async: true
 
-  import Phoenix.LiveViewTest
   import AinComBooking.AccountsFixtures
+  import Phoenix.LiveViewTest
 
   alias AinComBooking.Accounts
   alias AinComBooking.Repo

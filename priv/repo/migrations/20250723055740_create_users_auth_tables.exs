@@ -3,15 +3,26 @@ defmodule AinComBooking.Repo.Migrations.CreateUsersAuthTables do
   use Ecto.Migration
 
   def change do
-    execute("CREATE EXTENSION IF NOT EXISTS citext", "")
+    if repo().__adapter__() == Ecto.Adapters.SQLite3 do
+      create table(:users, primary_key: false) do
+        add(:id, :binary_id, primary_key: true)
+        add(:email, :string, null: false)
+        add(:hashed_password, :string, null: false)
+        add(:confirmed_at, :naive_datetime)
 
-    create table(:users, primary_key: false) do
-      add(:id, :binary_id, primary_key: true)
-      add(:email, :citext, null: false)
-      add(:hashed_password, :string, null: false)
-      add(:confirmed_at, :naive_datetime)
+        timestamps()
+      end
+    else
+      execute("CREATE EXTENSION IF NOT EXISTS citext", "")
 
-      timestamps()
+      create table(:users, primary_key: false) do
+        add(:id, :binary_id, primary_key: true)
+        add(:email, :citext, null: false)
+        add(:hashed_password, :string, null: false)
+        add(:confirmed_at, :naive_datetime)
+
+        timestamps()
+      end
     end
 
     create(unique_index(:users, [:email]))

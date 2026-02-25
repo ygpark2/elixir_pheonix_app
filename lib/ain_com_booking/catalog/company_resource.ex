@@ -10,6 +10,8 @@ defmodule AinComBooking.Catalog.CompanyResource do
     field(:type, :string)
     field(:location, :string)
     field(:description, :string)
+    field(:price, :decimal)
+    field(:currency, :string)
 
     belongs_to(:user, AinComBooking.Accounts.User, type: :binary_id)
     belongs_to(:company, AinComBooking.Catalog.Company, type: :binary_id)
@@ -29,9 +31,12 @@ defmodule AinComBooking.Catalog.CompanyResource do
       :type,
       :location,
       :description,
+      :price,
+      :currency,
       :user_id,
       :company_id
     ])
-    |> validate_required([:name, :company_id])
+    |> validate_required([:name, :company_id, :price, :currency])
+    |> validate_number(:price, greater_than_or_equal_to: 0)
   end
 end

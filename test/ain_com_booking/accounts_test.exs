@@ -1,10 +1,11 @@
 defmodule AinComBooking.AccountsTest do
   use AinComBooking.DataCase
 
-  alias AinComBooking.Accounts
-
   import AinComBooking.AccountsFixtures
-  alias AinComBooking.Accounts.{User, UserToken}
+
+  alias AinComBooking.Accounts
+  alias AinComBooking.Accounts.User
+  alias AinComBooking.Accounts.UserToken
 
   describe "get_user_by_email/1" do
     test "does not return the user if the email does not exist" do
@@ -38,7 +39,7 @@ defmodule AinComBooking.AccountsTest do
   describe "get_user!/1" do
     test "raises if id is invalid" do
       assert_raise Ecto.NoResultsError, fn ->
-        Accounts.get_user!(-1)
+        Accounts.get_user!(Ecto.UUID.generate())
       end
     end
 
@@ -48,18 +49,83 @@ defmodule AinComBooking.AccountsTest do
     end
   end
 
+  describe "follow relationships" do
+    test "follows and unfollows a user" do
+      follower = user_fixture()
+      followed = user_fixture()
+
+      assert {:ok, _follow} = Accounts.follow_user(follower, followed)
+      assert Accounts.following?(follower, followed)
+
+      assert :ok = Accounts.unfollow_user(follower, followed)
+      refute Accounts.following?(follower, followed)
+    end
+
+    test "prevents duplicate follow" do
+      follower = user_fixture()
+      followed = user_fixture()
+
+      assert {:ok, _follow} = Accounts.follow_user(follower, followed)
+      assert {:error, changeset} = Accounts.follow_user(follower, followed)
+
+      assert %{followed_id: ["has already been taken"]} = errors_on(changeset)
+    end
+
+    test "prevents self follow" do
+      user = user_fixture()
+
+      assert {:error, changeset} = Accounts.follow_user(user, user)
+      assert %{followed_id: ["cannot follow yourself"]} = errors_on(changeset)
+    end
+  end
+
+  describe "search_users/1" do
+    test "returns matching users by name keyword with public fields only" do
+      user = user_fixture(%{name: "Search Target"})
+      id = user.id
+
+      results = Accounts.search_users("Search")
+
+      assert [%{id: ^id, name: "Search Target"}] = results
+      refute Map.has_key?(List.first(results), :email)
+      refute Map.has_key?(List.first(results), :phone)
+      refute Map.has_key?(List.first(results), :address)
+    end
+
+    test "returns matching user by id" do
+      user = user_fixture(%{name: "ID Target"})
+      id = user.id
+
+      assert [%{id: ^id, name: "ID Target"}] = Accounts.search_users(user.id)
+    end
+
+    test "returns empty list when no matches found" do
+      assert [] == Accounts.search_users("no-matches")
+    end
+  end
+
   describe "register_user/1" do
     test "requires email and password to be set" do
       {:error, changeset} = Accounts.register_user(%{})
 
       assert %{
                password: ["can't be blank"],
-               email: ["can't be blank"]
+               email: ["can't be blank"],
+               name: ["can't be blank"],
+               phone: ["can't be blank"],
+               address: ["can't be blank"]
              } = errors_on(changeset)
     end
 
     test "validates email and password when given" do
-      {:error, changeset} = Accounts.register_user(%{email: "not valid", password: "not valid"})
+      {:error, changeset} =
+        Accounts.register_user(%{
+          email: "not valid",
+          password: "not valid",
+          name: "Test User",
+          phone: "010-0000-0000",
+          address: "Seoul"
+        })
 
       assert %{
                email: ["must have the @ sign and no spaces"],
@@ -69,18 +135,44 @@ defmodule AinComBooking.AccountsTest do
 
     test "validates maximum values for email and password for security" do
       too_long = String.duplicate("db", 100)
-      {:error, changeset} = Accounts.register_user(%{email: too_long, password: too_long})
+
+      {:error, changeset} =
+        Accounts.register_user(%{
+          email: too_long,
+          password: too_long,
+          name: "Test User",
+          phone: "010-0000-0000",
+          address: "Seoul"
+        })
+
       assert "should be at most 160 character(s)" in errors_on(changeset).email
       assert "should be at most 72 character(s)" in errors_on(changeset).password
     end
 
     test "validates email uniqueness" do
       %{email: email} = user_fixture()
-      {:error, changeset} = Accounts.register_user(%{email: email})
+
+      {:error, changeset} =
+        Accounts.register_user(%{
+          email: email,
+          name: "Test User",
+          phone: "010-0000-0000",
+          address: "Seoul",
+          password: valid_user_password()
+        })
+
       assert "has already been taken" in errors_on(changeset).email
 
       # Now try with the upper cased email too, to check that email case is ignored.
-      {:error, changeset} = Accounts.register_user(%{email: String.upcase(email)})
+      {:error, changeset} =
+        Accounts.register_user(%{
+          email: String.upcase(email),
+          name: "Test User",
+          phone: "010-0000-0000",
+          address: "Seoul",
+          password: valid_user_password()
+        })
+
       assert "has already been taken" in errors_on(changeset).email
     end
 
@@ -97,7 +189,7 @@ defmodule AinComBooking.AccountsTest do
   describe "change_user_registration/2" do
     test "returns a changeset" do
       assert %Ecto.Changeset{} = changeset = Accounts.change_user_registration(%User{})
-      assert changeset.required == [:password, :email]
+      assert Enum.sort(changeset.required) == Enum.sort([:password, :email, :name, :phone, :address])
     end
 
     test "allows fields to be set" do

@@ -1,4 +1,7 @@
 @import 'tailwindcss';
+@source "../js";
+@source "../../lib/ain_com_booking_web";
+@source "../../lib/ain_com_booking_web.ex";
 @plugin "@tailwindcss/forms";
 @variant phx-click-loading ([".phx-click-loading&", ".phx-click-loading &"]);
 @variant phx-submit-loading ([".phx-submit-loading&", ".phx-submit-loading &"]);

@@ -1,23 +1,25 @@
 defmodule AinComBookingApi.Devices.Device do
+  @moduledoc false
   use Ecto.Schema
+
   import Ecto.Changeset
 
   @primary_key {:id, :binary_id, autogenerate: true}
   @foreign_key_type :binary_id
 
   schema "devices" do
-    field :token_hash, :string
-    field :fingerprint, :string
-    field :name, :string
-    field :os, :string
-    field :version, :string
-    field :user_agent, :string
-    field :ip, :string
-    field :last_seen_at, :utc_datetime_usec
-    field :revoked_at, :utc_datetime_usec
-    field :expires_at, :utc_datetime_usec
+    field(:token_hash, :string)
+    field(:fingerprint, :string)
+    field(:name, :string)
+    field(:os, :string)
+    field(:version, :string)
+    field(:user_agent, :string)
+    field(:ip, :string)
+    field(:last_seen_at, :utc_datetime_usec)
+    field(:revoked_at, :utc_datetime_usec)
+    field(:expires_at, :utc_datetime_usec)
 
-    belongs_to :user, AinComBooking.Accounts.User
+    belongs_to(:user, AinComBooking.Accounts.User)
 
     timestamps()
   end

@@ -4,99 +4,99 @@ defmodule AinComBookingWeb.UserLoginLive do
 
   def render(assigns) do
     ~H"""
-    <div class="ant-card ant-card-bordered">
-      <div class="ant-card-body">
-        <div class="ant-typography" style="text-align:center; margin-bottom: 8px;">
-          <h2 class="ant-typography" style="margin:0; font-weight:600;">Welcome back</h2>
-          <div class="ant-typography" style="color:#667085;">
+    <div class="relative mx-auto w-full max-w-md overflow-hidden rounded-3xl border border-gray-200 bg-white shadow-theme-lg">
+      <div class="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-brand-500 via-blue-light-500 to-success-500"></div>
+      <div class="px-6 py-8 sm:px-8">
+        <div class="mb-7 text-center">
+          <p class="inline-flex items-center gap-2 rounded-full border border-brand-100 bg-brand-25 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-brand-700">
+            Secure Access
+          </p>
+          <h1 class="mt-4 text-3xl font-semibold text-gray-900">Log in</h1>
+          <p class="mt-2 text-sm text-gray-600">
+            Welcome back
+          </p>
+          <p class="mt-1 text-sm text-gray-600">
             Don’t have an account?
-            <a class="ant-typography" href={~p"/users/register"}>Sign up</a>
-          </div>
+            <a href={~p"/users/register"} class="font-semibold text-brand-600 hover:text-brand-700 hover:underline">
+              Sign up
+            </a>
+          </p>
         </div>
 
-        <form id="login_form" action={~p"/users/log_in"} method="post" class="ant-form ant-form-vertical" phx-update="ignore">
+        <form id="login_form" action={~p"/users/log_in"} method="post" class="space-y-5" phx-update="ignore">
           <input type="hidden" name="_csrf_token" value={Phoenix.Controller.get_csrf_token()} />
 
-          <!-- Email -->
-          <div class="ant-form-item">
-            <label class="ant-form-item-required ant-form-item-label"><span>Email</span></label>
-            <div class="ant-form-item-control-input">
-              <div class="ant-form-item-control-input-content">
-                <input class="ant-input" type="email" name="user[email]" value={@form[:email].value} required />
-              </div>
-            </div>
+          <div>
+            <label for="login-email" class="mb-1.5 block text-sm font-semibold text-gray-800">Email</label>
+            <input
+              id="login-email"
+              class="block w-full rounded-xl border border-gray-300 bg-white px-3.5 py-2.5 text-gray-900 shadow-theme-xs outline-none transition focus:border-brand-400 focus:ring-4 focus:ring-brand-500/15"
+              type="email"
+              name="user[email]"
+              value={@form[:email].value || ""}
+              autocomplete="email"
+              required
+            />
           </div>
 
-          <!-- Password -->
-          <div class="ant-form-item">
-            <label class="ant-form-item-required ant-form-item-label"><span>Password</span></label>
-            <div class="ant-form-item-control-input">
-              <div class="ant-form-item-control-input-content">
-                <input class="ant-input" type="password" name="user[password]" required />
-              </div>
-            </div>
+          <div>
+            <label for="login-password" class="mb-1.5 block text-sm font-semibold text-gray-800">Password</label>
+            <input
+              id="login-password"
+              class="block w-full rounded-xl border border-gray-300 bg-white px-3.5 py-2.5 text-gray-900 shadow-theme-xs outline-none transition focus:border-brand-400 focus:ring-4 focus:ring-brand-500/15"
+              type="password"
+              name="user[password]"
+              autocomplete="current-password"
+              required
+            />
           </div>
 
-          <!-- Remember + Forgot -->
-          <div class="ant-form-item">
-            <div class="ant-space" style="display:flex; justify-content:space-between; align-items:center;">
-              <label class="ant-checkbox-wrapper" style="display:flex; align-items:center; gap:8px;">
-                <input type="checkbox" name="user[remember_me]" value="true" />
-                <span>Keep me logged in</span>
-              </label>
-              <a class="ant-typography" href={~p"/users/reset_password"}>Forgot password?</a>
-            </div>
+          <div class="flex items-center justify-between gap-3">
+            <label class="inline-flex items-center gap-2 text-sm text-gray-600">
+              <input
+                type="checkbox"
+                name="user[remember_me]"
+                value="true"
+                class="h-4 w-4 rounded border-gray-300 text-brand-600 focus:ring-brand-500/40"
+              />
+              <span>Keep me logged in</span>
+            </label>
+            <a href={~p"/users/reset_password"} class="text-sm font-semibold text-brand-600 hover:text-brand-700 hover:underline">
+              Forgot password?
+            </a>
           </div>
 
-          <!-- Submit -->
-          <div class="ant-form-item">
-            <button class="ant-btn ant-btn-primary ant-btn-lg" type="submit" style="width:100%;">
-              <span>Sign in</span>
-            </button>
-          </div>
+          <button
+            class="w-full rounded-xl bg-gray-900 px-4 py-3 text-sm font-semibold text-white shadow-theme-sm transition hover:bg-brand-700 focus:outline-none focus:ring-4 focus:ring-brand-500/30"
+            type="submit"
+          >
+            Sign in
+          </button>
         </form>
 
-        <!-- Social row (optional) -->
-        <div class="ant-divider" role="separator"><span class="ant-divider-inner-text">Or continue with</span></div>
-        <div class="ant-space" style="display:grid; grid-template-columns:repeat(3,1fr); gap:8px;">
-          <button type="button" class="ant-btn" style="width:100%;">Google</button>
-          <button type="button" class="ant-btn" style="width:100%;">GitHub</button>
-          <button type="button" class="ant-btn" style="width:100%;">SAML</button>
+        <div class="mt-7">
+          <div class="relative">
+            <div class="absolute inset-0 flex items-center" aria-hidden="true">
+              <div class="w-full border-t border-gray-200"></div>
+            </div>
+            <div class="relative flex justify-center text-xs uppercase">
+              <span class="bg-white px-2 text-gray-400">Or continue with</span>
+            </div>
+          </div>
+          <div class="mt-4 grid grid-cols-3 gap-2">
+            <button type="button" class="rounded-lg border border-gray-200 bg-gray-50 px-2 py-2 text-xs font-medium text-gray-700 transition hover:bg-gray-100">
+              Google
+            </button>
+            <button type="button" class="rounded-lg border border-gray-200 bg-gray-50 px-2 py-2 text-xs font-medium text-gray-700 transition hover:bg-gray-100">
+              GitHub
+            </button>
+            <button type="button" class="rounded-lg border border-gray-200 bg-gray-50 px-2 py-2 text-xs font-medium text-gray-700 transition hover:bg-gray-100">
+              SAML
+            </button>
+          </div>
         </div>
       </div>
     </div>
-
-        <!--
-    <div class="mx-auto max-w-sm p-4">
-      <.header class="text-center">
-        Log in to account
-        <:subtitle>
-          Don't have an account?
-          <.link navigate={~p"/users/register"} class="font-semibold text-brand hover:underline">
-            Sign up
-          </.link>
-          for an account now.
-        </:subtitle>
-      </.header>
-
-      <.simple_form for={@form} id="login_form" action={~p"/users/log_in"} phx-update="ignore">
-        <.input field={@form[:email]} type="email" label="Email" required />
-        <.input field={@form[:password]} type="password" label="Password" required />
-
-        <:actions>
-          <.input field={@form[:remember_me]} type="checkbox" label="Keep me logged in" />
-          <.link href={~p"/users/reset_password"} class="text-sm font-semibold">
-            Forgot your password?
-          </.link>
-        </:actions>
-        <:actions>
-          <.button phx-disable-with="Logging in..." class="w-full">
-            Log in <span aria-hidden="true">→</span>
-          </.button>
-        </:actions>
-      </.simple_form>
-    </div>
-    -->
     """
   end
 
@@ -108,9 +108,7 @@ defmodule AinComBookingWeb.UserLoginLive do
      socket
      |> assign(page_title: "Log in")
      |> assign(layout_variant: :auth)
-     |> assign(body_class: "bg-gray-50")
+     |> assign(body_class: "bg-gradient-to-br from-blue-light-25 via-gray-25 to-brand-50")
      |> assign(form: form), temporary_assigns: [form: form]}
-
-    # {:ok, assign(socket, form: form), temporary_assigns: [form: form]}
   end
 end

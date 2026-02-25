@@ -22,8 +22,6 @@ defmodule AinComBooking.Catalog.Unit do
     many_to_many(:services, AinComBooking.Catalog.CompanyService, join_through: "services_units", join_keys: [unit_id: :id, service_id: :id], on_replace: :delete)
     many_to_many(:resources, AinComBooking.Catalog.CompanyResource, join_through: "resources_units", join_keys: [unit_id: :id, resource_id: :id], on_replace: :delete)
 
-    has_many(:slots, AinComBooking.Bookings.CompanySlot)
-
     timestamps()
   end
 

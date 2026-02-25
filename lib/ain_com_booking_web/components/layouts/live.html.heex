@@ -1,4 +1,11 @@
 <main role="main">
+  <%= if current_user = assigns[:current_user] do %>
+    <nav class="user-menu">
+      <span class="user-email"><%= current_user.email %></span>
+      <.link navigate={~p"/users/settings"}>Settings</.link>
+      <.link href={~p"/users/log_out"} method="delete">Log out</.link>
+    </nav>
+  <% end %>
 
   <div class="flash-messages">
     <.layout_flash flash={@flash} kind={:success} />

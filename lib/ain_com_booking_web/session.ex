@@ -1,5 +1,15 @@
 defmodule AinComBookingWeb.Session do
   @moduledoc false
+  @behaviour Plug
+
+  @impl true
+  def init(opts), do: opts
+
+  @impl true
+  def call(conn, _opts) do
+    Plug.Session.call(conn, Plug.Session.init(config()))
+  end
+
   def config do
     [
       store: :cookie,
