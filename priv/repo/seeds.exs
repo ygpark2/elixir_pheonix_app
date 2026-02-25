@@ -15,15 +15,15 @@ alias AinComBooking.Repo
 
 seed_users = [
   %{
-    email: "ygpark2@gmail.com",
+    email: "user@ain.com",
     password: "12345",
     name: "YG Park",
     phone: "010-0000-0000",
     address: "Seoul"
   },
   %{
-    email: "seed.admin@aincom.local",
-    password: "AinComAdmin!2026",
+    email: "admin@ain.com",
+    password: "admin!2026",
     name: "Seed Admin",
     phone: "010-1111-2222",
     address: "Busan"
