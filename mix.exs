@@ -106,7 +106,7 @@ defmodule AinCom.Mixfile do
       {:excellent_migrations, "~> 0.1", only: [:dev, :test], runtime: false},
 
       # Translations
-      {:gettext, "~> 0.26"},
+      {:gettext, "~> 1.0"},
 
       # Errors
       {:sentry, "~> 11.0"},
