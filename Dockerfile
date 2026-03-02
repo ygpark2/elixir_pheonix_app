@@ -1,7 +1,7 @@
 # -----------------------------------------------
 # Stage: npm dependencies
 # -----------------------------------------------
-FROM node:25.6-bookworm-slim AS npm-builder
+FROM node:25.7-bookworm-slim AS npm-builder
 
 # Install Debian dependencies
 RUN apt-get update -y && \
