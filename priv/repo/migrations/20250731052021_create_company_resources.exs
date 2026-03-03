@@ -9,9 +9,10 @@ defmodule AinComBooking.Repo.Migrations.CreateCompanyResources do
       add(:type, :string, null: false)
       add(:location, :string)
       add(:description, :text)
+      add(:price, :decimal, null: false, default: 0)
+      add(:currency, :string, null: false, default: "KRW")
 
-      # 🔗 사용자 소유 관계
-      add(:company_id, references(:users, type: :binary_id, on_delete: :delete_all), null: false)
+      add(:company_id, references(:companies, type: :binary_id, on_delete: :delete_all), null: false)
 
       timestamps()
     end

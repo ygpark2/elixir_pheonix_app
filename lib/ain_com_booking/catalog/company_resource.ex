@@ -13,7 +13,6 @@ defmodule AinComBooking.Catalog.CompanyResource do
     field(:price, :decimal)
     field(:currency, :string)
 
-    belongs_to(:user, AinComBooking.Accounts.User, type: :binary_id)
     belongs_to(:company, AinComBooking.Catalog.Company, type: :binary_id)
 
     many_to_many(:units, AinComBooking.Catalog.Unit, join_through: "resources_units", join_keys: [resource_id: :id, unit_id: :id], on_replace: :delete)
@@ -33,7 +32,6 @@ defmodule AinComBooking.Catalog.CompanyResource do
       :description,
       :price,
       :currency,
-      :user_id,
       :company_id
     ])
     |> validate_required([:name, :company_id, :price, :currency])

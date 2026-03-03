@@ -68,9 +68,6 @@ defmodule AinComBookingWeb.Router do
 
     get("/", Home.Controller, :index, as: :home)
     live("/live", Home.Live, :index, as: :live_home)
-
-    get("/admin", Admin.Controller, :index, as: :admin)
-    live("/admin/live", Admin.Live, :index, as: :live_admin)
   end
 
   scope "/api", AinComBookingApi.Controllers do
@@ -140,12 +137,72 @@ defmodule AinComBookingWeb.Router do
   end
 
   scope "/", AinComBookingWeb do
+    pipe_through([:browser, :require_authenticated_user, :require_admin_user])
+
+    get("/admin", Admin.Controller, :index, as: :admin)
+
+    live_session :require_admin_user,
+      on_mount: [{AinComBookingWeb.UserAuth, :ensure_admin}] do
+      live("/admin/live", Admin.Live, :index, as: :live_admin)
+      live("/admin/dashboard", AdminDashboardLive, :index)
+    end
+  end
+
+  scope "/", AinComBookingWeb do
+    pipe_through([:browser, :require_authenticated_user, :require_company_user])
+
+    live_session :require_company_user,
+      on_mount: [{AinComBookingWeb.UserAuth, :ensure_company}] do
+      live("/company/console", CompanyConsoleLive, :index)
+      live("/company/console/services", CompanyServiceLive, :index)
+      live("/company/console/services/new", CompanyServiceLive, :new)
+      live("/company/console/services/:id", CompanyServiceLive, :show)
+      live("/company/console/services/:id/edit", CompanyServiceLive, :edit)
+      live("/company/console/services/:id/delete", CompanyServiceLive, :delete)
+      live("/company/console/resources", CompanyResourceLive, :index)
+      live("/company/console/resources/new", CompanyResourceLive, :new)
+      live("/company/console/resources/:id", CompanyResourceLive, :show)
+      live("/company/console/resources/:id/edit", CompanyResourceLive, :edit)
+      live("/company/console/resources/:id/delete", CompanyResourceLive, :delete)
+      live("/company/console/slots", CompanySlotLive, :index)
+      live("/company/console/slots/new", CompanySlotLive, :new)
+      live("/company/console/slots/:id", CompanySlotLive, :show)
+      live("/company/console/slots/:id/edit", CompanySlotLive, :edit)
+      live("/company/console/slots/:id/delete", CompanySlotLive, :delete)
+      live("/company/console/pages", CompanyBookingPageLive, :index)
+      live("/company/console/services/:service_id/pages/new", CompanyBookingPageLive, :new)
+      live("/company/console/services/:service_id/pages/:id", CompanyBookingPageLive, :show)
+      live("/company/console/services/:service_id/pages/:id/edit", CompanyBookingPageLive, :edit)
+      live("/company/console/services/:service_id/pages/:id/delete", CompanyBookingPageLive, :delete)
+      live("/company/console/resources/:resource_id/pages/new", CompanyBookingPageLive, :new)
+      live("/company/console/resources/:resource_id/pages/:id", CompanyBookingPageLive, :show)
+      live("/company/console/resources/:resource_id/pages/:id/edit", CompanyBookingPageLive, :edit)
+      live("/company/console/resources/:resource_id/pages/:id/delete", CompanyBookingPageLive, :delete)
+    end
+  end
+
+  scope "/", AinComBookingWeb do
     pipe_through([:browser, :require_authenticated_user])
 
     live_session :require_authenticated_user,
       on_mount: [{AinComBookingWeb.UserAuth, :ensure_authenticated}] do
-      live("/admin/dashboard", AdminDashboardLive, :index)
       live("/feed", SocialFeedLive, :index)
+      live("/feed/posts/:post_id", SocialFeedLive, :show)
+      live("/services", UserServiceLive, :index)
+      live("/services/new", UserServiceLive, :new)
+      live("/services/:id", UserServiceLive, :show)
+      live("/services/:id/edit", UserServiceLive, :edit)
+      live("/services/:id/delete", UserServiceLive, :delete)
+      live("/resources", UserResourceLive, :index)
+      live("/resources/new", UserResourceLive, :new)
+      live("/resources/:id", UserResourceLive, :show)
+      live("/resources/:id/edit", UserResourceLive, :edit)
+      live("/resources/:id/delete", UserResourceLive, :delete)
+      live("/slots", UserSlotLive, :index)
+      live("/slots/new", UserSlotLive, :new)
+      live("/slots/:id", UserSlotLive, :show)
+      live("/slots/:id/edit", UserSlotLive, :edit)
+      live("/slots/:id/delete", UserSlotLive, :delete)
       live("/users/search", UserSearchLive, :index)
       live("/users/settings", UserSettingsLive, :edit)
       live("/users/settings/confirm_email/:token", UserSettingsLive, :confirm_email)
@@ -164,6 +221,8 @@ defmodule AinComBookingWeb.Router do
       on_mount: [{AinComBookingWeb.UserAuth, :mount_current_user}] do
       live("/users/confirm/:token", UserConfirmationLive, :edit)
       live("/users/confirm", UserConfirmationInstructionsLive, :new)
+      live("/share/:post_id", SharedBookingPostLive, :show)
+      live("/book/:slug", CompanyPublicBookingPageLive, :show)
     end
   end
 end

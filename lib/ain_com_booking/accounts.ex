@@ -26,7 +26,7 @@ defmodule AinComBooking.Accounts do
 
   """
   def get_user_by_email(email) when is_binary(email) do
-    Repo.get_by(User, email: email)
+    Repo.get_by(User, email: User.normalize_email(email))
   end
 
   @doc """
@@ -42,7 +42,7 @@ defmodule AinComBooking.Accounts do
 
   """
   def get_user_by_email_and_password(email, password) when is_binary(email) and is_binary(password) do
-    user = Repo.get_by(User, email: email)
+    user = Repo.get_by(User, email: User.normalize_email(email))
     if User.valid_password?(user, password), do: user
   end
 
@@ -68,6 +68,18 @@ defmodule AinComBooking.Accounts do
 
   """
   def get_user!(id), do: Repo.get!(User, id)
+
+  @doc """
+  Returns true when the user has the admin role.
+  """
+  def admin?(%User{role: :admin}), do: true
+  def admin?(_), do: false
+
+  @doc """
+  Returns true when the user has the company role.
+  """
+  def company?(%User{role: :company}), do: true
+  def company?(_), do: false
 
   @doc """
   Follows a user.

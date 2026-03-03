@@ -14,6 +14,7 @@ defmodule AinComBookingWeb.UserSettingsLiveTest do
       {:ok, _lv, html} =
         live(conn, ~p"/users/settings")
 
+      assert html =~ "settings-feed-layout"
       assert html =~ "Change Email"
       assert html =~ "Change Password"
     end

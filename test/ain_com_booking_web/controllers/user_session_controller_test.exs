@@ -66,6 +66,17 @@ defmodule AinComBookingWeb.UserSessionControllerTest do
       assert Phoenix.Flash.get(conn.assigns.flash, :info) =~ "Password updated successfully"
     end
 
+    test "company users land on the company console", %{conn: conn} do
+      user = user_fixture(%{role: :company})
+
+      conn =
+        post(conn, ~p"/users/log_in", %{
+          "user" => %{"email" => user.email, "password" => valid_user_password()}
+        })
+
+      assert redirected_to(conn) == ~p"/company/console"
+    end
+
     test "redirects to login page with invalid credentials", %{conn: conn} do
       conn =
         post(conn, ~p"/users/log_in", %{

@@ -161,7 +161,8 @@ lib/ain_com_booking_graphql/
 ## NOTES
 - Endpoint: `POST /graphql` (no GraphiQL interface provided)
 - All entities use UUID primary keys (binary_id)
-- Authentication context currently empty (TODO: implement auth)
+- Authentication context resolves `current_user` from browser session or Bearer token
+- Authenticated `me` query is protected by GraphQL middleware
 - Comprehensive telemetry in Telemetry UI with GraphQL/Absinthe metrics
 - Security limits: max aliases 100, max depth 100, max directives 100
 - Environment variables: GRAPHQL_ENABLE_INTROSPECTION, GRAPHQL_ENABLE_FIELD_SUGGESTIONS
