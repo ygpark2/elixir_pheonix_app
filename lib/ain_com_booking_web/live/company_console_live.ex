@@ -26,24 +26,24 @@ defmodule AinComBookingWeb.CompanyConsoleLive do
                 Your company inventory, booking pages, and customer reservations are tracked here. Use this view to spot publishing gaps and respond to new bookings quickly.
               </p>
 
-              <div class="mt-5 grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
-                <div class="rounded-2xl border border-white/10 bg-white/5 px-4 py-4">
+              <div class="mt-5 space-y-3">
+                <div class="flex items-center justify-between gap-4 rounded-2xl border border-white/10 bg-white/5 px-4 py-4">
                   <div class="text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-300">Total Bookings</div>
-                  <div class="mt-2 text-2xl font-semibold"><%= @snapshot.bookings %></div>
+                  <div class="text-2xl font-semibold"><%= @snapshot.bookings %></div>
                 </div>
-                <div class="rounded-2xl border border-white/10 bg-white/5 px-4 py-4">
+                <div class="flex items-center justify-between gap-4 rounded-2xl border border-white/10 bg-white/5 px-4 py-4">
                   <div class="text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-300">Last 7 Days</div>
-                  <div class="mt-2 text-2xl font-semibold"><%= @snapshot.bookings_last_7_days %></div>
+                  <div class="text-2xl font-semibold"><%= @snapshot.bookings_last_7_days %></div>
                 </div>
-                <div class="rounded-2xl border border-white/10 bg-white/5 px-4 py-4">
+                <div class="flex items-center justify-between gap-4 rounded-2xl border border-white/10 bg-white/5 px-4 py-4">
                   <div class="text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-300">Last 7 Days Revenue</div>
-                  <div class="mt-2 text-2xl font-semibold">
+                  <div class="text-2xl font-semibold">
                     <%= money_total(@snapshot.revenue_last_7_days, @snapshot.revenue_last_7_days_currency) %>
                   </div>
                 </div>
-                <div class="rounded-2xl border border-white/10 bg-white/5 px-4 py-4">
+                <div class="flex items-center justify-between gap-4 rounded-2xl border border-white/10 bg-white/5 px-4 py-4">
                   <div class="text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-300">Published Pages</div>
-                  <div class="mt-2 text-2xl font-semibold"><%= @snapshot.published_pages %></div>
+                  <div class="text-2xl font-semibold"><%= @snapshot.published_pages %></div>
                 </div>
               </div>
             </div>
@@ -61,16 +61,16 @@ defmodule AinComBookingWeb.CompanyConsoleLive do
               </p>
               <div class="mt-5 flex flex-wrap gap-2">
                 <.link
-                  navigate={~p"/company/console/slots/new"}
+                  navigate={~p"/company/console/services"}
                   class="rounded-full bg-white px-4 py-2 text-sm font-semibold text-slate-950 transition hover:bg-slate-100"
                 >
-                  Add Slot
+                  Review Services
                 </.link>
                 <.link
-                  navigate={~p"/company/console/pages"}
+                  navigate={~p"/company/console/resources"}
                   class="rounded-full border border-white/20 px-4 py-2 text-sm font-semibold text-white transition hover:bg-white/10"
                 >
-                  Review Pages
+                  Review Resources
                 </.link>
               </div>
             </div>
@@ -106,8 +106,10 @@ defmodule AinComBookingWeb.CompanyConsoleLive do
               <h2 class="text-lg font-semibold tracking-tight text-slate-950">Recent Customer Bookings</h2>
               <p class="mt-1 text-sm text-slate-500">The latest confirmed activity from your published booking pages.</p>
             </div>
-            <div class="rounded-full bg-slate-100 px-3 py-1 text-xs font-semibold uppercase tracking-[0.16em] text-slate-500">
-              <%= @snapshot.bookings %> total
+            <div class="flex items-center gap-3">
+              <div class="rounded-full bg-slate-100 px-3 py-1 text-xs font-semibold uppercase tracking-[0.16em] text-slate-500">
+                <%= @snapshot.bookings %> total
+              </div>
             </div>
           </div>
 
@@ -133,9 +135,6 @@ defmodule AinComBookingWeb.CompanyConsoleLive do
                   </p>
 
                   <div class="mt-3 flex flex-wrap gap-2">
-                    <.link :if={booking.slot_id} navigate={~p"/company/console/slots/#{booking.slot_id}"} class={mini_action_link_class()}>
-                      Slot
-                    </.link>
                     <.link :if={booking.service_id} navigate={~p"/company/console/services/#{booking.service_id}"} class={mini_action_link_class()}>
                       Service
                     </.link>
@@ -182,9 +181,6 @@ defmodule AinComBookingWeb.CompanyConsoleLive do
           <div class="rounded-3xl border border-slate-200 bg-white p-4 shadow-sm">
             <div class="flex items-center justify-between gap-3">
               <h2 class="text-lg font-semibold tracking-tight text-slate-950">Recent Booking Pages</h2>
-              <.link navigate={~p"/company/console/pages"} class="text-sm font-semibold text-brand-600 transition hover:text-brand-500">
-                Manage
-              </.link>
             </div>
 
             <div :if={@recent_pages == []} class="mt-4 rounded-2xl border border-dashed border-slate-300 bg-slate-50 px-4 py-6 text-sm text-slate-500">
@@ -216,11 +212,8 @@ defmodule AinComBookingWeb.CompanyConsoleLive do
               <.link navigate={~p"/company/console/resources/new"} class={action_link_class()}>
                 Create resource
               </.link>
-              <.link navigate={~p"/company/console/slots/new"} class={action_link_class()}>
-                Add availability slot
-              </.link>
-              <.link navigate={~p"/company/console/pages"} class={action_link_class()}>
-                Review booking pages
+              <.link navigate={~p"/company/console/services"} class={action_link_class()}>
+                Review services
               </.link>
             </div>
           </div>
@@ -229,9 +222,9 @@ defmodule AinComBookingWeb.CompanyConsoleLive do
             <h2 class="text-lg font-semibold tracking-tight text-slate-950">How To Launch</h2>
             <div class="mt-4 space-y-3 text-sm leading-6 text-slate-600">
               <p>1. Create a company service or resource.</p>
-              <p>2. Add future `available` slots under `Slots`.</p>
-              <p>3. Create a nested booking page from the service or resource detail.</p>
-              <p>4. Publish and share the generated `/book/:slug` URL.</p>
+              <p>2. Open each detail page and generate manual/automatic slots.</p>
+              <p>3. Check booked customers from the service/resource booked modal.</p>
+              <p>4. Keep upcoming slots available so customers can reserve in time.</p>
             </div>
           </div>
         </div>
