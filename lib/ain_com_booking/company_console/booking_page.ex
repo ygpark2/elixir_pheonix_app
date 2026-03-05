@@ -59,7 +59,8 @@ defmodule AinComBooking.CompanyConsole.BookingPage do
       :service_id,
       :resource_id
     ])
-    |> validate_required([:title, :button_label, :slug, :theme, :company_id])
+    |> update_change(:slug, &normalize_slug/1)
+    |> validate_required([:title, :button_label, :theme, :company_id])
     |> validate_length(:title, min: 3, max: 120)
     |> validate_length(:description, max: 600)
     |> validate_length(:button_label, min: 2, max: 40)
@@ -146,4 +147,16 @@ defmodule AinComBooking.CompanyConsole.BookingPage do
         add_error(changeset, :lunch_end_time, "must be after lunch start time")
     end
   end
+
+  defp normalize_slug(value) when is_binary(value) do
+    value
+    |> String.trim()
+    |> String.downcase()
+    |> case do
+      "" -> nil
+      normalized -> normalized
+    end
+  end
+
+  defp normalize_slug(value), do: value
 end

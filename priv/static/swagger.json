@@ -4,6 +4,98 @@
     "title": "AinComBooking API"
   },
   "definitions": {
+    "Company": {
+      "description": "Represents a company",
+      "example": {
+        "address1": "123 Main St",
+        "city": "Seoul",
+        "country_id": "KR",
+        "description_text": "A leading provider of tech services",
+        "email": "contact@acme.com",
+        "id": "abc123",
+        "logo": "acme-logo.png",
+        "name": "Acme Corp",
+        "phone": "123-456-7890",
+        "timezone": "Asia/Seoul"
+      },
+      "properties": {
+        "address1": {
+          "type": "string"
+        },
+        "city": {
+          "type": "string"
+        },
+        "country_id": {
+          "type": "string"
+        },
+        "description_text": {
+          "type": "string"
+        },
+        "email": {
+          "type": "string"
+        },
+        "id": {
+          "description": "Company ID",
+          "type": "string"
+        },
+        "logo": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "phone": {
+          "type": "string"
+        },
+        "timezone": {
+          "type": "string"
+        }
+      },
+      "title": "Company",
+      "type": "object"
+    },
+    "SignupRequest": {
+      "description": "Parameters to register a new user",
+      "example": {
+        "email": "user@example.com",
+        "password": "password123"
+      },
+      "properties": {
+        "email": {
+          "description": "User email",
+          "type": "string"
+        },
+        "password": {
+          "description": "User password",
+          "type": "string"
+        }
+      },
+      "required": [
+        "email",
+        "password"
+      ],
+      "title": "SignupRequest",
+      "type": "object"
+    },
+    "UserResponse": {
+      "description": "Response returned after successful registration",
+      "example": {
+        "email": "user@example.com",
+        "id": "550e8400-e29b-41d4-a716-446655440000"
+      },
+      "properties": {
+        "email": {
+          "description": "User email",
+          "type": "string"
+        },
+        "id": {
+          "description": "User ID",
+          "type": "string"
+        }
+      },
+      "title": "UserResponse",
+      "type": "object"
+    },
     "ErrorsResponse": {
       "description": "Validation error response",
       "example": {
@@ -65,29 +157,6 @@
       "title": "LoginRequest",
       "type": "object"
     },
-    "SignupRequest": {
-      "description": "Parameters to register a new user",
-      "example": {
-        "email": "user@example.com",
-        "password": "password123"
-      },
-      "properties": {
-        "email": {
-          "description": "User email",
-          "type": "string"
-        },
-        "password": {
-          "description": "User password",
-          "type": "string"
-        }
-      },
-      "required": [
-        "email",
-        "password"
-      ],
-      "title": "SignupRequest",
-      "type": "object"
-    },
     "TokenResponse": {
       "description": "Response containing tokens",
       "example": {
@@ -115,75 +184,6 @@
         }
       },
       "title": "TokenResponse",
-      "type": "object"
-    },
-    "UserResponse": {
-      "description": "Response returned after successful registration",
-      "example": {
-        "email": "user@example.com",
-        "id": "550e8400-e29b-41d4-a716-446655440000"
-      },
-      "properties": {
-        "email": {
-          "description": "User email",
-          "type": "string"
-        },
-        "id": {
-          "description": "User ID",
-          "type": "string"
-        }
-      },
-      "title": "UserResponse",
-      "type": "object"
-    },
-    "Company": {
-      "description": "Represents a company",
-      "example": {
-        "address1": "123 Main St",
-        "city": "Seoul",
-        "country_id": "KR",
-        "description_text": "A leading provider of tech services",
-        "email": "contact@acme.com",
-        "id": "abc123",
-        "logo": "acme-logo.png",
-        "name": "Acme Corp",
-        "phone": "123-456-7890",
-        "timezone": "Asia/Seoul"
-      },
-      "properties": {
-        "address1": {
-          "type": "string"
-        },
-        "city": {
-          "type": "string"
-        },
-        "country_id": {
-          "type": "string"
-        },
-        "description_text": {
-          "type": "string"
-        },
-        "email": {
-          "type": "string"
-        },
-        "id": {
-          "description": "Company ID",
-          "type": "string"
-        },
-        "logo": {
-          "type": "string"
-        },
-        "name": {
-          "type": "string"
-        },
-        "phone": {
-          "type": "string"
-        },
-        "timezone": {
-          "type": "string"
-        }
-      },
-      "title": "Company",
       "type": "object"
     },
     "CompanyRequest": {
@@ -1063,6 +1063,13 @@
       "name": "User",
       "description": "User-related endpoints"
     }
+  ],
+  "basePath": "/api",
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
   ],
   "paths": {
     "/auth/login": {
@@ -3176,12 +3183,5 @@
       }
     }
   },
-  "swagger": "2.0",
-  "basePath": "/api",
-  "consumes": [
-    "application/json"
-  ],
-  "produces": [
-    "application/json"
-  ]
+  "swagger": "2.0"
 }

@@ -4,9 +4,9 @@ defmodule AinComBookingWeb.CompanyConsoleLiveTest do
   import AinComBooking.AccountsFixtures
   import Phoenix.LiveViewTest
 
+  alias AinComBooking.Bookings.CompanyBooking
   alias AinComBooking.Bookings.CompanySlot
   alias AinComBooking.CompanyConsole
-  alias AinComBooking.CompanyConsole.BookingPage
   alias AinComBooking.Repo
 
   describe "company console" do
@@ -68,65 +68,30 @@ defmodule AinComBookingWeb.CompanyConsoleLiveTest do
       resource = Repo.get_by!(AinComBooking.Catalog.CompanyResource, name: "Board Room A")
 
       assert_patch(resource_lv, ~p"/company/console/resources/#{resource.id}")
-      assert render(resource_lv) =~ "Create Booking Page"
-
-      {:ok, slot_lv, _html} = live(conn, ~p"/company/console/slots")
-
-      slot_lv
-      |> element(~s(a[href="/company/console/slots/new"]))
-      |> render_click()
+      assert render(resource_lv) =~ "Resource Slot Calendar"
 
       start_time = DateTime.utc_now() |> DateTime.add(24 * 60 * 60, :second) |> DateTime.truncate(:second)
       end_time = DateTime.add(start_time, 30 * 60, :second)
 
-      slot_lv
-      |> form("#company-slot-form",
-        slot: %{
-          start_time: datetime_local_value(start_time),
-          end_time: datetime_local_value(end_time),
-          status: "available",
-          max_bookings: "1",
-          service_id: service.id,
-          resource_id: resource.id
-        }
-      )
-      |> render_submit()
+      {:ok, slot} =
+        CompanyConsole.create_company_slot(company_user, %{
+          "start_time" => start_time,
+          "end_time" => end_time,
+          "status" => "available",
+          "max_bookings" => "1",
+          "service_id" => service.id,
+          "resource_id" => resource.id
+        })
 
-      slot = Repo.get_by!(CompanySlot, resource_id: resource.id)
-      assert_patch(slot_lv, ~p"/company/console/slots/#{slot.id}")
-
-      {:ok, page_lv, _html} = live(conn, "/company/console/resources/#{resource.id}/pages/new")
-
-      assert has_element?(page_lv, ~s(input[type="date"][name="booking_page[schedule_start_date]"]))
-      assert has_element?(page_lv, ~s(input[type="date"][name="booking_page[schedule_end_date]"]))
-      assert has_element?(page_lv, ~s(select[name="booking_page[work_start_time]"]))
-      assert has_element?(page_lv, ~s(select[name="booking_page[work_end_time]"]))
-      assert has_element?(page_lv, ~s(select[name="booking_page[slot_minutes]"]))
-      assert has_element?(page_lv, ~s(select[name="booking_page[break_minutes]"]))
-      assert has_element?(page_lv, ~s(select[name="booking_page[lunch_start_time]"]))
-      assert has_element?(page_lv, ~s(select[name="booking_page[lunch_end_time]"]))
-      assert has_element?(page_lv, ~s(input[type="checkbox"][name="booking_page[available_weekdays][]"][value="mon"]))
-      refute has_element?(page_lv, ~s(input[type="text"][name="booking_page[available_weekdays]"]))
-      assert has_element?(page_lv, ~s(input[type="date"][name="booking_page[excluded_dates][]"]))
-      refute has_element?(page_lv, ~s(textarea[name="booking_page[excluded_dates]"]))
-
-      page_lv
-      |> form("#company-booking-page-form",
-        booking_page: %{
-          title: "Board Room Reservations",
-          slug: "board-room-a",
-          description: "Reserve the room online.",
-          button_label: "Reserve now",
-          theme: "brand",
-          is_published: "true"
-        }
-      )
-      |> render_submit()
-
-      page = Repo.get_by!(BookingPage, slug: "board-room-a")
-
-      assert_patch(page_lv, "/company/console/resources/#{resource.id}/pages/#{page.id}")
-      assert render(page_lv) =~ "/book/board-room-a"
+      {:ok, _page} =
+        CompanyConsole.create_booking_page_for_resource(company_user, resource.id, %{
+          "title" => "Board Room Reservations",
+          "slug" => "board-room-a",
+          "description" => "Reserve the room online.",
+          "button_label" => "Reserve now",
+          "theme" => "brand",
+          "is_published" => "true"
+        })
 
       {:ok, public_lv, public_html} = live(conn, ~p"/book/board-room-a")
       assert public_html =~ "Board Room Reservations"
@@ -145,10 +110,12 @@ defmodule AinComBookingWeb.CompanyConsoleLiveTest do
       assert render(public_lv) =~ "Your booking is confirmed."
       assert Repo.get!(CompanySlot, slot.id).status == :booked
 
+      {:ok, resource_show_lv, _resource_html} = live(conn, ~p"/company/console/resources/#{resource.id}")
+      assert render(resource_show_lv) =~ "1 booking"
+
       {:ok, _refreshed_dashboard, refreshed_dashboard_html} = live(conn, ~p"/company/console")
       assert refreshed_dashboard_html =~ "Customer One"
       assert refreshed_dashboard_html =~ "Board Room A"
-      assert refreshed_dashboard_html =~ "/company/console/slots/#{slot.id}"
       assert refreshed_dashboard_html =~ "/company/console/resources/#{resource.id}"
     end
 
@@ -213,6 +180,287 @@ defmodule AinComBookingWeb.CompanyConsoleLiveTest do
       assert dashboard_html =~ "Auto Board Room"
     end
 
+    test "service detail manual slot modal creates a slot and updates calendar immediately", %{conn: conn} do
+      company_user = user_fixture(%{name: "Service Slot Owner", role: :company})
+      conn = log_in_user(conn, company_user)
+
+      {:ok, service} =
+        CompanyConsole.create_company_service(company_user, %{
+          "name" => "Manual Slot Service",
+          "description_text" => "Service detail slot test",
+          "duration" => 45,
+          "price" => "90.00",
+          "currency" => "KRW",
+          "is_active" => true,
+          "is_public" => true
+        })
+
+      {:ok, lv, html} = live(conn, ~p"/company/console/services/#{service.id}")
+      assert html =~ "Service Slot Calendar"
+
+      lv
+      |> element(~s(button[phx-click="open_manual_slot_modal"]))
+      |> render_click()
+
+      assert has_element?(lv, "#service-manual-slot-form")
+
+      selected_date = Date.utc_today()
+
+      render_hook(lv, "manual_drag_select", %{"start_index" => "40", "end_index" => "43"})
+      render_hook(lv, "manual_drag_select", %{"start_index" => "44", "end_index" => "47"})
+
+      start_time_a = DateTime.new!(selected_date, Time.new!(10, 0, 0), "Etc/UTC")
+      end_time_a = DateTime.new!(selected_date, Time.new!(10, 45, 0), "Etc/UTC")
+      start_time_b = DateTime.new!(selected_date, Time.new!(11, 0, 0), "Etc/UTC")
+      end_time_b = DateTime.new!(selected_date, Time.new!(11, 45, 0), "Etc/UTC")
+
+      lv
+      |> form("#service-manual-slot-form",
+        manual_slot: %{
+          selected_date: Date.to_iso8601(selected_date),
+          max_bookings: "3"
+        }
+      )
+      |> render_submit()
+
+      assert render(lv) =~ "수동 slot 2개 생성"
+
+      created_slot_a = Repo.get_by!(CompanySlot, service_id: service.id, start_time: start_time_a, end_time: end_time_a)
+      created_slot_b = Repo.get_by!(CompanySlot, service_id: service.id, start_time: start_time_b, end_time: end_time_b)
+
+      assert created_slot_a.max_bookings == 3
+      assert created_slot_b.max_bookings == 3
+
+      expected_slot_line_a =
+        "#{Calendar.strftime(start_time_a, "%Y-%m-%d %H:%M UTC")} to #{Calendar.strftime(end_time_a, "%Y-%m-%d %H:%M UTC")}"
+
+      expected_slot_line_b =
+        "#{Calendar.strftime(start_time_b, "%Y-%m-%d %H:%M UTC")} to #{Calendar.strftime(end_time_b, "%Y-%m-%d %H:%M UTC")}"
+
+      rendered = render(lv)
+      assert rendered =~ expected_slot_line_a
+      assert rendered =~ expected_slot_line_b
+    end
+
+    test "resource detail auto slot modal creates slots and shows them on calendar", %{conn: conn} do
+      company_user = user_fixture(%{name: "Resource Slot Owner", role: :company})
+      conn = log_in_user(conn, company_user)
+
+      {:ok, resource} =
+        CompanyConsole.create_company_resource(company_user, %{
+          "name" => "Auto Slot Room",
+          "type" => "room",
+          "location" => "Gangnam",
+          "description" => "Resource detail slot test",
+          "price" => "70.00",
+          "currency" => "KRW"
+        })
+
+      {:ok, lv, html} = live(conn, ~p"/company/console/resources/#{resource.id}")
+      assert html =~ "Resource Slot Calendar"
+
+      lv
+      |> element(~s(button[phx-click="open_auto_slot_modal"]))
+      |> render_click()
+
+      assert has_element?(lv, "#resource-auto-slot-form")
+      refute has_element?(lv, "#auto-excluded-date-1")
+
+      lv
+      |> element(~s(button[phx-click="add_auto_excluded_date"]))
+      |> render_click()
+
+      assert has_element?(lv, "#auto-excluded-date-1")
+
+      tomorrow = Date.add(Date.utc_today(), 1)
+      weekday = weekday_name(tomorrow)
+
+      lv
+      |> form("#resource-auto-slot-form",
+        auto_slot: %{
+          auto_slots_enabled: "true",
+          schedule_start_date: Date.to_iso8601(tomorrow),
+          schedule_end_date: Date.to_iso8601(tomorrow),
+          work_start_time: "09:00",
+          work_end_time: "10:00",
+          slot_minutes: "30",
+          break_minutes: "0",
+          lunch_start_time: "",
+          lunch_end_time: "",
+          available_weekdays: [weekday],
+          excluded_dates: [""],
+          default_max_bookings: "2"
+        }
+      )
+      |> render_submit()
+
+      rendered = render(lv)
+      assert rendered =~ "자동 slot 2개 생성"
+
+      created_slots =
+        company_user
+        |> CompanyConsole.list_company_slots()
+        |> Enum.filter(&(&1.resource_id == resource.id))
+
+      assert length(created_slots) == 2
+      assert rendered =~ "Max 2 bookings"
+    end
+
+    test "service index booked modal supports edit and cancel", %{conn: conn} do
+      company_user = user_fixture(%{name: "Service Booking Owner", role: :company})
+      conn = log_in_user(conn, company_user)
+
+      {:ok, service} =
+        CompanyConsole.create_company_service(company_user, %{
+          "name" => "Booked Service",
+          "description_text" => "Service bookings modal test",
+          "duration" => 30,
+          "price" => "55.00",
+          "currency" => "KRW",
+          "is_active" => true,
+          "is_public" => true
+        })
+
+      start_time = future_datetime_at_minute(3)
+      end_time = DateTime.add(start_time, 30 * 60, :second)
+
+      {:ok, slot} =
+        CompanyConsole.create_company_slot(company_user, %{
+          "start_time" => start_time,
+          "end_time" => end_time,
+          "status" => "available",
+          "source_type" => "manual",
+          "service_id" => service.id
+        })
+
+      booking =
+        %CompanyBooking{}
+        |> CompanyBooking.changeset(%{
+          "customer_name" => "Booking Customer",
+          "email" => "booking@example.com",
+          "phone" => "010-1111-2222",
+          "status" => "confirmed",
+          "slot_id" => slot.id,
+          "service_id" => service.id,
+          "total_price" => "55.00",
+          "currency" => "KRW"
+        })
+        |> Repo.insert!()
+
+      {:ok, lv, _html} = live(conn, ~p"/company/console/services")
+
+      lv
+      |> element(~s(button[phx-click="open_service_bookings_modal"][phx-value-service_id="#{service.id}"]))
+      |> render_click()
+
+      assert has_element?(lv, "#service-bookings-modal")
+      assert render(lv) =~ "Booking Customer"
+
+      lv
+      |> element(~s(button[phx-click="edit_booking"][phx-value-booking_id="#{booking.id}"]))
+      |> render_click()
+
+      lv
+      |> form("#service-booking-edit-form-#{booking.id}",
+        booking: %{
+          customer_name: "Booking Customer Updated",
+          email: "booking-updated@example.com",
+          phone: "010-3333-4444",
+          status: "noshow"
+        }
+      )
+      |> render_submit()
+
+      updated_booking = Repo.get!(CompanyBooking, booking.id)
+      assert updated_booking.customer_name == "Booking Customer Updated"
+      assert updated_booking.status == "noshow"
+
+      lv
+      |> element(~s(button[phx-click="cancel_booking"][phx-value-booking_id="#{booking.id}"]))
+      |> render_click()
+
+      cancelled_booking = Repo.get!(CompanyBooking, booking.id)
+      assert cancelled_booking.status == "cancelled"
+      assert render(lv) =~ "예약을 취소했습니다."
+    end
+
+    test "resource index booked modal supports edit and cancel", %{conn: conn} do
+      company_user = user_fixture(%{name: "Resource Booking Owner", role: :company})
+      conn = log_in_user(conn, company_user)
+
+      {:ok, resource} =
+        CompanyConsole.create_company_resource(company_user, %{
+          "name" => "Booked Resource",
+          "type" => "room",
+          "location" => "Gangnam",
+          "description" => "Resource bookings modal test",
+          "price" => "80.00",
+          "currency" => "KRW"
+        })
+
+      start_time = future_datetime_at_minute(4)
+      end_time = DateTime.add(start_time, 60 * 60, :second)
+
+      {:ok, slot} =
+        CompanyConsole.create_company_slot(company_user, %{
+          "start_time" => start_time,
+          "end_time" => end_time,
+          "status" => "available",
+          "source_type" => "manual",
+          "resource_id" => resource.id
+        })
+
+      booking =
+        %CompanyBooking{}
+        |> CompanyBooking.changeset(%{
+          "customer_name" => "Resource Customer",
+          "email" => "resource@example.com",
+          "phone" => "010-5555-6666",
+          "status" => "confirmed",
+          "slot_id" => slot.id,
+          "resource_id" => resource.id,
+          "total_price" => "80.00",
+          "currency" => "KRW"
+        })
+        |> Repo.insert!()
+
+      {:ok, lv, _html} = live(conn, ~p"/company/console/resources")
+
+      lv
+      |> element(~s(button[phx-click="open_resource_bookings_modal"][phx-value-resource_id="#{resource.id}"]))
+      |> render_click()
+
+      assert has_element?(lv, "#resource-bookings-modal")
+      assert render(lv) =~ "Resource Customer"
+
+      lv
+      |> element(~s(button[phx-click="edit_booking"][phx-value-booking_id="#{booking.id}"]))
+      |> render_click()
+
+      lv
+      |> form("#resource-booking-edit-form-#{booking.id}",
+        booking: %{
+          customer_name: "Resource Customer Updated",
+          email: "resource-updated@example.com",
+          phone: "010-7777-8888",
+          status: "noshow"
+        }
+      )
+      |> render_submit()
+
+      updated_booking = Repo.get!(CompanyBooking, booking.id)
+      assert updated_booking.customer_name == "Resource Customer Updated"
+      assert updated_booking.status == "noshow"
+
+      lv
+      |> element(~s(button[phx-click="cancel_booking"][phx-value-booking_id="#{booking.id}"]))
+      |> render_click()
+
+      cancelled_booking = Repo.get!(CompanyBooking, booking.id)
+      assert cancelled_booking.status == "cancelled"
+      assert render(lv) =~ "예약을 취소했습니다."
+    end
+
     test "non-company users cannot access the company console", %{conn: conn} do
       user = user_fixture()
       conn = log_in_user(conn, user)
@@ -223,8 +471,12 @@ defmodule AinComBookingWeb.CompanyConsoleLiveTest do
     end
   end
 
-  defp datetime_local_value(%DateTime{} = datetime) do
-    Calendar.strftime(datetime, "%Y-%m-%dT%H:%M")
+  defp future_datetime_at_minute(days_ahead) when is_integer(days_ahead) and days_ahead > 0 do
+    future = DateTime.add(DateTime.utc_now(), days_ahead * 24 * 60 * 60, :second)
+    date = DateTime.to_date(future)
+    time = DateTime.to_time(future)
+    {:ok, normalized_time} = Time.new(time.hour, time.minute, 0)
+    date |> NaiveDateTime.new!(normalized_time) |> DateTime.from_naive!("Etc/UTC")
   end
 
   defp weekday_name(date) do

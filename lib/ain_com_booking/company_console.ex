@@ -72,6 +72,83 @@ defmodule AinComBooking.CompanyConsole do
     |> Enum.take(limit)
   end
 
+  def list_company_bookings(%User{} = user) do
+    Repo.all(
+      from([booking, slot, service, resource] in company_bookings_query(user),
+        order_by: [desc: booking.inserted_at],
+        preload: [slot: slot, service: service, resource: resource]
+      )
+    )
+  end
+
+  def list_company_bookings_for_service(%User{} = user, service_id) when is_binary(service_id) do
+    Repo.all(
+      from([booking, slot, service, resource] in company_bookings_query(user),
+        where: booking.service_id == ^service_id,
+        order_by: [desc: booking.inserted_at],
+        preload: [slot: slot, service: service, resource: resource]
+      )
+    )
+  end
+
+  def list_company_bookings_for_resource(%User{} = user, resource_id) when is_binary(resource_id) do
+    Repo.all(
+      from([booking, slot, service, resource] in company_bookings_query(user),
+        where: booking.resource_id == ^resource_id,
+        order_by: [desc: booking.inserted_at],
+        preload: [slot: slot, service: service, resource: resource]
+      )
+    )
+  end
+
+  def confirmed_company_booking_counts_by_slot_ids(%User{} = user, slot_ids) when is_list(slot_ids) do
+    normalized_slot_ids =
+      slot_ids
+      |> Enum.filter(&is_binary/1)
+      |> Enum.uniq()
+
+    if normalized_slot_ids == [] do
+      %{}
+    else
+      Repo.all(
+        from([booking, _slot, _service, _resource] in company_bookings_query(user),
+          where: booking.slot_id in ^normalized_slot_ids and booking.status == "confirmed",
+          group_by: booking.slot_id,
+          select: {booking.slot_id, count(booking.id)}
+        )
+      )
+      |> Map.new()
+    end
+  end
+
+  def get_company_booking(%User{} = user, id) when is_binary(id) do
+    Repo.one(
+      from([booking, slot, service, resource] in company_bookings_query(user),
+        where: booking.id == ^id,
+        preload: [slot: slot, service: service, resource: resource]
+      )
+    )
+  end
+
+  def change_company_booking(%CompanyBooking{} = booking, attrs \\ %{}) do
+    CompanyBooking.changeset(booking, normalize_booking_attrs(attrs))
+  end
+
+  def update_company_booking(%User{} = user, %CompanyBooking{} = booking, attrs) when is_map(attrs) do
+    case get_company_booking(user, booking.id) do
+      nil ->
+        {:error, :not_found}
+
+      %CompanyBooking{} = owned_booking ->
+        owned_booking
+        |> CompanyBooking.changeset(normalize_booking_update_attrs(attrs))
+        |> validate_booking_status_capacity()
+        |> Repo.update()
+        |> preload_booking()
+        |> sync_slot_status_after_booking_update(owned_booking.slot_id)
+    end
+  end
+
   def recent_company_bookings(%User{} = user, limit \\ 6) when is_integer(limit) and limit > 0 do
     Repo.all(
       from([booking, slot, service, resource] in company_bookings_query(user),
@@ -295,6 +372,7 @@ defmodule AinComBooking.CompanyConsole do
           |> put_company_id(company_id)
           |> Map.put("service_id", service_id)
           |> Map.put("resource_id", nil)
+          |> ensure_booking_page_slug()
         )
         |> Repo.insert()
         |> preload_page()
@@ -315,6 +393,7 @@ defmodule AinComBooking.CompanyConsole do
           |> put_company_id(company_id)
           |> Map.put("service_id", nil)
           |> Map.put("resource_id", resource_id)
+          |> ensure_booking_page_slug()
         )
         |> Repo.insert()
         |> preload_page()
@@ -326,7 +405,11 @@ defmodule AinComBooking.CompanyConsole do
 
   def update_booking_page(%BookingPage{} = page, attrs) when is_map(attrs) do
     page
-    |> BookingPage.changeset(preserve_page_targets(page, attrs))
+    |> BookingPage.changeset(
+      page
+      |> preserve_page_targets(attrs)
+      |> ensure_booking_page_slug(page)
+    )
     |> Repo.update()
     |> preload_page()
   end
@@ -544,6 +627,37 @@ defmodule AinComBooking.CompanyConsole do
     |> Map.put("service_id", page.service_id)
     |> Map.put("resource_id", page.resource_id)
   end
+
+  defp ensure_booking_page_slug(attrs, page \\ nil) when is_map(attrs) do
+    attrs = stringify_keys(attrs)
+    existing_slug = existing_page_slug(page)
+
+    case normalize_optional_slug(Map.get(attrs, "slug")) do
+      slug when is_binary(slug) ->
+        Map.put(attrs, "slug", slug)
+
+      nil when is_binary(existing_slug) ->
+        Map.put(attrs, "slug", existing_slug)
+
+      _ ->
+        Map.put(attrs, "slug", Ecto.UUID.generate())
+    end
+  end
+
+  defp existing_page_slug(%BookingPage{slug: slug}) when is_binary(slug) and slug != "", do: slug
+  defp existing_page_slug(_page), do: nil
+
+  defp normalize_optional_slug(value) when is_binary(value) do
+    value
+    |> String.trim()
+    |> String.downcase()
+    |> case do
+      "" -> nil
+      normalized -> normalized
+    end
+  end
+
+  defp normalize_optional_slug(_value), do: nil
 
   defp apply_parent_target(attrs, :service, service_id) when is_binary(service_id) do
     attrs
@@ -1106,6 +1220,112 @@ defmodule AinComBooking.CompanyConsole do
     else
       lock(query, "FOR UPDATE")
     end
+  end
+
+  defp validate_booking_status_capacity(changeset) do
+    slot_id = Ecto.Changeset.get_field(changeset, :slot_id)
+    status = Ecto.Changeset.get_field(changeset, :status)
+    booking_id = changeset.data && changeset.data.id
+
+    cond do
+      status != "confirmed" ->
+        changeset
+
+      is_nil(slot_id) ->
+        changeset
+
+      true ->
+        case Repo.get(CompanySlot, slot_id) do
+          nil ->
+            Ecto.Changeset.add_error(changeset, :slot_id, "was not found")
+
+          %CompanySlot{status: :cancelled} ->
+            Ecto.Changeset.add_error(changeset, :status, "cannot confirm for a cancelled slot")
+
+          %CompanySlot{} = slot when is_integer(slot.max_bookings) ->
+            confirmed_count = confirmed_booking_count(slot_id, booking_id)
+
+            if confirmed_count >= slot.max_bookings do
+              Ecto.Changeset.add_error(changeset, :status, "slot has reached max bookings")
+            else
+              changeset
+            end
+
+          %CompanySlot{} ->
+            changeset
+        end
+    end
+  end
+
+  defp confirmed_booking_count(slot_id, except_booking_id \\ nil) when is_binary(slot_id) do
+    base_query =
+      from(booking in CompanyBooking,
+        where: booking.slot_id == ^slot_id and booking.status == "confirmed"
+      )
+
+    query =
+      if is_binary(except_booking_id) do
+        from(booking in base_query, where: booking.id != ^except_booking_id)
+      else
+        base_query
+      end
+
+    Repo.aggregate(query, :count, :id)
+  end
+
+  defp sync_slot_status_after_booking_update({:ok, booking}, slot_id) do
+    sync_slot_status(slot_id)
+    {:ok, booking}
+  end
+
+  defp sync_slot_status_after_booking_update(other, _slot_id), do: other
+
+  defp sync_slot_status(slot_id) when is_binary(slot_id) do
+    case Repo.get(CompanySlot, slot_id) do
+      nil ->
+        :ok
+
+      %CompanySlot{status: :cancelled} ->
+        :ok
+
+      %CompanySlot{} = slot ->
+        confirmed_count = confirmed_booking_count(slot_id)
+
+        target_status =
+          if is_integer(slot.max_bookings) and confirmed_count >= slot.max_bookings do
+            :booked
+          else
+            :available
+          end
+
+        if slot.status != target_status do
+          slot
+          |> Ecto.Changeset.change(status: target_status)
+          |> Repo.update()
+        else
+          :ok
+        end
+    end
+  end
+
+  defp sync_slot_status(_slot_id), do: :ok
+
+  defp preload_booking({:ok, %CompanyBooking{} = booking}) do
+    {:ok, Repo.preload(booking, [:slot, :service, :resource])}
+  end
+
+  defp preload_booking(other), do: other
+
+  defp normalize_booking_attrs(attrs) do
+    attrs
+    |> stringify_keys()
+    |> Map.delete("id")
+  end
+
+  defp normalize_booking_update_attrs(attrs) do
+    attrs
+    |> normalize_booking_attrs()
+    |> Map.take(["customer_name", "email", "phone", "status"])
   end
 
   defp put_company_id(attrs, company_id) do

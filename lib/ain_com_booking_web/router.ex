@@ -164,20 +164,6 @@ defmodule AinComBookingWeb.Router do
       live("/company/console/resources/:id", CompanyResourceLive, :show)
       live("/company/console/resources/:id/edit", CompanyResourceLive, :edit)
       live("/company/console/resources/:id/delete", CompanyResourceLive, :delete)
-      live("/company/console/slots", CompanySlotLive, :index)
-      live("/company/console/slots/new", CompanySlotLive, :new)
-      live("/company/console/slots/:id", CompanySlotLive, :show)
-      live("/company/console/slots/:id/edit", CompanySlotLive, :edit)
-      live("/company/console/slots/:id/delete", CompanySlotLive, :delete)
-      live("/company/console/pages", CompanyBookingPageLive, :index)
-      live("/company/console/services/:service_id/pages/new", CompanyBookingPageLive, :new)
-      live("/company/console/services/:service_id/pages/:id", CompanyBookingPageLive, :show)
-      live("/company/console/services/:service_id/pages/:id/edit", CompanyBookingPageLive, :edit)
-      live("/company/console/services/:service_id/pages/:id/delete", CompanyBookingPageLive, :delete)
-      live("/company/console/resources/:resource_id/pages/new", CompanyBookingPageLive, :new)
-      live("/company/console/resources/:resource_id/pages/:id", CompanyBookingPageLive, :show)
-      live("/company/console/resources/:resource_id/pages/:id/edit", CompanyBookingPageLive, :edit)
-      live("/company/console/resources/:resource_id/pages/:id/delete", CompanyBookingPageLive, :delete)
     end
   end
 

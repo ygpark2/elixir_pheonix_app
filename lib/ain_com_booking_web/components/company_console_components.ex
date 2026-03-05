@@ -53,14 +53,6 @@ defmodule AinComBookingWeb.CompanyConsoleComponents do
                 <.icon name="hero-cube" class="h-5 w-5" />
                 <span class="text-sm font-semibold">Resources</span>
               </.link>
-              <.link navigate={~p"/company/console/slots"} class={nav_item_class(@active_section == :slots)}>
-                <.icon name="hero-calendar-days" class="h-5 w-5" />
-                <span class="text-sm font-semibold">Slots</span>
-              </.link>
-              <.link navigate={~p"/company/console/pages"} class={nav_item_class(@active_section == :pages)}>
-                <.icon name="hero-globe-alt" class="h-5 w-5" />
-                <span class="text-sm font-semibold">Booking Pages</span>
-              </.link>
             </nav>
 
             <section class="rounded-3xl border border-slate-200 bg-white p-3 shadow-sm">
