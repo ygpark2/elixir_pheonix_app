@@ -4,6 +4,8 @@ defmodule AinComBooking.AccountsFixtures do
   entities via the `AinComBooking.Accounts` context.
   """
 
+  alias AinComBooking.Repo
+
   def unique_user_email, do: "user#{System.unique_integer()}@example.com"
   def valid_user_password, do: "hello world!"
   def valid_user_name, do: "Test User"
@@ -21,12 +23,24 @@ defmodule AinComBooking.AccountsFixtures do
   end
 
   def user_fixture(attrs \\ %{}) do
+    attrs = Map.new(attrs)
+    role = Map.get(attrs, :role) || Map.get(attrs, "role")
+    attrs = Map.drop(attrs, [:role, "role"])
+
     {:ok, user} =
       attrs
       |> valid_user_attributes()
       |> AinComBooking.Accounts.register_user()
 
-    user
+    case role do
+      nil ->
+        user
+
+      role ->
+        user
+        |> Ecto.Changeset.change(role: role)
+        |> Repo.update!()
+    end
   end
 
   def extract_user_token(fun) do

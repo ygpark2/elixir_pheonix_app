@@ -20,7 +20,6 @@ defmodule AinComBooking.Catalog.CompanyService do
     field(:price, :decimal)
     field(:currency, :string)
 
-    belongs_to(:user, AinComBooking.Accounts.User, type: :binary_id)
     belongs_to(:company, AinComBooking.Catalog.Company, type: :binary_id)
 
     many_to_many(:units, AinComBooking.Catalog.Unit, join_through: "services_units", join_keys: [service_id: :id, unit_id: :id], on_replace: :delete)
@@ -47,7 +46,6 @@ defmodule AinComBooking.Catalog.CompanyService do
       :is_recurring,
       :price,
       :currency,
-      :user_id,
       :company_id
     ])
     |> validate_required([:name, :duration, :price, :currency, :company_id])

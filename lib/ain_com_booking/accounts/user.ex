@@ -11,6 +11,7 @@ defmodule AinComBooking.Accounts.User do
     field(:phone, :string)
     field(:address, :string)
     field(:feed_visibility, Ecto.Enum, values: [:public, :followers, :link, :private], default: :public)
+    field(:role, Ecto.Enum, values: [:user, :admin, :company], default: :user)
     field(:password, :string, virtual: true, redact: true)
     field(:hashed_password, :string, redact: true)
     field(:current_password, :string, virtual: true, redact: true)
@@ -71,7 +72,7 @@ defmodule AinComBooking.Accounts.User do
     |> validate_required([:email])
     |> validate_format(:email, ~r/^[^\s]+@[^\s]+$/, message: "must have the @ sign and no spaces")
     |> validate_length(:email, max: 160)
-    |> update_change(:email, &String.downcase/1)
+    |> update_change(:email, &normalize_email/1)
     |> maybe_validate_unique_email(opts)
   end
 
@@ -117,6 +118,10 @@ defmodule AinComBooking.Accounts.User do
     else
       changeset
     end
+  end
+
+  def normalize_email(email) when is_binary(email) do
+    String.downcase(email)
   end
 
   @doc """

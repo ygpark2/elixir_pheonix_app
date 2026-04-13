@@ -10,7 +10,7 @@
   "dependencies": {
     "phoenix": "^1.7.7",
     "phoenix_html": "^4.2.1",
-    "phoenix_live_view": "^1.1.19",
+    "phoenix_live_view": "^1.1.25",
     "simple-css-reset": "^3.0.0",
     "antd": "^6.3.1",
     "alpinejs": "^3.15.3",
@@ -20,7 +20,7 @@
     "@babel/eslint-parser": "^7.28.5",
     "eslint": "^9.39.2",
     "eslint-plugin-mirego": "^1.0.0",
-    "prettier": "^3.7.4",
+    "prettier": "^3.8.1",
     "stylelint": "^15.11.0",
     "stylelint-config-mirego": "^2.3.0",
     "stylelint-scss": "^5.3.2",

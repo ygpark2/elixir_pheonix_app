@@ -19,7 +19,7 @@ defmodule AinComBooking.Repo.Migrations.CreateUserServices do
       add(:price, :decimal)
       add(:currency, :string)
 
-      add(:user_id, references(:companies, type: :binary_id, on_delete: :delete_all), null: false)
+      add(:user_id, references(:users, type: :binary_id, on_delete: :delete_all), null: false)
 
       timestamps()
     end

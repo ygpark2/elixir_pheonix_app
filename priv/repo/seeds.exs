@@ -11,6 +11,7 @@
 # and so on) as they will fail if something goes wrong.
 
 alias AinComBooking.Accounts.User
+alias AinComBooking.CompanyConsole
 alias AinComBooking.Repo
 
 seed_users = [
@@ -19,14 +20,24 @@ seed_users = [
     password: "12345",
     name: "YG Park",
     phone: "010-0000-0000",
-    address: "Seoul"
+    address: "Seoul",
+    role: :user
   },
   %{
     email: "admin@ain.com",
     password: "admin!2026",
     name: "Seed Admin",
     phone: "010-1111-2222",
-    address: "Busan"
+    address: "Busan",
+    role: :admin
+  },
+  %{
+    email: "company@ain.com",
+    password: "company!2026",
+    name: "Seed Company",
+    phone: "010-2222-3333",
+    address: "Incheon",
+    role: :company
   }
 ]
 
@@ -50,34 +61,47 @@ Enum.each(seed_users, fn attrs ->
   now = NaiveDateTime.truncate(NaiveDateTime.utc_now(), :second)
   hashed_password = Bcrypt.hash_pwd_salt(attrs.password)
 
-  case Repo.get_by(User, email: email) do
-    nil ->
-      %User{}
-      |> Ecto.Changeset.change(%{
-        email: email,
-        hashed_password: hashed_password,
-        name: attrs.name,
-        phone: attrs.phone,
-        address: attrs.address,
-        feed_visibility: :public,
-        confirmed_at: now
-      })
-      |> Repo.insert!()
+  seeded_user =
+    case Repo.get_by(User, email: email) do
+      nil ->
+        user =
+          %User{}
+          |> Ecto.Changeset.change(%{
+            email: email,
+            hashed_password: hashed_password,
+            name: attrs.name,
+            phone: attrs.phone,
+            address: attrs.address,
+            role: attrs.role,
+            feed_visibility: :public,
+            confirmed_at: now
+          })
+          |> Repo.insert!()
 
-      IO.puts("Inserted seed user: #{email}")
+        IO.puts("Inserted seed user: #{email}")
+        user
 
-    existing_user ->
-      existing_user
-      |> Ecto.Changeset.change(%{
-        hashed_password: hashed_password,
-        name: attrs.name,
-        phone: attrs.phone,
-        address: attrs.address,
-        feed_visibility: :public,
-        confirmed_at: now
-      })
-      |> Repo.update!()
+      existing_user ->
+        user =
+          existing_user
+          |> Ecto.Changeset.change(%{
+            hashed_password: hashed_password,
+            name: attrs.name,
+            phone: attrs.phone,
+            address: attrs.address,
+            role: attrs.role,
+            feed_visibility: :public,
+            confirmed_at: now
+          })
+          |> Repo.update!()
 
-      IO.puts("Updated seed user: #{email}")
+        IO.puts("Updated seed user: #{email}")
+        user
+    end
+
+  if attrs.role == :company do
+    company = CompanyConsole.ensure_company!(seeded_user)
+
+    IO.puts("Ensured seed company: #{company.name} (#{company.login})")
   end
 end)

@@ -34,7 +34,7 @@ defmodule AinComBookingWeb.UserAuth do
     |> renew_session()
     |> put_token_in_session(token)
     |> maybe_write_remember_me_cookie(token, params)
-    |> redirect(to: user_return_to || signed_in_path(conn))
+    |> redirect(to: user_return_to || signed_in_path(conn, user))
   end
 
   defp maybe_write_remember_me_cookie(conn, token, %{"remember_me" => "true"}) do
@@ -125,6 +125,14 @@ defmodule AinComBookingWeb.UserAuth do
       on user_token.
       Redirects to login page if there's no logged user.
 
+    * `:ensure_admin` - Authenticates the user from the session,
+      verifies the user has the `admin` role, and redirects when access
+      is not allowed.
+
+    * `:ensure_company` - Authenticates the user from the session,
+      verifies the user has the `company` role, and redirects when access
+      is not allowed.
+
     * `:redirect_if_user_is_authenticated` - Authenticates the user from the session.
       Redirects to signed_in_path if there's a logged user.
 
@@ -156,12 +164,37 @@ defmodule AinComBookingWeb.UserAuth do
     if socket.assigns.current_user do
       {:cont, socket}
     else
-      socket =
-        socket
-        |> Phoenix.LiveView.put_flash(:error, "You must log in to access this page.")
-        |> Phoenix.LiveView.redirect(to: ~p"/users/log_in")
+      {:halt, redirect_to_login(socket)}
+    end
+  end
 
-      {:halt, socket}
+  def on_mount(:ensure_admin, _params, session, socket) do
+    socket = mount_current_user(socket, session)
+
+    cond do
+      is_nil(socket.assigns.current_user) ->
+        {:halt, redirect_to_login(socket)}
+
+      Accounts.admin?(socket.assigns.current_user) ->
+        {:cont, socket}
+
+      true ->
+        {:halt, redirect_non_admin(socket)}
+    end
+  end
+
+  def on_mount(:ensure_company, _params, session, socket) do
+    socket = mount_current_user(socket, session)
+
+    cond do
+      is_nil(socket.assigns.current_user) ->
+        {:halt, redirect_to_login(socket)}
+
+      Accounts.company?(socket.assigns.current_user) ->
+        {:cont, socket}
+
+      true ->
+        {:halt, redirect_non_company(socket)}
     end
   end
 
@@ -214,6 +247,44 @@ defmodule AinComBookingWeb.UserAuth do
     end
   end
 
+  @doc """
+  Used for routes that require the current user to be an admin.
+  """
+  def require_admin_user(conn, _opts) do
+    cond do
+      is_nil(conn.assigns[:current_user]) ->
+        require_authenticated_user(conn, [])
+
+      Accounts.admin?(conn.assigns.current_user) ->
+        conn
+
+      true ->
+        conn
+        |> put_flash(:error, "You are not authorized to access this page.")
+        |> redirect(to: signed_in_path(conn))
+        |> halt()
+    end
+  end
+
+  @doc """
+  Used for routes that require the current user to be a company customer.
+  """
+  def require_company_user(conn, _opts) do
+    cond do
+      is_nil(conn.assigns[:current_user]) ->
+        require_authenticated_user(conn, [])
+
+      Accounts.company?(conn.assigns.current_user) ->
+        conn
+
+      true ->
+        conn
+        |> put_flash(:error, "You are not authorized to access this page.")
+        |> redirect(to: signed_in_path(conn))
+        |> halt()
+    end
+  end
+
   defp put_token_in_session(conn, token) do
     conn
     |> put_session(:user_token, token)
@@ -226,5 +297,33 @@ defmodule AinComBookingWeb.UserAuth do
 
   defp maybe_store_return_to(conn), do: conn
 
-  defp signed_in_path(_conn), do: ~p"/"
+  defp redirect_to_login(socket) do
+    socket
+    |> Phoenix.LiveView.put_flash(:error, "You must log in to access this page.")
+    |> Phoenix.LiveView.redirect(to: ~p"/users/log_in")
+  end
+
+  defp redirect_non_admin(socket) do
+    socket
+    |> Phoenix.LiveView.put_flash(:error, "You are not authorized to access this page.")
+    |> Phoenix.LiveView.redirect(to: signed_in_path(socket))
+  end
+
+  defp redirect_non_company(socket) do
+    socket
+    |> Phoenix.LiveView.put_flash(:error, "You are not authorized to access this page.")
+    |> Phoenix.LiveView.redirect(to: signed_in_path(socket))
+  end
+
+  defp signed_in_path(conn_or_socket, user \\ nil) do
+    case resolve_user(conn_or_socket, user) do
+      %{role: :company} -> ~p"/company/console"
+      _ -> ~p"/"
+    end
+  end
+
+  defp resolve_user(_conn_or_socket, %{role: _} = user), do: user
+  defp resolve_user(%{assigns: %{current_user: user}}, _user), do: user
+  defp resolve_user(%{assigns: assigns}, _user) when is_map(assigns), do: Map.get(assigns, :current_user)
+  defp resolve_user(_conn_or_socket, _user), do: nil
 end

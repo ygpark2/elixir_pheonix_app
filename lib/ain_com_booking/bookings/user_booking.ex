@@ -17,6 +17,7 @@ defmodule AinComBooking.Bookings.UserBooking do
     field(:total_price, :decimal)
     field(:currency, :string)
 
+    belongs_to(:user, AinComBooking.Accounts.User, type: :binary_id)
     belongs_to(:slot, UserSlot, type: :binary_id)
     belongs_to(:service, AinComBooking.Catalog.UserService, type: :binary_id)
     belongs_to(:resource, AinComBooking.Catalog.UserResource, type: :binary_id)
@@ -31,6 +32,7 @@ defmodule AinComBooking.Bookings.UserBooking do
       :email,
       :phone,
       :status,
+      :user_id,
       :slot_id,
       :service_id,
       :resource_id,
@@ -48,6 +50,7 @@ defmodule AinComBooking.Bookings.UserBooking do
     |> assoc_constraint(:slot)
     |> assoc_constraint(:service)
     |> assoc_constraint(:resource)
+    |> assoc_constraint(:user)
     |> check_constraint(:service_id, name: :user_bookings_service_or_resource_required)
   end
 

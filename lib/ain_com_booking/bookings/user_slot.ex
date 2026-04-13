@@ -9,9 +9,12 @@ defmodule AinComBooking.Bookings.UserSlot do
     field(:start_time, :utc_datetime)
     field(:end_time, :utc_datetime)
     field(:status, Ecto.Enum, values: [:available, :booked, :cancelled])
+    field(:source_type, Ecto.Enum, values: [:manual, :generated], default: :manual)
+    field(:max_bookings, :integer)
 
     belongs_to(:service, AinComBooking.Catalog.UserService, type: :binary_id)
     belongs_to(:resource, AinComBooking.Catalog.UserResource, type: :binary_id)
+    belongs_to(:post, AinComBooking.Social.Post, type: :binary_id)
 
     has_many(:bookings, AinComBooking.Bookings.UserBooking, foreign_key: :slot_id)
 
@@ -20,12 +23,14 @@ defmodule AinComBooking.Bookings.UserSlot do
 
   def changeset(slot, attrs) do
     slot
-    |> cast(attrs, [:start_time, :end_time, :status, :service_id, :resource_id])
+    |> cast(attrs, [:start_time, :end_time, :status, :source_type, :max_bookings, :service_id, :resource_id, :post_id])
     |> validate_required([:start_time, :end_time, :status])
     |> validate_service_or_resource_present()
     |> validate_end_time_after_start_time()
+    |> validate_number(:max_bookings, greater_than: 0)
     |> foreign_key_constraint(:service_id)
     |> foreign_key_constraint(:resource_id)
+    |> foreign_key_constraint(:post_id)
     |> check_constraint(:service_id, name: :user_slots_service_or_resource_required)
   end
 

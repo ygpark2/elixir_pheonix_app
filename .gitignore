@@ -8,6 +8,8 @@ _bmad/
 /_build
 /db
 /data
+/data/postgres/
+/docs/
 /deps
 /*.ez
 /cover
@@ -21,7 +23,13 @@ npm-debug.log
 
 # IDE
 .idea/
+.elixir_ls/
 ain_com.iml
+
+# OS / editor cruft
+.DS_Store
+*.swp
+*.swo
 
 # Static artifacts
 /assets/node_modules

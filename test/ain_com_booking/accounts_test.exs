@@ -16,6 +16,11 @@ defmodule AinComBooking.AccountsTest do
       %{id: id} = user = user_fixture()
       assert %User{id: ^id} = Accounts.get_user_by_email(user.email)
     end
+
+    test "matches email case-insensitively" do
+      %{id: id} = user = user_fixture()
+      assert %User{id: ^id} = Accounts.get_user_by_email(String.upcase(user.email))
+    end
   end
 
   describe "get_user_by_email_and_password/2" do
@@ -33,6 +38,16 @@ defmodule AinComBooking.AccountsTest do
 
       assert %User{id: ^id} =
                Accounts.get_user_by_email_and_password(user.email, valid_user_password())
+    end
+
+    test "matches the login email case-insensitively" do
+      %{id: id} = user = user_fixture()
+
+      assert %User{id: ^id} =
+               Accounts.get_user_by_email_and_password(
+                 String.upcase(user.email),
+                 valid_user_password()
+               )
     end
   end
 
