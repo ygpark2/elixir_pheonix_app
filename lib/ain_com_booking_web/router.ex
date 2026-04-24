@@ -78,17 +78,27 @@ defmodule AinComBookingWeb.Router do
 
     pipe_through(:protected_api)
 
-    resources("/company/companies", CompanyController, only: [:create, :update, :delete, :index])
-    resources("/company/units", CompanyUnitController, only: [:create, :update, :delete, :index])
-    resources("/company/slots", CompanySlotController, only: [:create, :update, :delete, :index])
-    resources("/company/bookings", CompanyBookingController, only: [:create, :update, :delete, :index])
-    resources("/company/services", CompanyServiceController, only: [:create, :update, :delete, :index])
-    resources("/company/resources", CompanyResourceController, only: [:create, :update, :delete, :index])
+    resources("/company/companies", CompanyController, only: [:create, :update, :index])
+    delete("/company/companies/:id", CompanyController, :remove)
+    resources("/company/units", CompanyUnitController, only: [:create, :update, :index])
+    delete("/company/units/:id", CompanyUnitController, :remove)
+    resources("/company/slots", CompanySlotController, only: [:create, :update, :index])
+    delete("/company/slots/:id", CompanySlotController, :remove)
+    resources("/company/bookings", CompanyBookingController, only: [:create, :update, :index])
+    delete("/company/bookings/:id", CompanyBookingController, :remove)
+    resources("/company/services", CompanyServiceController, only: [:create, :update, :index])
+    delete("/company/services/:id", CompanyServiceController, :remove)
+    resources("/company/resources", CompanyResourceController, only: [:create, :update, :index])
+    delete("/company/resources/:id", CompanyResourceController, :remove)
 
-    resources("/user/slots", UserSlotController, only: [:create, :update, :delete, :index])
-    resources("/user/bookings", UserBookingController, only: [:create, :update, :delete, :index])
-    resources("/user/services", UserServiceController, only: [:create, :update, :delete, :index])
-    resources("/user/resources", UserResourceController, only: [:create, :update, :delete, :index])
+    resources("/user/slots", UserSlotController, only: [:create, :update, :index])
+    delete("/user/slots/:id", UserSlotController, :remove)
+    resources("/user/bookings", UserBookingController, only: [:create, :update, :index])
+    delete("/user/bookings/:id", UserBookingController, :remove)
+    resources("/user/services", UserServiceController, only: [:create, :update, :index])
+    delete("/user/services/:id", UserServiceController, :remove)
+    resources("/user/resources", UserResourceController, only: [:create, :update, :index])
+    delete("/user/resources/:id", UserResourceController, :remove)
   end
 
   scope "/api/swagger" do
@@ -154,16 +164,16 @@ defmodule AinComBookingWeb.Router do
     live_session :require_company_user,
       on_mount: [{AinComBookingWeb.UserAuth, :ensure_company}] do
       live("/company/console", CompanyConsoleLive, :index)
-      live("/company/console/services", CompanyServiceLive, :index)
-      live("/company/console/services/new", CompanyServiceLive, :new)
-      live("/company/console/services/:id", CompanyServiceLive, :show)
-      live("/company/console/services/:id/edit", CompanyServiceLive, :edit)
-      live("/company/console/services/:id/delete", CompanyServiceLive, :delete)
-      live("/company/console/resources", CompanyResourceLive, :index)
-      live("/company/console/resources/new", CompanyResourceLive, :new)
-      live("/company/console/resources/:id", CompanyResourceLive, :show)
-      live("/company/console/resources/:id/edit", CompanyResourceLive, :edit)
-      live("/company/console/resources/:id/delete", CompanyResourceLive, :delete)
+      live("/company/console/services", CompanyInventoryLive, :index)
+      live("/company/console/services/new", CompanyInventoryLive, :new)
+      live("/company/console/services/:id", CompanyInventoryLive, :show)
+      live("/company/console/services/:id/edit", CompanyInventoryLive, :edit)
+      live("/company/console/services/:id/delete", CompanyInventoryLive, :delete)
+      live("/company/console/resources", CompanyInventoryLive, :index)
+      live("/company/console/resources/new", CompanyInventoryLive, :new)
+      live("/company/console/resources/:id", CompanyInventoryLive, :show)
+      live("/company/console/resources/:id/edit", CompanyInventoryLive, :edit)
+      live("/company/console/resources/:id/delete", CompanyInventoryLive, :delete)
     end
   end
 

@@ -2,9 +2,11 @@ defmodule AinComBookingWeb.CompanyConsoleLive do
   @moduledoc false
   use AinComBookingWeb, :live_view
 
-  import AinComBookingWeb.CompanyConsoleComponents
+  import AinComBookingWeb.CompanyConsoleComponents, except: [booking_slot_window: 1]
 
   alias AinComBooking.CompanyConsole
+  alias AinComBooking.CompanyConsole.BookingPages
+  alias AinComBooking.CompanyConsole.Bookings
 
   def render(assigns) do
     ~H"""
@@ -193,7 +195,7 @@ defmodule AinComBookingWeb.CompanyConsoleLive do
                   <div class="min-w-0 flex-1">
                     <div class="truncate text-sm font-semibold text-slate-950"><%= page.title %></div>
                     <div class="mt-1 truncate text-xs text-slate-400"><%= page_target_name(page) %></div>
-                    <div class="mt-1 truncate text-xs text-slate-400"><%= CompanyConsole.public_url(page) %></div>
+                    <div class="mt-1 truncate text-xs text-slate-400"><%= BookingPages.public_url(page) %></div>
                   </div>
                   <span class={page_status_class(page.is_published)}>
                     <%= if page.is_published, do: "Published", else: "Draft" %>
@@ -241,8 +243,8 @@ defmodule AinComBookingWeb.CompanyConsoleLive do
      |> assign(:hide_global_user_menu, true)
      |> assign(:company, company)
      |> assign(:snapshot, CompanyConsole.dashboard_snapshot(socket.assigns.current_user))
-     |> assign(:recent_pages, CompanyConsole.recent_booking_pages(socket.assigns.current_user))
-     |> assign(:recent_bookings, CompanyConsole.recent_company_bookings(socket.assigns.current_user))}
+     |> assign(:recent_pages, BookingPages.recent_booking_pages(socket.assigns.current_user))
+     |> assign(:recent_bookings, Bookings.recent_company_bookings(socket.assigns.current_user))}
   end
 
   defp page_status_class(true), do: "rounded-full bg-emerald-50 px-2.5 py-1 text-[11px] font-semibold text-emerald-700"

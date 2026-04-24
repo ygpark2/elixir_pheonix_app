@@ -2,7 +2,9 @@ defmodule AinComBookingWeb.CompanyPublicBookingPageLive do
   @moduledoc false
   use AinComBookingWeb, :live_view
 
-  alias AinComBooking.CompanyConsole
+  alias AinComBooking.CompanyConsole.BookingPages
+  alias AinComBooking.CompanyConsole.Bookings
+  alias AinComBooking.CompanyConsole.SlotGeneration
 
   @booking_window_days 30
 
@@ -37,7 +39,7 @@ defmodule AinComBookingWeb.CompanyPublicBookingPageLive do
                 </div>
                 <div class="flex items-center gap-3">
                   <span class="rounded-full bg-slate-100 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.16em] text-slate-500">
-                    <%= CompanyConsole.company_timezone(@page) %>
+                    <%= BookingPages.company_timezone(@page) %>
                   </span>
                   <span class="text-sm font-semibold text-slate-500"><%= @calendar_month.total_slots %> open</span>
                 </div>
@@ -189,8 +191,8 @@ defmodule AinComBookingWeb.CompanyPublicBookingPageLive do
   end
 
   def mount(%{"slug" => slug}, _session, socket) do
-    page = CompanyConsole.get_published_booking_page_by_slug(slug)
-    slots = if page, do: CompanyConsole.list_upcoming_slots_for_page(page, @booking_window_days), else: []
+    page = BookingPages.get_published_booking_page_by_slug(slug)
+    slots = if page, do: SlotGeneration.list_upcoming_slots_for_page(page, @booking_window_days), else: []
 
     {:ok,
      socket
@@ -252,9 +254,9 @@ defmodule AinComBookingWeb.CompanyPublicBookingPageLive do
   def handle_event("book", %{"booking" => params}, socket) do
     attrs = Map.put(params, "slot_id", socket.assigns.selected_slot_id)
 
-    case CompanyConsole.create_booking_from_page(socket.assigns.page, attrs) do
+    case Bookings.create_booking_from_page(socket.assigns.page, attrs) do
       {:ok, _booking} ->
-        slots = CompanyConsole.list_upcoming_slots_for_page(socket.assigns.page, @booking_window_days)
+        slots = SlotGeneration.list_upcoming_slots_for_page(socket.assigns.page, @booking_window_days)
 
         {:noreply,
          socket
@@ -269,7 +271,7 @@ defmodule AinComBookingWeb.CompanyPublicBookingPageLive do
       {:error, reason} ->
         {:noreply,
          socket
-         |> put_flash(:error, CompanyConsole.booking_error_message(reason))
+         |> put_flash(:error, Bookings.booking_error_message(reason))
          |> assign(:booking_form, to_form(params, as: :booking))}
     end
   end
@@ -357,8 +359,8 @@ defmodule AinComBookingWeb.CompanyPublicBookingPageLive do
   defp booking_calendar_window(page) do
     now = DateTime.utc_now()
     window_end = DateTime.add(now, @booking_window_days * 24 * 60 * 60, :second)
-    start_date = now |> then(&CompanyConsole.page_local_datetime(page, &1)) |> DateTime.to_date()
-    end_date = window_end |> then(&CompanyConsole.page_local_datetime(page, &1)) |> DateTime.to_date()
+    start_date = now |> then(&BookingPages.page_local_datetime(page, &1)) |> DateTime.to_date()
+    end_date = window_end |> then(&BookingPages.page_local_datetime(page, &1)) |> DateTime.to_date()
 
     %{
       start_date: start_date,
@@ -476,7 +478,7 @@ defmodule AinComBookingWeb.CompanyPublicBookingPageLive do
 
   defp slot_local_date(page, slot) do
     page
-    |> CompanyConsole.page_local_datetime(slot.start_time)
+    |> BookingPages.page_local_datetime(slot.start_time)
     |> DateTime.to_date()
   end
 
@@ -519,7 +521,7 @@ defmodule AinComBookingWeb.CompanyPublicBookingPageLive do
   defp format_datetime(_page, nil), do: "Unknown"
 
   defp format_datetime(page, %DateTime{} = datetime) do
-    local_datetime = CompanyConsole.page_local_datetime(page, datetime)
+    local_datetime = BookingPages.page_local_datetime(page, datetime)
     "#{Calendar.strftime(local_datetime, "%Y-%m-%d %H:%M")} #{local_datetime.zone_abbr || local_datetime.time_zone}"
   end
 

@@ -242,6 +242,69 @@ defmodule AinComBookingWeb.CompanyConsoleLiveTest do
       assert rendered =~ expected_slot_line_b
     end
 
+    test "service detail page creates and updates booking pages from the UI", %{conn: conn} do
+      company_user = user_fixture(%{name: "Service Booking Page Owner", role: :company})
+      conn = log_in_user(conn, company_user)
+
+      {:ok, service} =
+        CompanyConsole.create_company_service(company_user, %{
+          "name" => "Strategy Session",
+          "description_text" => "Service booking page test",
+          "duration" => 60,
+          "price" => "120.00",
+          "currency" => "USD",
+          "is_active" => true,
+          "is_public" => true
+        })
+
+      {:ok, lv, _html} = live(conn, ~p"/company/console/services/#{service.id}")
+
+      lv
+      |> form("#company-service-booking-page-form",
+        booking_page: %{
+          title: "Strategy Session Booking",
+          slug: "strategy-session-booking",
+          button_label: "Reserve now",
+          theme: "brand",
+          is_published: "true",
+          auto_slots_enabled: "false",
+          description: "Book a strategy session.",
+          available_weekdays: ["mon", "tue"],
+          excluded_dates: "",
+          default_max_bookings: ""
+        }
+      )
+      |> render_submit()
+
+      assert render(lv) =~ "Strategy Session Booking"
+      assert render(lv) =~ "/book/strategy-session-booking"
+
+      page = Repo.get_by!(AinComBooking.CompanyConsole.BookingPage, slug: "strategy-session-booking")
+
+      lv
+      |> element(~s(button[phx-click="edit_booking_page"][phx-value-page_id="#{page.id}"]))
+      |> render_click()
+
+      lv
+      |> form("#company-service-booking-page-form",
+        booking_page: %{
+          title: "Strategy Session Booking Updated",
+          slug: "strategy-session-booking",
+          button_label: "Reserve now",
+          theme: "brand",
+          is_published: "true",
+          auto_slots_enabled: "false",
+          description: "Book a strategy session.",
+          available_weekdays: ["mon", "tue"],
+          excluded_dates: "",
+          default_max_bookings: ""
+        }
+      )
+      |> render_submit()
+
+      assert render(lv) =~ "Strategy Session Booking Updated"
+    end
+
     test "resource detail auto slot modal creates slots and shows them on calendar", %{conn: conn} do
       company_user = user_fixture(%{name: "Resource Slot Owner", role: :company})
       conn = log_in_user(conn, company_user)
@@ -304,6 +367,43 @@ defmodule AinComBookingWeb.CompanyConsoleLiveTest do
 
       assert length(created_slots) == 2
       assert rendered =~ "Max 2 bookings"
+    end
+
+    test "resource detail page creates booking pages from the UI", %{conn: conn} do
+      company_user = user_fixture(%{name: "Resource Booking Page Owner", role: :company})
+      conn = log_in_user(conn, company_user)
+
+      {:ok, resource} =
+        CompanyConsole.create_company_resource(company_user, %{
+          "name" => "Studio A",
+          "type" => "studio",
+          "location" => "Seoul",
+          "description" => "Resource booking page test",
+          "price" => "80.00",
+          "currency" => "KRW"
+        })
+
+      {:ok, lv, _html} = live(conn, ~p"/company/console/resources/#{resource.id}")
+
+      lv
+      |> form("#company-resource-booking-page-form",
+        booking_page: %{
+          title: "Studio A Booking",
+          slug: "studio-a-booking",
+          button_label: "Reserve now",
+          theme: "brand",
+          is_published: "true",
+          auto_slots_enabled: "false",
+          description: "Book Studio A.",
+          available_weekdays: ["mon", "tue"],
+          excluded_dates: "",
+          default_max_bookings: ""
+        }
+      )
+      |> render_submit()
+
+      assert render(lv) =~ "Studio A Booking"
+      assert render(lv) =~ "/book/studio-a-booking"
     end
 
     test "service index booked modal supports edit and cancel", %{conn: conn} do
