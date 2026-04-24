@@ -181,6 +181,7 @@ defmodule AinComBookingApi.Controllers.Company.CompanySlotController do
     end
   end
 
+
   def swagger_definitions do
     %{
       CompanySlot:

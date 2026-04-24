@@ -181,6 +181,7 @@ defmodule AinComBookingApi.Controllers.User.UserSlotController do
     end
   end
 
+
   def swagger_definitions do
     %{
       UserSlot:

@@ -215,6 +215,7 @@ defmodule AinComBookingApi.Controllers.User.UserBookingController do
     end
   end
 
+
   def swagger_definitions do
     %{
       UserBooking:

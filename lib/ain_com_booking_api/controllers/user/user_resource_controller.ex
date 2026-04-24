@@ -113,6 +113,7 @@ defmodule AinComBookingApi.Controllers.User.UserResourceController do
     end
   end
 
+
   def swagger_definitions do
     %{
       UserResource:

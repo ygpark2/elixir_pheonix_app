@@ -119,6 +119,29 @@ defmodule AinComBooking.AccountsTest do
     end
   end
 
+  describe "search_users/2" do
+    test "shows followers-only users only after following them" do
+      viewer = user_fixture(%{name: "Viewer"})
+      public_user = user_fixture(%{name: "Public Search Target", feed_visibility: :public})
+      follower_only_user = user_fixture(%{name: "Followers Search Target", feed_visibility: :followers})
+      _private_user = user_fixture(%{name: "Private Search Target", feed_visibility: :private})
+
+      results = Accounts.search_users(viewer, "Search Target")
+      ids = Enum.map(results, & &1.id)
+
+      assert public_user.id in ids
+      refute follower_only_user.id in ids
+
+      assert {:ok, _follow} = Accounts.follow_user(viewer, follower_only_user)
+
+      results = Accounts.search_users(viewer, "Search Target")
+      ids = Enum.map(results, & &1.id)
+
+      assert public_user.id in ids
+      assert follower_only_user.id in ids
+    end
+  end
+
   describe "register_user/1" do
     test "requires email and password to be set" do
       {:error, changeset} = Accounts.register_user(%{})

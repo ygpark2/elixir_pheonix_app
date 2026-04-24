@@ -35,6 +35,35 @@ defmodule AinComBookingWeb.UserSearchLiveTest do
       assert result =~ "No results found"
     end
 
+    test "hides follower-only users until the viewer follows them", %{conn: conn} do
+      current_user = user_fixture(%{email: "viewer@example.com", name: "Viewer"})
+      follower_only_user = user_fixture(%{
+        email: "followers@example.com",
+        name: "Followers Search Target",
+        feed_visibility: :followers
+      })
+
+      conn = log_in_user(conn, current_user)
+
+      {:ok, lv, _html} = live(conn, ~p"/users/search")
+
+      result =
+        lv
+        |> form("#user_search_form", %{"search" => %{"query" => "Followers"}})
+        |> render_change()
+
+      refute result =~ "Followers Search Target"
+
+      assert {:ok, _follow} = AinComBooking.Accounts.follow_user(current_user, follower_only_user)
+
+      result =
+        lv
+        |> form("#user_search_form", %{"search" => %{"query" => "Followers"}})
+        |> render_change()
+
+      assert result =~ "Followers Search Target"
+    end
+
     test "redirects if user is not logged in", %{conn: conn} do
       assert {:error, redirect} = live(conn, ~p"/users/search")
 

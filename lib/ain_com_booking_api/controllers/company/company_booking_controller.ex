@@ -224,6 +224,7 @@ defmodule AinComBookingApi.Controllers.Company.CompanyBookingController do
     end
   end
 
+
   def swagger_definitions do
     %{
       CompanyBooking:

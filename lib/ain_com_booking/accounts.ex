@@ -120,27 +120,62 @@ defmodule AinComBooking.Accounts do
   @doc """
   Searches users by name keyword or id.
 
-  Returns only public fields (id, name).
+  Results are filtered by the viewer's visibility permissions and return only
+  public fields (`id`, `name`).
   """
-  def search_users(query) when is_binary(query) do
-    # Visibility/follow-based filtering will be layered on once social scope is implemented.
+  def search_users(%User{id: viewer_id}, query) when is_binary(viewer_id) do
+    search_users(viewer_id, query)
+  end
+
+  def search_users(viewer_id, query) when (is_binary(viewer_id) or is_nil(viewer_id)) and is_binary(query) do
     trimmed = String.trim(query)
 
     if trimmed == "" do
       []
     else
+      visibility_scope = visible_search_users_query(viewer_id)
+
       case Ecto.UUID.cast(trimmed) do
         {:ok, uuid} ->
-          Repo.all(from(u in User, where: u.id == ^uuid, select: %{id: u.id, name: u.name}))
+          Repo.all(
+            from(u in subquery(visibility_scope),
+              where: u.id == ^uuid,
+              select: %{id: u.id, name: u.name}
+            )
+          )
 
         :error ->
           like = "%#{trimmed}%"
-          Repo.all(from(u in User, where: fragment("lower(?) LIKE lower(?)", u.name, ^like), select: %{id: u.id, name: u.name}))
+
+          Repo.all(
+            from(u in subquery(visibility_scope),
+              where: fragment("lower(?) LIKE lower(?)", u.name, ^like),
+              order_by: [asc: u.name],
+              select: %{id: u.id, name: u.name}
+            )
+          )
       end
     end
   end
 
+  def search_users(_, _), do: []
+  def search_users(query) when is_binary(query), do: search_users(nil, query)
   def search_users(_), do: []
+
+  defp visible_search_users_query(nil) do
+    from(u in User, where: u.feed_visibility == :public)
+  end
+
+  defp visible_search_users_query(viewer_id) when is_binary(viewer_id) do
+    from(u in User,
+      left_join: f in Follow,
+      on: f.followed_id == u.id and f.follower_id == ^viewer_id,
+      where:
+        u.id == ^viewer_id or
+          u.feed_visibility == :public or
+          (u.feed_visibility == :followers and not is_nil(f.follower_id))
+    )
+  end
 
   ## User registration
 

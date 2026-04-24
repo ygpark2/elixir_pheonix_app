@@ -58,7 +58,7 @@ defmodule AinComBookingWeb.UserSearchLive do
       if trimmed == "" do
         []
       else
-        Accounts.search_users(trimmed)
+        Accounts.search_users(socket.assigns.current_user, trimmed)
       end
 
     form = to_form(%{"query" => query}, as: :search)

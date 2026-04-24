@@ -113,6 +113,7 @@ defmodule AinComBookingApi.Controllers.Company.CompanyResourceController do
     end
   end
 
+
   def swagger_definitions do
     %{
       CompanyResource:

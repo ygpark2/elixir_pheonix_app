@@ -118,6 +118,7 @@ defmodule AinComBookingApi.Controllers.User.UserServiceController do
     end
   end
 
+
   def swagger_definitions do
     %{
       UserService:
